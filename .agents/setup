@@ -7,6 +7,14 @@ export PATH="$HOME/.local/bin:$PATH"
 export MISE_YES=1
 TIMEFORMAT='Step completed in %3R seconds'
 
+echo 'Preparing Git LFS'
+if ! git lfs version >/dev/null 2>&1; then
+  sudo apt-get update
+  sudo apt-get install -y git-lfs
+fi
+git lfs install --local
+time git lfs pull
+
 echo 'Preparing mise'
 if ! command -v mise >/dev/null 2>&1; then
   time curl -fsSL https://mise.run | sh

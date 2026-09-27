@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# This repository currently needs no authentication, services, or wake-time repair.
-# Tool installation belongs in setup so it can be reused from the orb snapshot.
+repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+
+echo 'Initializing and downloading Git LFS files'
+git lfs install --local
+git lfs pull
