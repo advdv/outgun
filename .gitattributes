@@ -1,2 +1,4 @@
 OutgunnedAdventure_Quickstart_ENG.pdf filter=lfs diff=lfs merge=lfs -text
 Outgunned-Riccardo-Rico-Sirignano-Simone-Formicola-z-library.sk-1lib.sk-z-lib.sk.pdf filter=lfs diff=lfs merge=lfs -text
+Outgunned_Adventure_ENG_1_1.pdf filter=lfs diff=lfs merge=lfs -text
+Outgunned[[:space:]]Adventure_Sheets_ENG/** filter=lfs diff=lfs merge=lfs -text
