@@ -1,0 +1,7 @@
+[settings]
+go.set_gobin = false
+minimum_release_age_excludes = ["amp"]
+
+[tools]
+amp = { version = "latest", allow_builds = ["@ampcode/cli"] }
+node = "lts"
