@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+export PATH="$HOME/.local/bin:$PATH"
+export MISE_YES=1
+TIMEFORMAT='Step completed in %3R seconds'
+
+echo 'Preparing mise'
+if ! command -v mise >/dev/null 2>&1; then
+  time curl -fsSL https://mise.run | sh
+fi
+
+echo 'Installing tools declared in mise.toml'
+mise trust "$repo_root/mise.toml"
+time mise install
+
+echo 'Configuring the repository environment for login shells'
+marker="# outgun orb mise environment"
+if ! grep -Fqx "$marker" "$HOME/.bash_profile" 2>/dev/null; then
+  cat >> "$HOME/.bash_profile" <<EOF
+
+$marker
+if [[ "\$PWD" == "$repo_root" || "\$PWD" == "$repo_root/"* ]]; then
+  eval "\$("$(command -v mise)" env --shell bash)"
+  # Keep the orb-managed Amp CLI ahead of the repository's mise installation.
+  export PATH="\$HOME/.amp/bin:\$PATH"
+fi
+EOF
+fi
+
+echo 'Orb setup ready'
