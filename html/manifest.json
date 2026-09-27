@@ -1,0 +1,3462 @@
+{
+  "sample_per_pdf": null,
+  "seed": 20260927,
+  "documents": [
+    {
+      "source": "outgunned-adventure-quickstart-rules-en.pdf",
+      "total_pages": 73,
+      "pages": [
+        {
+          "pdf_page": 1,
+          "native_characters": 236,
+          "markdown_characters": 343,
+          "seconds": 4.35
+        },
+        {
+          "pdf_page": 2,
+          "native_characters": 631,
+          "markdown_characters": 682,
+          "seconds": 0.61
+        },
+        {
+          "pdf_page": 3,
+          "native_characters": 371,
+          "markdown_characters": 373,
+          "seconds": 2.22
+        },
+        {
+          "pdf_page": 4,
+          "native_characters": 1486,
+          "markdown_characters": 1589,
+          "seconds": 0.83
+        },
+        {
+          "pdf_page": 5,
+          "native_characters": 1697,
+          "markdown_characters": 1783,
+          "seconds": 2.03
+        },
+        {
+          "pdf_page": 6,
+          "native_characters": 1885,
+          "markdown_characters": 2110,
+          "seconds": 0.87
+        },
+        {
+          "pdf_page": 7,
+          "native_characters": 367,
+          "markdown_characters": 428,
+          "seconds": 3.43
+        },
+        {
+          "pdf_page": 8,
+          "native_characters": 1109,
+          "markdown_characters": 1271,
+          "seconds": 2.06
+        },
+        {
+          "pdf_page": 9,
+          "native_characters": 1262,
+          "markdown_characters": 1442,
+          "seconds": 2.28
+        },
+        {
+          "pdf_page": 10,
+          "native_characters": 1051,
+          "markdown_characters": 1056,
+          "seconds": 0.64
+        },
+        {
+          "pdf_page": 11,
+          "native_characters": 1311,
+          "markdown_characters": 1380,
+          "seconds": 0.31
+        },
+        {
+          "pdf_page": 12,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.34
+        },
+        {
+          "pdf_page": 13,
+          "native_characters": 194,
+          "markdown_characters": 43,
+          "seconds": 2.18
+        },
+        {
+          "pdf_page": 14,
+          "native_characters": 1668,
+          "markdown_characters": 1785,
+          "seconds": 0.98
+        },
+        {
+          "pdf_page": 15,
+          "native_characters": 2151,
+          "markdown_characters": 2331,
+          "seconds": 3.45
+        },
+        {
+          "pdf_page": 16,
+          "native_characters": 1107,
+          "markdown_characters": 1260,
+          "seconds": 0.72
+        },
+        {
+          "pdf_page": 17,
+          "native_characters": 355,
+          "markdown_characters": 370,
+          "seconds": 3.33
+        },
+        {
+          "pdf_page": 18,
+          "native_characters": 1579,
+          "markdown_characters": 2002,
+          "seconds": 0.99
+        },
+        {
+          "pdf_page": 19,
+          "native_characters": 1454,
+          "markdown_characters": 1570,
+          "seconds": 1.24
+        },
+        {
+          "pdf_page": 20,
+          "native_characters": 1901,
+          "markdown_characters": 2059,
+          "seconds": 1.64
+        },
+        {
+          "pdf_page": 21,
+          "native_characters": 1847,
+          "markdown_characters": 1925,
+          "seconds": 2.59
+        },
+        {
+          "pdf_page": 22,
+          "native_characters": 1453,
+          "markdown_characters": 1494,
+          "seconds": 1.52
+        },
+        {
+          "pdf_page": 23,
+          "native_characters": 1815,
+          "markdown_characters": 1897,
+          "seconds": 1.28
+        },
+        {
+          "pdf_page": 24,
+          "native_characters": 206,
+          "markdown_characters": 119,
+          "seconds": 1.61
+        },
+        {
+          "pdf_page": 25,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.36
+        },
+        {
+          "pdf_page": 26,
+          "native_characters": 1720,
+          "markdown_characters": 1829,
+          "seconds": 1.2
+        },
+        {
+          "pdf_page": 27,
+          "native_characters": 1406,
+          "markdown_characters": 1490,
+          "seconds": 3.65
+        },
+        {
+          "pdf_page": 28,
+          "native_characters": 1276,
+          "markdown_characters": 1281,
+          "seconds": 1.65
+        },
+        {
+          "pdf_page": 29,
+          "native_characters": 707,
+          "markdown_characters": 634,
+          "seconds": 1.78
+        },
+        {
+          "pdf_page": 30,
+          "native_characters": 1408,
+          "markdown_characters": 1502,
+          "seconds": 0.98
+        },
+        {
+          "pdf_page": 31,
+          "native_characters": 422,
+          "markdown_characters": 407,
+          "seconds": 3.28
+        },
+        {
+          "pdf_page": 32,
+          "native_characters": 1645,
+          "markdown_characters": 1764,
+          "seconds": 0.71
+        },
+        {
+          "pdf_page": 33,
+          "native_characters": 460,
+          "markdown_characters": 477,
+          "seconds": 2.22
+        },
+        {
+          "pdf_page": 34,
+          "native_characters": 1322,
+          "markdown_characters": 1436,
+          "seconds": 0.86
+        },
+        {
+          "pdf_page": 35,
+          "native_characters": 507,
+          "markdown_characters": 501,
+          "seconds": 1.65
+        },
+        {
+          "pdf_page": 36,
+          "native_characters": 1313,
+          "markdown_characters": 1221,
+          "seconds": 2.35
+        },
+        {
+          "pdf_page": 37,
+          "native_characters": 1811,
+          "markdown_characters": 1837,
+          "seconds": 1.86
+        },
+        {
+          "pdf_page": 38,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.34
+        },
+        {
+          "pdf_page": 39,
+          "native_characters": 130,
+          "markdown_characters": 49,
+          "seconds": 1.63
+        },
+        {
+          "pdf_page": 40,
+          "native_characters": 983,
+          "markdown_characters": 911,
+          "seconds": 1.94
+        },
+        {
+          "pdf_page": 41,
+          "native_characters": 1061,
+          "markdown_characters": 1213,
+          "seconds": 1.97
+        },
+        {
+          "pdf_page": 42,
+          "native_characters": 1588,
+          "markdown_characters": 1707,
+          "seconds": 0.94
+        },
+        {
+          "pdf_page": 43,
+          "native_characters": 1794,
+          "markdown_characters": 1859,
+          "seconds": 0.94
+        },
+        {
+          "pdf_page": 44,
+          "native_characters": 1089,
+          "markdown_characters": 1189,
+          "seconds": 1.93
+        },
+        {
+          "pdf_page": 45,
+          "native_characters": 1876,
+          "markdown_characters": 1911,
+          "seconds": 1.97
+        },
+        {
+          "pdf_page": 46,
+          "native_characters": 1547,
+          "markdown_characters": 1733,
+          "seconds": 0.9
+        },
+        {
+          "pdf_page": 47,
+          "native_characters": 397,
+          "markdown_characters": 421,
+          "seconds": 3.32
+        },
+        {
+          "pdf_page": 48,
+          "native_characters": 869,
+          "markdown_characters": 830,
+          "seconds": 2.05
+        },
+        {
+          "pdf_page": 49,
+          "native_characters": 1843,
+          "markdown_characters": 1874,
+          "seconds": 0.91
+        },
+        {
+          "pdf_page": 50,
+          "native_characters": 395,
+          "markdown_characters": 497,
+          "seconds": 3.08
+        },
+        {
+          "pdf_page": 51,
+          "native_characters": 113,
+          "markdown_characters": 106,
+          "seconds": 2.31
+        },
+        {
+          "pdf_page": 52,
+          "native_characters": 1643,
+          "markdown_characters": 1853,
+          "seconds": 1.72
+        },
+        {
+          "pdf_page": 53,
+          "native_characters": 1680,
+          "markdown_characters": 1681,
+          "seconds": 1.95
+        },
+        {
+          "pdf_page": 54,
+          "native_characters": 549,
+          "markdown_characters": 800,
+          "seconds": 2.18
+        },
+        {
+          "pdf_page": 55,
+          "native_characters": 533,
+          "markdown_characters": 616,
+          "seconds": 2.6
+        },
+        {
+          "pdf_page": 56,
+          "native_characters": 2238,
+          "markdown_characters": 2351,
+          "seconds": 0.39
+        },
+        {
+          "pdf_page": 57,
+          "native_characters": 1280,
+          "markdown_characters": 1452,
+          "seconds": 0.53
+        },
+        {
+          "pdf_page": 58,
+          "native_characters": 2516,
+          "markdown_characters": 2607,
+          "seconds": 0.41
+        },
+        {
+          "pdf_page": 59,
+          "native_characters": 1832,
+          "markdown_characters": 1941,
+          "seconds": 0.38
+        },
+        {
+          "pdf_page": 60,
+          "native_characters": 2063,
+          "markdown_characters": 2152,
+          "seconds": 0.34
+        },
+        {
+          "pdf_page": 61,
+          "native_characters": 954,
+          "markdown_characters": 1043,
+          "seconds": 0.41
+        },
+        {
+          "pdf_page": 62,
+          "native_characters": 2031,
+          "markdown_characters": 2121,
+          "seconds": 5.53
+        },
+        {
+          "pdf_page": 63,
+          "native_characters": 1204,
+          "markdown_characters": 1319,
+          "seconds": 5.87
+        },
+        {
+          "pdf_page": 64,
+          "native_characters": 2037,
+          "markdown_characters": 2166,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 65,
+          "native_characters": 1470,
+          "markdown_characters": 1532,
+          "seconds": 0.45
+        },
+        {
+          "pdf_page": 66,
+          "native_characters": 2078,
+          "markdown_characters": 2248,
+          "seconds": 0.39
+        },
+        {
+          "pdf_page": 67,
+          "native_characters": 1571,
+          "markdown_characters": 1670,
+          "seconds": 0.5
+        },
+        {
+          "pdf_page": 68,
+          "native_characters": 1548,
+          "markdown_characters": 1763,
+          "seconds": 4.24
+        },
+        {
+          "pdf_page": 69,
+          "native_characters": 1508,
+          "markdown_characters": 1733,
+          "seconds": 4.32
+        },
+        {
+          "pdf_page": 70,
+          "native_characters": 1562,
+          "markdown_characters": 1801,
+          "seconds": 4.05
+        },
+        {
+          "pdf_page": 71,
+          "native_characters": 1482,
+          "markdown_characters": 1712,
+          "seconds": 4.09
+        },
+        {
+          "pdf_page": 72,
+          "native_characters": 61,
+          "markdown_characters": 213,
+          "seconds": 1.8
+        },
+        {
+          "pdf_page": 73,
+          "native_characters": 32,
+          "markdown_characters": 113,
+          "seconds": 1.52
+        }
+      ]
+    },
+    {
+      "source": "outgunned-adventure-sheets-en/outgunned-adventure-adventurer-sheet-blank-en.pdf",
+      "total_pages": 1,
+      "pages": [
+        {
+          "pdf_page": 1,
+          "native_characters": 862,
+          "markdown_characters": 1747,
+          "seconds": 4.09
+        }
+      ]
+    },
+    {
+      "source": "outgunned-adventure-sheets-en/outgunned-adventure-pregenerated-adventurer-alaska-everhart-en.pdf",
+      "total_pages": 1,
+      "pages": [
+        {
+          "pdf_page": 1,
+          "native_characters": 1400,
+          "markdown_characters": 2365,
+          "seconds": 5.19
+        }
+      ]
+    },
+    {
+      "source": "outgunned-adventure-sheets-en/outgunned-adventure-pregenerated-adventurer-jason-odonnell-en.pdf",
+      "total_pages": 1,
+      "pages": [
+        {
+          "pdf_page": 1,
+          "native_characters": 1390,
+          "markdown_characters": 2475,
+          "seconds": 5.29
+        }
+      ]
+    },
+    {
+      "source": "outgunned-adventure-sheets-en/outgunned-adventure-pregenerated-adventurer-raymond-suri-en.pdf",
+      "total_pages": 1,
+      "pages": [
+        {
+          "pdf_page": 1,
+          "native_characters": 1378,
+          "markdown_characters": 2287,
+          "seconds": 5.12
+        }
+      ]
+    },
+    {
+      "source": "outgunned-adventure-sheets-en/outgunned-adventure-pregenerated-adventurer-segong-ye-jun-en.pdf",
+      "total_pages": 1,
+      "pages": [
+        {
+          "pdf_page": 1,
+          "native_characters": 1527,
+          "markdown_characters": 2500,
+          "seconds": 12.68
+        }
+      ]
+    },
+    {
+      "source": "outgunned-adventure-sheets-en/outgunned-adventure-travel-journal-blank-en.pdf",
+      "total_pages": 1,
+      "pages": [
+        {
+          "pdf_page": 1,
+          "native_characters": 345,
+          "markdown_characters": 688,
+          "seconds": 8.52
+        }
+      ]
+    },
+    {
+      "source": "outgunned-adventure-standalone-genre-book-v1.1-en.pdf",
+      "total_pages": 262,
+      "pages": [
+        {
+          "pdf_page": 1,
+          "native_characters": 62,
+          "markdown_characters": 69,
+          "seconds": 0.3
+        },
+        {
+          "pdf_page": 2,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.62
+        },
+        {
+          "pdf_page": 3,
+          "native_characters": 37,
+          "markdown_characters": 33,
+          "seconds": 1.99
+        },
+        {
+          "pdf_page": 4,
+          "native_characters": 671,
+          "markdown_characters": 725,
+          "seconds": 0.66
+        },
+        {
+          "pdf_page": 5,
+          "native_characters": 94,
+          "markdown_characters": 188,
+          "seconds": 2.32
+        },
+        {
+          "pdf_page": 6,
+          "native_characters": 629,
+          "markdown_characters": 689,
+          "seconds": 3.31
+        },
+        {
+          "pdf_page": 7,
+          "native_characters": 729,
+          "markdown_characters": 737,
+          "seconds": 4.05
+        },
+        {
+          "pdf_page": 8,
+          "native_characters": 1490,
+          "markdown_characters": 1618,
+          "seconds": 1.22
+        },
+        {
+          "pdf_page": 9,
+          "native_characters": 1831,
+          "markdown_characters": 1915,
+          "seconds": 2.91
+        },
+        {
+          "pdf_page": 10,
+          "native_characters": 1948,
+          "markdown_characters": 2143,
+          "seconds": 1.13
+        },
+        {
+          "pdf_page": 11,
+          "native_characters": 1702,
+          "markdown_characters": 1762,
+          "seconds": 1.84
+        },
+        {
+          "pdf_page": 12,
+          "native_characters": 1160,
+          "markdown_characters": 1194,
+          "seconds": 3.33
+        },
+        {
+          "pdf_page": 13,
+          "native_characters": 2202,
+          "markdown_characters": 2184,
+          "seconds": 4.14
+        },
+        {
+          "pdf_page": 14,
+          "native_characters": 775,
+          "markdown_characters": 751,
+          "seconds": 2.7
+        },
+        {
+          "pdf_page": 15,
+          "native_characters": 1734,
+          "markdown_characters": 1783,
+          "seconds": 3.66
+        },
+        {
+          "pdf_page": 16,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.41
+        },
+        {
+          "pdf_page": 17,
+          "native_characters": 236,
+          "markdown_characters": 53,
+          "seconds": 1.85
+        },
+        {
+          "pdf_page": 18,
+          "native_characters": 1990,
+          "markdown_characters": 2037,
+          "seconds": 1.2
+        },
+        {
+          "pdf_page": 19,
+          "native_characters": 1568,
+          "markdown_characters": 1755,
+          "seconds": 4.93
+        },
+        {
+          "pdf_page": 20,
+          "native_characters": 1697,
+          "markdown_characters": 1834,
+          "seconds": 2.87
+        },
+        {
+          "pdf_page": 21,
+          "native_characters": 1920,
+          "markdown_characters": 1960,
+          "seconds": 1.58
+        },
+        {
+          "pdf_page": 22,
+          "native_characters": 1726,
+          "markdown_characters": 1903,
+          "seconds": 1.42
+        },
+        {
+          "pdf_page": 23,
+          "native_characters": 1381,
+          "markdown_characters": 1393,
+          "seconds": 3.92
+        },
+        {
+          "pdf_page": 24,
+          "native_characters": 1068,
+          "markdown_characters": 1207,
+          "seconds": 1.19
+        },
+        {
+          "pdf_page": 25,
+          "native_characters": 410,
+          "markdown_characters": 387,
+          "seconds": 5.8
+        },
+        {
+          "pdf_page": 26,
+          "native_characters": 1234,
+          "markdown_characters": 1388,
+          "seconds": 1.12
+        },
+        {
+          "pdf_page": 27,
+          "native_characters": 252,
+          "markdown_characters": 263,
+          "seconds": 3.29
+        },
+        {
+          "pdf_page": 28,
+          "native_characters": 1143,
+          "markdown_characters": 1286,
+          "seconds": 1.11
+        },
+        {
+          "pdf_page": 29,
+          "native_characters": 245,
+          "markdown_characters": 254,
+          "seconds": 3.37
+        },
+        {
+          "pdf_page": 30,
+          "native_characters": 1053,
+          "markdown_characters": 1245,
+          "seconds": 1.32
+        },
+        {
+          "pdf_page": 31,
+          "native_characters": 391,
+          "markdown_characters": 445,
+          "seconds": 6.26
+        },
+        {
+          "pdf_page": 32,
+          "native_characters": 1193,
+          "markdown_characters": 1338,
+          "seconds": 1.2
+        },
+        {
+          "pdf_page": 33,
+          "native_characters": 355,
+          "markdown_characters": 414,
+          "seconds": 5.45
+        },
+        {
+          "pdf_page": 34,
+          "native_characters": 1187,
+          "markdown_characters": 1330,
+          "seconds": 1.17
+        },
+        {
+          "pdf_page": 35,
+          "native_characters": 355,
+          "markdown_characters": 346,
+          "seconds": 5.93
+        },
+        {
+          "pdf_page": 36,
+          "native_characters": 1132,
+          "markdown_characters": 1270,
+          "seconds": 1.19
+        },
+        {
+          "pdf_page": 37,
+          "native_characters": 377,
+          "markdown_characters": 428,
+          "seconds": 5.51
+        },
+        {
+          "pdf_page": 38,
+          "native_characters": 1106,
+          "markdown_characters": 1249,
+          "seconds": 1.16
+        },
+        {
+          "pdf_page": 39,
+          "native_characters": 265,
+          "markdown_characters": 272,
+          "seconds": 3.4
+        },
+        {
+          "pdf_page": 40,
+          "native_characters": 1139,
+          "markdown_characters": 1278,
+          "seconds": 1.03
+        },
+        {
+          "pdf_page": 41,
+          "native_characters": 227,
+          "markdown_characters": 242,
+          "seconds": 3.16
+        },
+        {
+          "pdf_page": 42,
+          "native_characters": 1190,
+          "markdown_characters": 1335,
+          "seconds": 1.2
+        },
+        {
+          "pdf_page": 43,
+          "native_characters": 262,
+          "markdown_characters": 323,
+          "seconds": 5.25
+        },
+        {
+          "pdf_page": 44,
+          "native_characters": 1144,
+          "markdown_characters": 1235,
+          "seconds": 2.28
+        },
+        {
+          "pdf_page": 45,
+          "native_characters": 382,
+          "markdown_characters": 424,
+          "seconds": 4.85
+        },
+        {
+          "pdf_page": 46,
+          "native_characters": 1967,
+          "markdown_characters": 2131,
+          "seconds": 3.05
+        },
+        {
+          "pdf_page": 47,
+          "native_characters": 1475,
+          "markdown_characters": 1526,
+          "seconds": 3.41
+        },
+        {
+          "pdf_page": 48,
+          "native_characters": 1550,
+          "markdown_characters": 1886,
+          "seconds": 1.36
+        },
+        {
+          "pdf_page": 49,
+          "native_characters": 1370,
+          "markdown_characters": 1605,
+          "seconds": 1.61
+        },
+        {
+          "pdf_page": 50,
+          "native_characters": 1534,
+          "markdown_characters": 1639,
+          "seconds": 1.36
+        },
+        {
+          "pdf_page": 51,
+          "native_characters": 1486,
+          "markdown_characters": 1740,
+          "seconds": 1.6
+        },
+        {
+          "pdf_page": 52,
+          "native_characters": 1277,
+          "markdown_characters": 1240,
+          "seconds": 2.96
+        },
+        {
+          "pdf_page": 53,
+          "native_characters": 1809,
+          "markdown_characters": 1888,
+          "seconds": 1.44
+        },
+        {
+          "pdf_page": 54,
+          "native_characters": 1717,
+          "markdown_characters": 2053,
+          "seconds": 3.27
+        },
+        {
+          "pdf_page": 55,
+          "native_characters": 1499,
+          "markdown_characters": 1582,
+          "seconds": 1.47
+        },
+        {
+          "pdf_page": 56,
+          "native_characters": 573,
+          "markdown_characters": 507,
+          "seconds": 2.68
+        },
+        {
+          "pdf_page": 57,
+          "native_characters": 1365,
+          "markdown_characters": 1470,
+          "seconds": 1.36
+        },
+        {
+          "pdf_page": 58,
+          "native_characters": 1470,
+          "markdown_characters": 1619,
+          "seconds": 1.04
+        },
+        {
+          "pdf_page": 59,
+          "native_characters": 1831,
+          "markdown_characters": 1876,
+          "seconds": 3.49
+        },
+        {
+          "pdf_page": 60,
+          "native_characters": 1565,
+          "markdown_characters": 1725,
+          "seconds": 1.14
+        },
+        {
+          "pdf_page": 61,
+          "native_characters": 1425,
+          "markdown_characters": 1516,
+          "seconds": 1.51
+        },
+        {
+          "pdf_page": 62,
+          "native_characters": 1785,
+          "markdown_characters": 2050,
+          "seconds": 2.51
+        },
+        {
+          "pdf_page": 63,
+          "native_characters": 1569,
+          "markdown_characters": 1574,
+          "seconds": 3.25
+        },
+        {
+          "pdf_page": 64,
+          "native_characters": 584,
+          "markdown_characters": 64,
+          "seconds": 3.74
+        },
+        {
+          "pdf_page": 65,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.42
+        },
+        {
+          "pdf_page": 66,
+          "native_characters": 1772,
+          "markdown_characters": 1883,
+          "seconds": 2.03
+        },
+        {
+          "pdf_page": 67,
+          "native_characters": 1831,
+          "markdown_characters": 1847,
+          "seconds": 3.92
+        },
+        {
+          "pdf_page": 68,
+          "native_characters": 942,
+          "markdown_characters": 911,
+          "seconds": 3.43
+        },
+        {
+          "pdf_page": 69,
+          "native_characters": 666,
+          "markdown_characters": 784,
+          "seconds": 4.22
+        },
+        {
+          "pdf_page": 70,
+          "native_characters": 1774,
+          "markdown_characters": 1782,
+          "seconds": 1.41
+        },
+        {
+          "pdf_page": 71,
+          "native_characters": 2237,
+          "markdown_characters": 2240,
+          "seconds": 2.04
+        },
+        {
+          "pdf_page": 72,
+          "native_characters": 1553,
+          "markdown_characters": 1725,
+          "seconds": 1.83
+        },
+        {
+          "pdf_page": 73,
+          "native_characters": 783,
+          "markdown_characters": 1000,
+          "seconds": 7.1
+        },
+        {
+          "pdf_page": 74,
+          "native_characters": 1672,
+          "markdown_characters": 1742,
+          "seconds": 1.7
+        },
+        {
+          "pdf_page": 75,
+          "native_characters": 1490,
+          "markdown_characters": 1507,
+          "seconds": 3.73
+        },
+        {
+          "pdf_page": 76,
+          "native_characters": 1281,
+          "markdown_characters": 1328,
+          "seconds": 0.6
+        },
+        {
+          "pdf_page": 77,
+          "native_characters": 1125,
+          "markdown_characters": 1079,
+          "seconds": 3.2
+        },
+        {
+          "pdf_page": 78,
+          "native_characters": 713,
+          "markdown_characters": 732,
+          "seconds": 1.86
+        },
+        {
+          "pdf_page": 79,
+          "native_characters": 1610,
+          "markdown_characters": 1631,
+          "seconds": 2.51
+        },
+        {
+          "pdf_page": 80,
+          "native_characters": 1248,
+          "markdown_characters": 1287,
+          "seconds": 3.42
+        },
+        {
+          "pdf_page": 81,
+          "native_characters": 2130,
+          "markdown_characters": 2187,
+          "seconds": 2.9
+        },
+        {
+          "pdf_page": 82,
+          "native_characters": 1654,
+          "markdown_characters": 1768,
+          "seconds": 1.85
+        },
+        {
+          "pdf_page": 83,
+          "native_characters": 1882,
+          "markdown_characters": 1949,
+          "seconds": 2.52
+        },
+        {
+          "pdf_page": 84,
+          "native_characters": 2022,
+          "markdown_characters": 2212,
+          "seconds": 1.64
+        },
+        {
+          "pdf_page": 85,
+          "native_characters": 1743,
+          "markdown_characters": 1780,
+          "seconds": 3.8
+        },
+        {
+          "pdf_page": 86,
+          "native_characters": 239,
+          "markdown_characters": 51,
+          "seconds": 1.79
+        },
+        {
+          "pdf_page": 87,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.37
+        },
+        {
+          "pdf_page": 88,
+          "native_characters": 1052,
+          "markdown_characters": 928,
+          "seconds": 2.63
+        },
+        {
+          "pdf_page": 89,
+          "native_characters": 1229,
+          "markdown_characters": 1225,
+          "seconds": 3.06
+        },
+        {
+          "pdf_page": 90,
+          "native_characters": 1777,
+          "markdown_characters": 1891,
+          "seconds": 1.39
+        },
+        {
+          "pdf_page": 91,
+          "native_characters": 1820,
+          "markdown_characters": 1890,
+          "seconds": 1.47
+        },
+        {
+          "pdf_page": 92,
+          "native_characters": 864,
+          "markdown_characters": 876,
+          "seconds": 3.5
+        },
+        {
+          "pdf_page": 93,
+          "native_characters": 1520,
+          "markdown_characters": 1563,
+          "seconds": 0.66
+        },
+        {
+          "pdf_page": 94,
+          "native_characters": 1787,
+          "markdown_characters": 1956,
+          "seconds": 1.23
+        },
+        {
+          "pdf_page": 95,
+          "native_characters": 154,
+          "markdown_characters": 99,
+          "seconds": 3.66
+        },
+        {
+          "pdf_page": 96,
+          "native_characters": 1050,
+          "markdown_characters": 1026,
+          "seconds": 2.92
+        },
+        {
+          "pdf_page": 97,
+          "native_characters": 1654,
+          "markdown_characters": 1691,
+          "seconds": 1.41
+        },
+        {
+          "pdf_page": 98,
+          "native_characters": 1865,
+          "markdown_characters": 2011,
+          "seconds": 1.58
+        },
+        {
+          "pdf_page": 99,
+          "native_characters": 1650,
+          "markdown_characters": 1707,
+          "seconds": 2.65
+        },
+        {
+          "pdf_page": 100,
+          "native_characters": 1865,
+          "markdown_characters": 2058,
+          "seconds": 2.46
+        },
+        {
+          "pdf_page": 101,
+          "native_characters": 1885,
+          "markdown_characters": 1967,
+          "seconds": 1.42
+        },
+        {
+          "pdf_page": 102,
+          "native_characters": 1907,
+          "markdown_characters": 2032,
+          "seconds": 2.5
+        },
+        {
+          "pdf_page": 103,
+          "native_characters": 1708,
+          "markdown_characters": 1764,
+          "seconds": 2.75
+        },
+        {
+          "pdf_page": 104,
+          "native_characters": 1801,
+          "markdown_characters": 1963,
+          "seconds": 1.06
+        },
+        {
+          "pdf_page": 105,
+          "native_characters": 1980,
+          "markdown_characters": 2006,
+          "seconds": 1.35
+        },
+        {
+          "pdf_page": 106,
+          "native_characters": 1293,
+          "markdown_characters": 1270,
+          "seconds": 2.5
+        },
+        {
+          "pdf_page": 107,
+          "native_characters": 1081,
+          "markdown_characters": 1110,
+          "seconds": 3.39
+        },
+        {
+          "pdf_page": 108,
+          "native_characters": 2085,
+          "markdown_characters": 2182,
+          "seconds": 1.1
+        },
+        {
+          "pdf_page": 109,
+          "native_characters": 1967,
+          "markdown_characters": 1974,
+          "seconds": 3.54
+        },
+        {
+          "pdf_page": 110,
+          "native_characters": 1833,
+          "markdown_characters": 1944,
+          "seconds": 3.03
+        },
+        {
+          "pdf_page": 111,
+          "native_characters": 580,
+          "markdown_characters": 509,
+          "seconds": 2.97
+        },
+        {
+          "pdf_page": 112,
+          "native_characters": 1787,
+          "markdown_characters": 1889,
+          "seconds": 2.55
+        },
+        {
+          "pdf_page": 113,
+          "native_characters": 1703,
+          "markdown_characters": 1786,
+          "seconds": 1.65
+        },
+        {
+          "pdf_page": 114,
+          "native_characters": 1572,
+          "markdown_characters": 1657,
+          "seconds": 1.54
+        },
+        {
+          "pdf_page": 115,
+          "native_characters": 1782,
+          "markdown_characters": 1824,
+          "seconds": 1.62
+        },
+        {
+          "pdf_page": 116,
+          "native_characters": 1375,
+          "markdown_characters": 1479,
+          "seconds": 0.31
+        },
+        {
+          "pdf_page": 117,
+          "native_characters": 1275,
+          "markdown_characters": 1337,
+          "seconds": 0.28
+        },
+        {
+          "pdf_page": 118,
+          "native_characters": 1672,
+          "markdown_characters": 1832,
+          "seconds": 1.05
+        },
+        {
+          "pdf_page": 119,
+          "native_characters": 1990,
+          "markdown_characters": 2016,
+          "seconds": 1.44
+        },
+        {
+          "pdf_page": 120,
+          "native_characters": 1165,
+          "markdown_characters": 1155,
+          "seconds": 2.51
+        },
+        {
+          "pdf_page": 121,
+          "native_characters": 1709,
+          "markdown_characters": 1739,
+          "seconds": 1.4
+        },
+        {
+          "pdf_page": 122,
+          "native_characters": 1623,
+          "markdown_characters": 1727,
+          "seconds": 1.01
+        },
+        {
+          "pdf_page": 123,
+          "native_characters": 1841,
+          "markdown_characters": 1873,
+          "seconds": 1.37
+        },
+        {
+          "pdf_page": 124,
+          "native_characters": 1900,
+          "markdown_characters": 2054,
+          "seconds": 1.04
+        },
+        {
+          "pdf_page": 125,
+          "native_characters": 1981,
+          "markdown_characters": 1988,
+          "seconds": 1.47
+        },
+        {
+          "pdf_page": 126,
+          "native_characters": 1434,
+          "markdown_characters": 1526,
+          "seconds": 1.13
+        },
+        {
+          "pdf_page": 127,
+          "native_characters": 1557,
+          "markdown_characters": 1547,
+          "seconds": 1.44
+        },
+        {
+          "pdf_page": 128,
+          "native_characters": 149,
+          "markdown_characters": 68,
+          "seconds": 1.96
+        },
+        {
+          "pdf_page": 129,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.39
+        },
+        {
+          "pdf_page": 130,
+          "native_characters": 2108,
+          "markdown_characters": 2203,
+          "seconds": 1.61
+        },
+        {
+          "pdf_page": 131,
+          "native_characters": 1687,
+          "markdown_characters": 1688,
+          "seconds": 4.11
+        },
+        {
+          "pdf_page": 132,
+          "native_characters": 1313,
+          "markdown_characters": 1366,
+          "seconds": 3.45
+        },
+        {
+          "pdf_page": 133,
+          "native_characters": 1809,
+          "markdown_characters": 1860,
+          "seconds": 2.22
+        },
+        {
+          "pdf_page": 134,
+          "native_characters": 913,
+          "markdown_characters": 1164,
+          "seconds": 2.4
+        },
+        {
+          "pdf_page": 135,
+          "native_characters": 1009,
+          "markdown_characters": 1465,
+          "seconds": 2.24
+        },
+        {
+          "pdf_page": 136,
+          "native_characters": 1426,
+          "markdown_characters": 1483,
+          "seconds": 1.13
+        },
+        {
+          "pdf_page": 137,
+          "native_characters": 1291,
+          "markdown_characters": 1319,
+          "seconds": 3.85
+        },
+        {
+          "pdf_page": 138,
+          "native_characters": 1932,
+          "markdown_characters": 2085,
+          "seconds": 1.6
+        },
+        {
+          "pdf_page": 139,
+          "native_characters": 1232,
+          "markdown_characters": 1242,
+          "seconds": 2.08
+        },
+        {
+          "pdf_page": 140,
+          "native_characters": 2080,
+          "markdown_characters": 2263,
+          "seconds": 1.62
+        },
+        {
+          "pdf_page": 141,
+          "native_characters": 771,
+          "markdown_characters": 743,
+          "seconds": 4.72
+        },
+        {
+          "pdf_page": 142,
+          "native_characters": 811,
+          "markdown_characters": 805,
+          "seconds": 0.82
+        },
+        {
+          "pdf_page": 143,
+          "native_characters": 724,
+          "markdown_characters": 757,
+          "seconds": 1.21
+        },
+        {
+          "pdf_page": 144,
+          "native_characters": 2061,
+          "markdown_characters": 2207,
+          "seconds": 1.51
+        },
+        {
+          "pdf_page": 145,
+          "native_characters": 1663,
+          "markdown_characters": 1648,
+          "seconds": 3.83
+        },
+        {
+          "pdf_page": 146,
+          "native_characters": 362,
+          "markdown_characters": 132,
+          "seconds": 2.6
+        },
+        {
+          "pdf_page": 147,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.4
+        },
+        {
+          "pdf_page": 148,
+          "native_characters": 1521,
+          "markdown_characters": 1500,
+          "seconds": 1.19
+        },
+        {
+          "pdf_page": 149,
+          "native_characters": 1936,
+          "markdown_characters": 1966,
+          "seconds": 3.12
+        },
+        {
+          "pdf_page": 150,
+          "native_characters": 2028,
+          "markdown_characters": 2101,
+          "seconds": 2.65
+        },
+        {
+          "pdf_page": 151,
+          "native_characters": 734,
+          "markdown_characters": 717,
+          "seconds": 4.2
+        },
+        {
+          "pdf_page": 152,
+          "native_characters": 1908,
+          "markdown_characters": 2003,
+          "seconds": 2.48
+        },
+        {
+          "pdf_page": 153,
+          "native_characters": 1675,
+          "markdown_characters": 1697,
+          "seconds": 2.94
+        },
+        {
+          "pdf_page": 154,
+          "native_characters": 1067,
+          "markdown_characters": 1129,
+          "seconds": 0.32
+        },
+        {
+          "pdf_page": 155,
+          "native_characters": 604,
+          "markdown_characters": 486,
+          "seconds": 3.29
+        },
+        {
+          "pdf_page": 156,
+          "native_characters": 670,
+          "markdown_characters": 556,
+          "seconds": 3.15
+        },
+        {
+          "pdf_page": 157,
+          "native_characters": 823,
+          "markdown_characters": 841,
+          "seconds": 0.27
+        },
+        {
+          "pdf_page": 158,
+          "native_characters": 856,
+          "markdown_characters": 891,
+          "seconds": 0.58
+        },
+        {
+          "pdf_page": 159,
+          "native_characters": 1025,
+          "markdown_characters": 1108,
+          "seconds": 0.27
+        },
+        {
+          "pdf_page": 160,
+          "native_characters": 1331,
+          "markdown_characters": 1386,
+          "seconds": 0.25
+        },
+        {
+          "pdf_page": 161,
+          "native_characters": 667,
+          "markdown_characters": 698,
+          "seconds": 0.62
+        },
+        {
+          "pdf_page": 162,
+          "native_characters": 1329,
+          "markdown_characters": 1421,
+          "seconds": 0.26
+        },
+        {
+          "pdf_page": 163,
+          "native_characters": 1143,
+          "markdown_characters": 1268,
+          "seconds": 0.6
+        },
+        {
+          "pdf_page": 164,
+          "native_characters": 1167,
+          "markdown_characters": 1285,
+          "seconds": 0.62
+        },
+        {
+          "pdf_page": 165,
+          "native_characters": 1310,
+          "markdown_characters": 1451,
+          "seconds": 0.64
+        },
+        {
+          "pdf_page": 166,
+          "native_characters": 970,
+          "markdown_characters": 975,
+          "seconds": 2.47
+        },
+        {
+          "pdf_page": 167,
+          "native_characters": 1628,
+          "markdown_characters": 1669,
+          "seconds": 1.81
+        },
+        {
+          "pdf_page": 168,
+          "native_characters": 1816,
+          "markdown_characters": 1972,
+          "seconds": 2.69
+        },
+        {
+          "pdf_page": 169,
+          "native_characters": 2068,
+          "markdown_characters": 2078,
+          "seconds": 3.75
+        },
+        {
+          "pdf_page": 170,
+          "native_characters": 1738,
+          "markdown_characters": 1765,
+          "seconds": 1.32
+        },
+        {
+          "pdf_page": 171,
+          "native_characters": 1407,
+          "markdown_characters": 1476,
+          "seconds": 2.62
+        },
+        {
+          "pdf_page": 172,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.37
+        },
+        {
+          "pdf_page": 173,
+          "native_characters": 70,
+          "markdown_characters": 52,
+          "seconds": 0.48
+        },
+        {
+          "pdf_page": 174,
+          "native_characters": 2090,
+          "markdown_characters": 2166,
+          "seconds": 1.39
+        },
+        {
+          "pdf_page": 175,
+          "native_characters": 1963,
+          "markdown_characters": 1968,
+          "seconds": 3.99
+        },
+        {
+          "pdf_page": 176,
+          "native_characters": 1626,
+          "markdown_characters": 1809,
+          "seconds": 1.92
+        },
+        {
+          "pdf_page": 177,
+          "native_characters": 1445,
+          "markdown_characters": 1488,
+          "seconds": 2.26
+        },
+        {
+          "pdf_page": 178,
+          "native_characters": 1694,
+          "markdown_characters": 1845,
+          "seconds": 1.87
+        },
+        {
+          "pdf_page": 179,
+          "native_characters": 1540,
+          "markdown_characters": 1619,
+          "seconds": 2.51
+        },
+        {
+          "pdf_page": 180,
+          "native_characters": 1439,
+          "markdown_characters": 1571,
+          "seconds": 1.86
+        },
+        {
+          "pdf_page": 181,
+          "native_characters": 1427,
+          "markdown_characters": 1495,
+          "seconds": 2.17
+        },
+        {
+          "pdf_page": 182,
+          "native_characters": 745,
+          "markdown_characters": 661,
+          "seconds": 3.61
+        },
+        {
+          "pdf_page": 183,
+          "native_characters": 1296,
+          "markdown_characters": 1279,
+          "seconds": 3.32
+        },
+        {
+          "pdf_page": 184,
+          "native_characters": 625,
+          "markdown_characters": 687,
+          "seconds": 4.5
+        },
+        {
+          "pdf_page": 185,
+          "native_characters": 657,
+          "markdown_characters": 684,
+          "seconds": 3.66
+        },
+        {
+          "pdf_page": 186,
+          "native_characters": 489,
+          "markdown_characters": 545,
+          "seconds": 3.18
+        },
+        {
+          "pdf_page": 187,
+          "native_characters": 670,
+          "markdown_characters": 770,
+          "seconds": 2.87
+        },
+        {
+          "pdf_page": 188,
+          "native_characters": 638,
+          "markdown_characters": 689,
+          "seconds": 3.84
+        },
+        {
+          "pdf_page": 189,
+          "native_characters": 694,
+          "markdown_characters": 766,
+          "seconds": 2.83
+        },
+        {
+          "pdf_page": 190,
+          "native_characters": 643,
+          "markdown_characters": 697,
+          "seconds": 3.31
+        },
+        {
+          "pdf_page": 191,
+          "native_characters": 729,
+          "markdown_characters": 789,
+          "seconds": 2.9
+        },
+        {
+          "pdf_page": 192,
+          "native_characters": 1923,
+          "markdown_characters": 2022,
+          "seconds": 3.31
+        },
+        {
+          "pdf_page": 193,
+          "native_characters": 1461,
+          "markdown_characters": 1480,
+          "seconds": 2.71
+        },
+        {
+          "pdf_page": 194,
+          "native_characters": 188,
+          "markdown_characters": 275,
+          "seconds": 2.37
+        },
+        {
+          "pdf_page": 195,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.27
+        },
+        {
+          "pdf_page": 196,
+          "native_characters": 1883,
+          "markdown_characters": 1962,
+          "seconds": 1.12
+        },
+        {
+          "pdf_page": 197,
+          "native_characters": 1636,
+          "markdown_characters": 1625,
+          "seconds": 3.78
+        },
+        {
+          "pdf_page": 198,
+          "native_characters": 1844,
+          "markdown_characters": 1949,
+          "seconds": 1.47
+        },
+        {
+          "pdf_page": 199,
+          "native_characters": 2032,
+          "markdown_characters": 2074,
+          "seconds": 1.44
+        },
+        {
+          "pdf_page": 200,
+          "native_characters": 735,
+          "markdown_characters": 706,
+          "seconds": 2.65
+        },
+        {
+          "pdf_page": 201,
+          "native_characters": 2128,
+          "markdown_characters": 2135,
+          "seconds": 1.73
+        },
+        {
+          "pdf_page": 202,
+          "native_characters": 1757,
+          "markdown_characters": 1856,
+          "seconds": 2.57
+        },
+        {
+          "pdf_page": 203,
+          "native_characters": 1903,
+          "markdown_characters": 1882,
+          "seconds": 3.79
+        },
+        {
+          "pdf_page": 204,
+          "native_characters": 1980,
+          "markdown_characters": 1951,
+          "seconds": 1.36
+        },
+        {
+          "pdf_page": 205,
+          "native_characters": 1391,
+          "markdown_characters": 1538,
+          "seconds": 1.71
+        },
+        {
+          "pdf_page": 206,
+          "native_characters": 1377,
+          "markdown_characters": 1331,
+          "seconds": 2.51
+        },
+        {
+          "pdf_page": 207,
+          "native_characters": 1628,
+          "markdown_characters": 1672,
+          "seconds": 2.71
+        },
+        {
+          "pdf_page": 208,
+          "native_characters": 1911,
+          "markdown_characters": 1894,
+          "seconds": 1.37
+        },
+        {
+          "pdf_page": 209,
+          "native_characters": 1872,
+          "markdown_characters": 1908,
+          "seconds": 1.31
+        },
+        {
+          "pdf_page": 210,
+          "native_characters": 1385,
+          "markdown_characters": 1417,
+          "seconds": 1.31
+        },
+        {
+          "pdf_page": 211,
+          "native_characters": 955,
+          "markdown_characters": 946,
+          "seconds": 0.88
+        },
+        {
+          "pdf_page": 212,
+          "native_characters": 1002,
+          "markdown_characters": 1034,
+          "seconds": 0.57
+        },
+        {
+          "pdf_page": 213,
+          "native_characters": 933,
+          "markdown_characters": 956,
+          "seconds": 0.74
+        },
+        {
+          "pdf_page": 214,
+          "native_characters": 776,
+          "markdown_characters": 800,
+          "seconds": 2.44
+        },
+        {
+          "pdf_page": 215,
+          "native_characters": 1910,
+          "markdown_characters": 1950,
+          "seconds": 1.5
+        },
+        {
+          "pdf_page": 216,
+          "native_characters": 1913,
+          "markdown_characters": 2020,
+          "seconds": 1.14
+        },
+        {
+          "pdf_page": 217,
+          "native_characters": 1803,
+          "markdown_characters": 1788,
+          "seconds": 3.66
+        },
+        {
+          "pdf_page": 218,
+          "native_characters": 2008,
+          "markdown_characters": 2015,
+          "seconds": 1.32
+        },
+        {
+          "pdf_page": 219,
+          "native_characters": 1404,
+          "markdown_characters": 1561,
+          "seconds": 1.69
+        },
+        {
+          "pdf_page": 220,
+          "native_characters": 1289,
+          "markdown_characters": 1350,
+          "seconds": 2.7
+        },
+        {
+          "pdf_page": 221,
+          "native_characters": 723,
+          "markdown_characters": 814,
+          "seconds": 3.1
+        },
+        {
+          "pdf_page": 222,
+          "native_characters": 1177,
+          "markdown_characters": 1139,
+          "seconds": 2.72
+        },
+        {
+          "pdf_page": 223,
+          "native_characters": 1894,
+          "markdown_characters": 1937,
+          "seconds": 1.37
+        },
+        {
+          "pdf_page": 224,
+          "native_characters": 1805,
+          "markdown_characters": 1916,
+          "seconds": 1.13
+        },
+        {
+          "pdf_page": 225,
+          "native_characters": 1689,
+          "markdown_characters": 1696,
+          "seconds": 3.73
+        },
+        {
+          "pdf_page": 226,
+          "native_characters": 1397,
+          "markdown_characters": 1411,
+          "seconds": 2.32
+        },
+        {
+          "pdf_page": 227,
+          "native_characters": 1576,
+          "markdown_characters": 1462,
+          "seconds": 3.12
+        },
+        {
+          "pdf_page": 228,
+          "native_characters": 1686,
+          "markdown_characters": 1822,
+          "seconds": 2.68
+        },
+        {
+          "pdf_page": 229,
+          "native_characters": 1849,
+          "markdown_characters": 1889,
+          "seconds": 1.43
+        },
+        {
+          "pdf_page": 230,
+          "native_characters": 808,
+          "markdown_characters": 859,
+          "seconds": 2.38
+        },
+        {
+          "pdf_page": 231,
+          "native_characters": 1963,
+          "markdown_characters": 1955,
+          "seconds": 3.24
+        },
+        {
+          "pdf_page": 232,
+          "native_characters": 1523,
+          "markdown_characters": 1703,
+          "seconds": 2.48
+        },
+        {
+          "pdf_page": 233,
+          "native_characters": 1924,
+          "markdown_characters": 1959,
+          "seconds": 1.37
+        },
+        {
+          "pdf_page": 234,
+          "native_characters": 1252,
+          "markdown_characters": 1362,
+          "seconds": 1.31
+        },
+        {
+          "pdf_page": 235,
+          "native_characters": 1851,
+          "markdown_characters": 1912,
+          "seconds": 1.38
+        },
+        {
+          "pdf_page": 236,
+          "native_characters": 141,
+          "markdown_characters": 235,
+          "seconds": 2.71
+        },
+        {
+          "pdf_page": 237,
+          "native_characters": 85,
+          "markdown_characters": 93,
+          "seconds": 2.6
+        },
+        {
+          "pdf_page": 238,
+          "native_characters": 1723,
+          "markdown_characters": 1994,
+          "seconds": 2.09
+        },
+        {
+          "pdf_page": 239,
+          "native_characters": 1463,
+          "markdown_characters": 1474,
+          "seconds": 3.5
+        },
+        {
+          "pdf_page": 240,
+          "native_characters": 532,
+          "markdown_characters": 661,
+          "seconds": 2.21
+        },
+        {
+          "pdf_page": 241,
+          "native_characters": 529,
+          "markdown_characters": 610,
+          "seconds": 3.34
+        },
+        {
+          "pdf_page": 242,
+          "native_characters": 2142,
+          "markdown_characters": 2259,
+          "seconds": 0.33
+        },
+        {
+          "pdf_page": 243,
+          "native_characters": 1217,
+          "markdown_characters": 1337,
+          "seconds": 0.45
+        },
+        {
+          "pdf_page": 244,
+          "native_characters": 2472,
+          "markdown_characters": 2573,
+          "seconds": 0.31
+        },
+        {
+          "pdf_page": 245,
+          "native_characters": 1830,
+          "markdown_characters": 1955,
+          "seconds": 0.32
+        },
+        {
+          "pdf_page": 246,
+          "native_characters": 2003,
+          "markdown_characters": 2096,
+          "seconds": 0.28
+        },
+        {
+          "pdf_page": 247,
+          "native_characters": 941,
+          "markdown_characters": 979,
+          "seconds": 0.82
+        },
+        {
+          "pdf_page": 248,
+          "native_characters": 2004,
+          "markdown_characters": 2096,
+          "seconds": 2.52
+        },
+        {
+          "pdf_page": 249,
+          "native_characters": 1206,
+          "markdown_characters": 1254,
+          "seconds": 3.57
+        },
+        {
+          "pdf_page": 250,
+          "native_characters": 1996,
+          "markdown_characters": 2098,
+          "seconds": 0.29
+        },
+        {
+          "pdf_page": 251,
+          "native_characters": 1411,
+          "markdown_characters": 1475,
+          "seconds": 0.28
+        },
+        {
+          "pdf_page": 252,
+          "native_characters": 2095,
+          "markdown_characters": 2270,
+          "seconds": 0.31
+        },
+        {
+          "pdf_page": 253,
+          "native_characters": 1638,
+          "markdown_characters": 1729,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 254,
+          "native_characters": 1388,
+          "markdown_characters": 1615,
+          "seconds": 3.2
+        },
+        {
+          "pdf_page": 255,
+          "native_characters": 1458,
+          "markdown_characters": 1667,
+          "seconds": 3.14
+        },
+        {
+          "pdf_page": 256,
+          "native_characters": 1542,
+          "markdown_characters": 1754,
+          "seconds": 3.85
+        },
+        {
+          "pdf_page": 257,
+          "native_characters": 1362,
+          "markdown_characters": 1575,
+          "seconds": 3.25
+        },
+        {
+          "pdf_page": 258,
+          "native_characters": 675,
+          "markdown_characters": 803,
+          "seconds": 2.11
+        },
+        {
+          "pdf_page": 259,
+          "native_characters": 313,
+          "markdown_characters": 12,
+          "seconds": 2.62
+        },
+        {
+          "pdf_page": 260,
+          "native_characters": 3890,
+          "markdown_characters": 4520,
+          "seconds": 0.45
+        },
+        {
+          "pdf_page": 261,
+          "native_characters": 1848,
+          "markdown_characters": 1866,
+          "seconds": 0.29
+        },
+        {
+          "pdf_page": 262,
+          "native_characters": 48,
+          "markdown_characters": 55,
+          "seconds": 0.64
+        }
+      ]
+    },
+    {
+      "source": "outgunned-core-rulebook-en.pdf",
+      "total_pages": 226,
+      "pages": [
+        {
+          "pdf_page": 1,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.4
+        },
+        {
+          "pdf_page": 2,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.6
+        },
+        {
+          "pdf_page": 3,
+          "native_characters": 33,
+          "markdown_characters": 106,
+          "seconds": 1.06
+        },
+        {
+          "pdf_page": 4,
+          "native_characters": 722,
+          "markdown_characters": 781,
+          "seconds": 0.68
+        },
+        {
+          "pdf_page": 5,
+          "native_characters": 174,
+          "markdown_characters": 266,
+          "seconds": 2.52
+        },
+        {
+          "pdf_page": 6,
+          "native_characters": 575,
+          "markdown_characters": 553,
+          "seconds": 0.46
+        },
+        {
+          "pdf_page": 7,
+          "native_characters": 679,
+          "markdown_characters": 651,
+          "seconds": 0.54
+        },
+        {
+          "pdf_page": 8,
+          "native_characters": 1875,
+          "markdown_characters": 1960,
+          "seconds": 3.49
+        },
+        {
+          "pdf_page": 9,
+          "native_characters": 1964,
+          "markdown_characters": 1997,
+          "seconds": 0.65
+        },
+        {
+          "pdf_page": 10,
+          "native_characters": 1873,
+          "markdown_characters": 1954,
+          "seconds": 0.39
+        },
+        {
+          "pdf_page": 11,
+          "native_characters": 1847,
+          "markdown_characters": 1834,
+          "seconds": 0.9
+        },
+        {
+          "pdf_page": 12,
+          "native_characters": 1246,
+          "markdown_characters": 1205,
+          "seconds": 1.33
+        },
+        {
+          "pdf_page": 13,
+          "native_characters": 2074,
+          "markdown_characters": 2055,
+          "seconds": 0.59
+        },
+        {
+          "pdf_page": 14,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.58
+        },
+        {
+          "pdf_page": 15,
+          "native_characters": 141,
+          "markdown_characters": 92,
+          "seconds": 3.27
+        },
+        {
+          "pdf_page": 16,
+          "native_characters": 1844,
+          "markdown_characters": 1865,
+          "seconds": 3.34
+        },
+        {
+          "pdf_page": 17,
+          "native_characters": 1465,
+          "markdown_characters": 1628,
+          "seconds": 8.91
+        },
+        {
+          "pdf_page": 18,
+          "native_characters": 1420,
+          "markdown_characters": 1498,
+          "seconds": 0.57
+        },
+        {
+          "pdf_page": 19,
+          "native_characters": 1814,
+          "markdown_characters": 1890,
+          "seconds": 0.47
+        },
+        {
+          "pdf_page": 20,
+          "native_characters": 1051,
+          "markdown_characters": 1079,
+          "seconds": 0.39
+        },
+        {
+          "pdf_page": 21,
+          "native_characters": 345,
+          "markdown_characters": 354,
+          "seconds": 0.94
+        },
+        {
+          "pdf_page": 22,
+          "native_characters": 1063,
+          "markdown_characters": 1097,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 23,
+          "native_characters": 301,
+          "markdown_characters": 320,
+          "seconds": 0.78
+        },
+        {
+          "pdf_page": 24,
+          "native_characters": 1099,
+          "markdown_characters": 1131,
+          "seconds": 0.43
+        },
+        {
+          "pdf_page": 25,
+          "native_characters": 407,
+          "markdown_characters": 344,
+          "seconds": 2.53
+        },
+        {
+          "pdf_page": 26,
+          "native_characters": 1052,
+          "markdown_characters": 1076,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 27,
+          "native_characters": 275,
+          "markdown_characters": 287,
+          "seconds": 1.01
+        },
+        {
+          "pdf_page": 28,
+          "native_characters": 1102,
+          "markdown_characters": 1115,
+          "seconds": 0.45
+        },
+        {
+          "pdf_page": 29,
+          "native_characters": 492,
+          "markdown_characters": 545,
+          "seconds": 2.09
+        },
+        {
+          "pdf_page": 30,
+          "native_characters": 997,
+          "markdown_characters": 1028,
+          "seconds": 0.43
+        },
+        {
+          "pdf_page": 31,
+          "native_characters": 428,
+          "markdown_characters": 489,
+          "seconds": 2.22
+        },
+        {
+          "pdf_page": 32,
+          "native_characters": 1004,
+          "markdown_characters": 1040,
+          "seconds": 0.43
+        },
+        {
+          "pdf_page": 33,
+          "native_characters": 438,
+          "markdown_characters": 432,
+          "seconds": 1.99
+        },
+        {
+          "pdf_page": 34,
+          "native_characters": 1079,
+          "markdown_characters": 1121,
+          "seconds": 0.48
+        },
+        {
+          "pdf_page": 35,
+          "native_characters": 378,
+          "markdown_characters": 459,
+          "seconds": 2.24
+        },
+        {
+          "pdf_page": 36,
+          "native_characters": 1137,
+          "markdown_characters": 1181,
+          "seconds": 0.46
+        },
+        {
+          "pdf_page": 37,
+          "native_characters": 343,
+          "markdown_characters": 402,
+          "seconds": 2.06
+        },
+        {
+          "pdf_page": 38,
+          "native_characters": 1024,
+          "markdown_characters": 1067,
+          "seconds": 0.51
+        },
+        {
+          "pdf_page": 39,
+          "native_characters": 363,
+          "markdown_characters": 379,
+          "seconds": 0.7
+        },
+        {
+          "pdf_page": 40,
+          "native_characters": 1763,
+          "markdown_characters": 1809,
+          "seconds": 0.48
+        },
+        {
+          "pdf_page": 41,
+          "native_characters": 1915,
+          "markdown_characters": 2027,
+          "seconds": 0.63
+        },
+        {
+          "pdf_page": 42,
+          "native_characters": 1345,
+          "markdown_characters": 1763,
+          "seconds": 0.67
+        },
+        {
+          "pdf_page": 43,
+          "native_characters": 1523,
+          "markdown_characters": 1583,
+          "seconds": 0.7
+        },
+        {
+          "pdf_page": 44,
+          "native_characters": 1392,
+          "markdown_characters": 1442,
+          "seconds": 0.66
+        },
+        {
+          "pdf_page": 45,
+          "native_characters": 1440,
+          "markdown_characters": 1481,
+          "seconds": 0.58
+        },
+        {
+          "pdf_page": 46,
+          "native_characters": 1483,
+          "markdown_characters": 1772,
+          "seconds": 0.65
+        },
+        {
+          "pdf_page": 47,
+          "native_characters": 1486,
+          "markdown_characters": 1556,
+          "seconds": 0.61
+        },
+        {
+          "pdf_page": 48,
+          "native_characters": 1176,
+          "markdown_characters": 1200,
+          "seconds": 0.59
+        },
+        {
+          "pdf_page": 49,
+          "native_characters": 1849,
+          "markdown_characters": 1929,
+          "seconds": 0.47
+        },
+        {
+          "pdf_page": 50,
+          "native_characters": 1757,
+          "markdown_characters": 2043,
+          "seconds": 0.51
+        },
+        {
+          "pdf_page": 51,
+          "native_characters": 1578,
+          "markdown_characters": 1678,
+          "seconds": 0.45
+        },
+        {
+          "pdf_page": 52,
+          "native_characters": 1643,
+          "markdown_characters": 1739,
+          "seconds": 0.4
+        },
+        {
+          "pdf_page": 53,
+          "native_characters": 1754,
+          "markdown_characters": 1813,
+          "seconds": 0.54
+        },
+        {
+          "pdf_page": 54,
+          "native_characters": 616,
+          "markdown_characters": 630,
+          "seconds": 1.52
+        },
+        {
+          "pdf_page": 55,
+          "native_characters": 1444,
+          "markdown_characters": 1497,
+          "seconds": 1.43
+        },
+        {
+          "pdf_page": 56,
+          "native_characters": 1296,
+          "markdown_characters": 1389,
+          "seconds": 0.46
+        },
+        {
+          "pdf_page": 57,
+          "native_characters": 1492,
+          "markdown_characters": 1590,
+          "seconds": 0.52
+        },
+        {
+          "pdf_page": 58,
+          "native_characters": 1783,
+          "markdown_characters": 1846,
+          "seconds": 0.51
+        },
+        {
+          "pdf_page": 59,
+          "native_characters": 1815,
+          "markdown_characters": 1814,
+          "seconds": 0.63
+        },
+        {
+          "pdf_page": 60,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.96
+        },
+        {
+          "pdf_page": 61,
+          "native_characters": 170,
+          "markdown_characters": 57,
+          "seconds": 3.72
+        },
+        {
+          "pdf_page": 62,
+          "native_characters": 1761,
+          "markdown_characters": 1821,
+          "seconds": 3.28
+        },
+        {
+          "pdf_page": 63,
+          "native_characters": 1834,
+          "markdown_characters": 1840,
+          "seconds": 3.39
+        },
+        {
+          "pdf_page": 64,
+          "native_characters": 908,
+          "markdown_characters": 926,
+          "seconds": 1.42
+        },
+        {
+          "pdf_page": 65,
+          "native_characters": 827,
+          "markdown_characters": 550,
+          "seconds": 2.7
+        },
+        {
+          "pdf_page": 66,
+          "native_characters": 1740,
+          "markdown_characters": 1740,
+          "seconds": 1.53
+        },
+        {
+          "pdf_page": 67,
+          "native_characters": 2216,
+          "markdown_characters": 2214,
+          "seconds": 0.54
+        },
+        {
+          "pdf_page": 68,
+          "native_characters": 1538,
+          "markdown_characters": 1575,
+          "seconds": 0.43
+        },
+        {
+          "pdf_page": 69,
+          "native_characters": 809,
+          "markdown_characters": 1002,
+          "seconds": 2.29
+        },
+        {
+          "pdf_page": 70,
+          "native_characters": 1766,
+          "markdown_characters": 1770,
+          "seconds": 0.48
+        },
+        {
+          "pdf_page": 71,
+          "native_characters": 1484,
+          "markdown_characters": 1497,
+          "seconds": 0.64
+        },
+        {
+          "pdf_page": 72,
+          "native_characters": 1487,
+          "markdown_characters": 1484,
+          "seconds": 2.46
+        },
+        {
+          "pdf_page": 73,
+          "native_characters": 599,
+          "markdown_characters": 569,
+          "seconds": 3.25
+        },
+        {
+          "pdf_page": 74,
+          "native_characters": 789,
+          "markdown_characters": 824,
+          "seconds": 0.68
+        },
+        {
+          "pdf_page": 75,
+          "native_characters": 2106,
+          "markdown_characters": 2136,
+          "seconds": 0.52
+        },
+        {
+          "pdf_page": 76,
+          "native_characters": 1661,
+          "markdown_characters": 1713,
+          "seconds": 0.49
+        },
+        {
+          "pdf_page": 77,
+          "native_characters": 1873,
+          "markdown_characters": 1942,
+          "seconds": 0.54
+        },
+        {
+          "pdf_page": 78,
+          "native_characters": 1439,
+          "markdown_characters": 1464,
+          "seconds": 0.66
+        },
+        {
+          "pdf_page": 79,
+          "native_characters": 1801,
+          "markdown_characters": 1845,
+          "seconds": 0.53
+        },
+        {
+          "pdf_page": 80,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.79
+        },
+        {
+          "pdf_page": 81,
+          "native_characters": 58,
+          "markdown_characters": 58,
+          "seconds": 3.17
+        },
+        {
+          "pdf_page": 82,
+          "native_characters": 915,
+          "markdown_characters": 915,
+          "seconds": 2.0
+        },
+        {
+          "pdf_page": 83,
+          "native_characters": 1015,
+          "markdown_characters": 1085,
+          "seconds": 3.63
+        },
+        {
+          "pdf_page": 84,
+          "native_characters": 1939,
+          "markdown_characters": 1987,
+          "seconds": 0.45
+        },
+        {
+          "pdf_page": 85,
+          "native_characters": 1834,
+          "markdown_characters": 1909,
+          "seconds": 0.46
+        },
+        {
+          "pdf_page": 86,
+          "native_characters": 1554,
+          "markdown_characters": 1607,
+          "seconds": 0.69
+        },
+        {
+          "pdf_page": 87,
+          "native_characters": 820,
+          "markdown_characters": 824,
+          "seconds": 1.64
+        },
+        {
+          "pdf_page": 88,
+          "native_characters": 1711,
+          "markdown_characters": 1757,
+          "seconds": 0.41
+        },
+        {
+          "pdf_page": 89,
+          "native_characters": 950,
+          "markdown_characters": 887,
+          "seconds": 1.53
+        },
+        {
+          "pdf_page": 90,
+          "native_characters": 1862,
+          "markdown_characters": 1865,
+          "seconds": 0.43
+        },
+        {
+          "pdf_page": 91,
+          "native_characters": 1696,
+          "markdown_characters": 1751,
+          "seconds": 0.5
+        },
+        {
+          "pdf_page": 92,
+          "native_characters": 1755,
+          "markdown_characters": 1849,
+          "seconds": 0.46
+        },
+        {
+          "pdf_page": 93,
+          "native_characters": 1324,
+          "markdown_characters": 1423,
+          "seconds": 0.82
+        },
+        {
+          "pdf_page": 94,
+          "native_characters": 2052,
+          "markdown_characters": 2112,
+          "seconds": 0.45
+        },
+        {
+          "pdf_page": 95,
+          "native_characters": 1944,
+          "markdown_characters": 2019,
+          "seconds": 0.49
+        },
+        {
+          "pdf_page": 96,
+          "native_characters": 1801,
+          "markdown_characters": 1909,
+          "seconds": 0.46
+        },
+        {
+          "pdf_page": 97,
+          "native_characters": 1924,
+          "markdown_characters": 1954,
+          "seconds": 0.49
+        },
+        {
+          "pdf_page": 98,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.93
+        },
+        {
+          "pdf_page": 99,
+          "native_characters": 696,
+          "markdown_characters": 263,
+          "seconds": 4.95
+        },
+        {
+          "pdf_page": 100,
+          "native_characters": 2027,
+          "markdown_characters": 2076,
+          "seconds": 2.97
+        },
+        {
+          "pdf_page": 101,
+          "native_characters": 2023,
+          "markdown_characters": 2000,
+          "seconds": 1.72
+        },
+        {
+          "pdf_page": 102,
+          "native_characters": 1204,
+          "markdown_characters": 1189,
+          "seconds": 1.51
+        },
+        {
+          "pdf_page": 103,
+          "native_characters": 1254,
+          "markdown_characters": 1351,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 104,
+          "native_characters": 903,
+          "markdown_characters": 1031,
+          "seconds": 0.82
+        },
+        {
+          "pdf_page": 105,
+          "native_characters": 1134,
+          "markdown_characters": 1036,
+          "seconds": 2.94
+        },
+        {
+          "pdf_page": 106,
+          "native_characters": 1412,
+          "markdown_characters": 1474,
+          "seconds": 0.42
+        },
+        {
+          "pdf_page": 107,
+          "native_characters": 1342,
+          "markdown_characters": 1354,
+          "seconds": 1.33
+        },
+        {
+          "pdf_page": 108,
+          "native_characters": 1891,
+          "markdown_characters": 1910,
+          "seconds": 0.41
+        },
+        {
+          "pdf_page": 109,
+          "native_characters": 1541,
+          "markdown_characters": 1580,
+          "seconds": 0.43
+        },
+        {
+          "pdf_page": 110,
+          "native_characters": 1122,
+          "markdown_characters": 1131,
+          "seconds": 0.59
+        },
+        {
+          "pdf_page": 111,
+          "native_characters": 2224,
+          "markdown_characters": 2274,
+          "seconds": 0.5
+        },
+        {
+          "pdf_page": 112,
+          "native_characters": 1418,
+          "markdown_characters": 1463,
+          "seconds": 1.91
+        },
+        {
+          "pdf_page": 113,
+          "native_characters": 2315,
+          "markdown_characters": 2321,
+          "seconds": 0.5
+        },
+        {
+          "pdf_page": 114,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.87
+        },
+        {
+          "pdf_page": 115,
+          "native_characters": 153,
+          "markdown_characters": 58,
+          "seconds": 3.46
+        },
+        {
+          "pdf_page": 116,
+          "native_characters": 1060,
+          "markdown_characters": 1112,
+          "seconds": 4.34
+        },
+        {
+          "pdf_page": 117,
+          "native_characters": 1541,
+          "markdown_characters": 1575,
+          "seconds": 0.69
+        },
+        {
+          "pdf_page": 118,
+          "native_characters": 1909,
+          "markdown_characters": 1981,
+          "seconds": 0.46
+        },
+        {
+          "pdf_page": 119,
+          "native_characters": 1539,
+          "markdown_characters": 1539,
+          "seconds": 0.76
+        },
+        {
+          "pdf_page": 120,
+          "native_characters": 1281,
+          "markdown_characters": 1329,
+          "seconds": 0.68
+        },
+        {
+          "pdf_page": 121,
+          "native_characters": 967,
+          "markdown_characters": 1050,
+          "seconds": 2.02
+        },
+        {
+          "pdf_page": 122,
+          "native_characters": 1430,
+          "markdown_characters": 1467,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 123,
+          "native_characters": 1139,
+          "markdown_characters": 1139,
+          "seconds": 0.66
+        },
+        {
+          "pdf_page": 124,
+          "native_characters": 1875,
+          "markdown_characters": 1915,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 125,
+          "native_characters": 1902,
+          "markdown_characters": 1871,
+          "seconds": 0.57
+        },
+        {
+          "pdf_page": 126,
+          "native_characters": 1585,
+          "markdown_characters": 1617,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 127,
+          "native_characters": 1143,
+          "markdown_characters": 1126,
+          "seconds": 2.08
+        },
+        {
+          "pdf_page": 128,
+          "native_characters": 1169,
+          "markdown_characters": 1158,
+          "seconds": 6.39
+        },
+        {
+          "pdf_page": 129,
+          "native_characters": 1563,
+          "markdown_characters": 1612,
+          "seconds": 0.53
+        },
+        {
+          "pdf_page": 130,
+          "native_characters": 1799,
+          "markdown_characters": 1872,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 131,
+          "native_characters": 1820,
+          "markdown_characters": 1806,
+          "seconds": 0.59
+        },
+        {
+          "pdf_page": 132,
+          "native_characters": 933,
+          "markdown_characters": 958,
+          "seconds": 0.46
+        },
+        {
+          "pdf_page": 133,
+          "native_characters": 28,
+          "markdown_characters": 16,
+          "seconds": 2.93
+        },
+        {
+          "pdf_page": 134,
+          "native_characters": 1146,
+          "markdown_characters": 1170,
+          "seconds": 0.48
+        },
+        {
+          "pdf_page": 135,
+          "native_characters": 83,
+          "markdown_characters": 16,
+          "seconds": 1.93
+        },
+        {
+          "pdf_page": 136,
+          "native_characters": 1036,
+          "markdown_characters": 1075,
+          "seconds": 0.46
+        },
+        {
+          "pdf_page": 137,
+          "native_characters": 31,
+          "markdown_characters": 16,
+          "seconds": 1.58
+        },
+        {
+          "pdf_page": 138,
+          "native_characters": 1599,
+          "markdown_characters": 1664,
+          "seconds": 0.43
+        },
+        {
+          "pdf_page": 139,
+          "native_characters": 1743,
+          "markdown_characters": 1742,
+          "seconds": 0.57
+        },
+        {
+          "pdf_page": 140,
+          "native_characters": 1555,
+          "markdown_characters": 1649,
+          "seconds": 0.43
+        },
+        {
+          "pdf_page": 141,
+          "native_characters": 580,
+          "markdown_characters": 695,
+          "seconds": 1.95
+        },
+        {
+          "pdf_page": 142,
+          "native_characters": 1569,
+          "markdown_characters": 1639,
+          "seconds": 0.43
+        },
+        {
+          "pdf_page": 143,
+          "native_characters": 1526,
+          "markdown_characters": 1624,
+          "seconds": 0.51
+        },
+        {
+          "pdf_page": 144,
+          "native_characters": 1311,
+          "markdown_characters": 1387,
+          "seconds": 0.45
+        },
+        {
+          "pdf_page": 145,
+          "native_characters": 1234,
+          "markdown_characters": 1238,
+          "seconds": 0.7
+        },
+        {
+          "pdf_page": 146,
+          "native_characters": 1440,
+          "markdown_characters": 1513,
+          "seconds": 0.42
+        },
+        {
+          "pdf_page": 147,
+          "native_characters": 1328,
+          "markdown_characters": 1393,
+          "seconds": 0.47
+        },
+        {
+          "pdf_page": 148,
+          "native_characters": 1893,
+          "markdown_characters": 1912,
+          "seconds": 0.43
+        },
+        {
+          "pdf_page": 149,
+          "native_characters": 1883,
+          "markdown_characters": 2049,
+          "seconds": 0.56
+        },
+        {
+          "pdf_page": 150,
+          "native_characters": 816,
+          "markdown_characters": 848,
+          "seconds": 0.38
+        },
+        {
+          "pdf_page": 151,
+          "native_characters": 1076,
+          "markdown_characters": 1118,
+          "seconds": 0.42
+        },
+        {
+          "pdf_page": 152,
+          "native_characters": 865,
+          "markdown_characters": 874,
+          "seconds": 3.31
+        },
+        {
+          "pdf_page": 153,
+          "native_characters": 1500,
+          "markdown_characters": 1525,
+          "seconds": 0.6
+        },
+        {
+          "pdf_page": 154,
+          "native_characters": 1588,
+          "markdown_characters": 1652,
+          "seconds": 0.42
+        },
+        {
+          "pdf_page": 155,
+          "native_characters": 1871,
+          "markdown_characters": 1942,
+          "seconds": 0.49
+        },
+        {
+          "pdf_page": 156,
+          "native_characters": 1735,
+          "markdown_characters": 1758,
+          "seconds": 0.41
+        },
+        {
+          "pdf_page": 157,
+          "native_characters": 1632,
+          "markdown_characters": 1694,
+          "seconds": 0.45
+        },
+        {
+          "pdf_page": 158,
+          "native_characters": 1547,
+          "markdown_characters": 1339,
+          "seconds": 2.4
+        },
+        {
+          "pdf_page": 159,
+          "native_characters": 974,
+          "markdown_characters": 962,
+          "seconds": 3.05
+        },
+        {
+          "pdf_page": 160,
+          "native_characters": 1784,
+          "markdown_characters": 1801,
+          "seconds": 0.5
+        },
+        {
+          "pdf_page": 161,
+          "native_characters": 1631,
+          "markdown_characters": 1617,
+          "seconds": 0.59
+        },
+        {
+          "pdf_page": 162,
+          "native_characters": 1781,
+          "markdown_characters": 1835,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 163,
+          "native_characters": 1668,
+          "markdown_characters": 1733,
+          "seconds": 0.48
+        },
+        {
+          "pdf_page": 164,
+          "native_characters": 0,
+          "markdown_characters": 0,
+          "seconds": 0.89
+        },
+        {
+          "pdf_page": 165,
+          "native_characters": 93,
+          "markdown_characters": 64,
+          "seconds": 3.31
+        },
+        {
+          "pdf_page": 166,
+          "native_characters": 1917,
+          "markdown_characters": 1933,
+          "seconds": 2.99
+        },
+        {
+          "pdf_page": 167,
+          "native_characters": 1928,
+          "markdown_characters": 1912,
+          "seconds": 3.76
+        },
+        {
+          "pdf_page": 168,
+          "native_characters": 1988,
+          "markdown_characters": 2027,
+          "seconds": 0.45
+        },
+        {
+          "pdf_page": 169,
+          "native_characters": 1225,
+          "markdown_characters": 1321,
+          "seconds": 0.71
+        },
+        {
+          "pdf_page": 170,
+          "native_characters": 2156,
+          "markdown_characters": 2181,
+          "seconds": 0.4
+        },
+        {
+          "pdf_page": 171,
+          "native_characters": 1460,
+          "markdown_characters": 1652,
+          "seconds": 2.78
+        },
+        {
+          "pdf_page": 172,
+          "native_characters": 2308,
+          "markdown_characters": 2311,
+          "seconds": 0.4
+        },
+        {
+          "pdf_page": 173,
+          "native_characters": 1961,
+          "markdown_characters": 2049,
+          "seconds": 2.9
+        },
+        {
+          "pdf_page": 174,
+          "native_characters": 1209,
+          "markdown_characters": 1161,
+          "seconds": 1.49
+        },
+        {
+          "pdf_page": 175,
+          "native_characters": 1686,
+          "markdown_characters": 1732,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 176,
+          "native_characters": 1831,
+          "markdown_characters": 1861,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 177,
+          "native_characters": 1596,
+          "markdown_characters": 1612,
+          "seconds": 0.55
+        },
+        {
+          "pdf_page": 178,
+          "native_characters": 2038,
+          "markdown_characters": 2043,
+          "seconds": 0.46
+        },
+        {
+          "pdf_page": 179,
+          "native_characters": 1514,
+          "markdown_characters": 1626,
+          "seconds": 1.46
+        },
+        {
+          "pdf_page": 180,
+          "native_characters": 1727,
+          "markdown_characters": 1739,
+          "seconds": 1.43
+        },
+        {
+          "pdf_page": 181,
+          "native_characters": 2181,
+          "markdown_characters": 2202,
+          "seconds": 0.5
+        },
+        {
+          "pdf_page": 182,
+          "native_characters": 816,
+          "markdown_characters": 753,
+          "seconds": 1.58
+        },
+        {
+          "pdf_page": 183,
+          "native_characters": 1528,
+          "markdown_characters": 1596,
+          "seconds": 0.46
+        },
+        {
+          "pdf_page": 184,
+          "native_characters": 1114,
+          "markdown_characters": 1082,
+          "seconds": 1.52
+        },
+        {
+          "pdf_page": 185,
+          "native_characters": 2028,
+          "markdown_characters": 2075,
+          "seconds": 0.48
+        },
+        {
+          "pdf_page": 186,
+          "native_characters": 1323,
+          "markdown_characters": 1337,
+          "seconds": 0.54
+        },
+        {
+          "pdf_page": 187,
+          "native_characters": 2129,
+          "markdown_characters": 2162,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 188,
+          "native_characters": 1171,
+          "markdown_characters": 1171,
+          "seconds": 2.27
+        },
+        {
+          "pdf_page": 189,
+          "native_characters": 1634,
+          "markdown_characters": 1665,
+          "seconds": 3.25
+        },
+        {
+          "pdf_page": 190,
+          "native_characters": 1693,
+          "markdown_characters": 1712,
+          "seconds": 0.43
+        },
+        {
+          "pdf_page": 191,
+          "native_characters": 1834,
+          "markdown_characters": 1879,
+          "seconds": 0.49
+        },
+        {
+          "pdf_page": 192,
+          "native_characters": 837,
+          "markdown_characters": 837,
+          "seconds": 2.28
+        },
+        {
+          "pdf_page": 193,
+          "native_characters": 1920,
+          "markdown_characters": 1920,
+          "seconds": 1.85
+        },
+        {
+          "pdf_page": 194,
+          "native_characters": 1458,
+          "markdown_characters": 1512,
+          "seconds": 0.42
+        },
+        {
+          "pdf_page": 195,
+          "native_characters": 2026,
+          "markdown_characters": 2054,
+          "seconds": 0.51
+        },
+        {
+          "pdf_page": 196,
+          "native_characters": 1986,
+          "markdown_characters": 2021,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 197,
+          "native_characters": 1228,
+          "markdown_characters": 1321,
+          "seconds": 0.55
+        },
+        {
+          "pdf_page": 198,
+          "native_characters": 2139,
+          "markdown_characters": 2135,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 199,
+          "native_characters": 1933,
+          "markdown_characters": 1980,
+          "seconds": 0.42
+        },
+        {
+          "pdf_page": 200,
+          "native_characters": 49,
+          "markdown_characters": 126,
+          "seconds": 2.57
+        },
+        {
+          "pdf_page": 201,
+          "native_characters": 319,
+          "markdown_characters": 131,
+          "seconds": 3.47
+        },
+        {
+          "pdf_page": 202,
+          "native_characters": 2213,
+          "markdown_characters": 2252,
+          "seconds": 0.58
+        },
+        {
+          "pdf_page": 203,
+          "native_characters": 1607,
+          "markdown_characters": 1603,
+          "seconds": 0.71
+        },
+        {
+          "pdf_page": 204,
+          "native_characters": 494,
+          "markdown_characters": 512,
+          "seconds": 0.72
+        },
+        {
+          "pdf_page": 205,
+          "native_characters": 624,
+          "markdown_characters": 680,
+          "seconds": 2.12
+        },
+        {
+          "pdf_page": 206,
+          "native_characters": 1659,
+          "markdown_characters": 1846,
+          "seconds": 0.45
+        },
+        {
+          "pdf_page": 207,
+          "native_characters": 1595,
+          "markdown_characters": 1829,
+          "seconds": 1.16
+        },
+        {
+          "pdf_page": 208,
+          "native_characters": 2039,
+          "markdown_characters": 2177,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 209,
+          "native_characters": 1832,
+          "markdown_characters": 1907,
+          "seconds": 0.53
+        },
+        {
+          "pdf_page": 210,
+          "native_characters": 2289,
+          "markdown_characters": 2427,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 211,
+          "native_characters": 1685,
+          "markdown_characters": 1782,
+          "seconds": 0.52
+        },
+        {
+          "pdf_page": 212,
+          "native_characters": 2041,
+          "markdown_characters": 2139,
+          "seconds": 0.44
+        },
+        {
+          "pdf_page": 213,
+          "native_characters": 1646,
+          "markdown_characters": 1690,
+          "seconds": 0.56
+        },
+        {
+          "pdf_page": 214,
+          "native_characters": 2005,
+          "markdown_characters": 2132,
+          "seconds": 0.45
+        },
+        {
+          "pdf_page": 215,
+          "native_characters": 2291,
+          "markdown_characters": 2390,
+          "seconds": 0.51
+        },
+        {
+          "pdf_page": 216,
+          "native_characters": 1249,
+          "markdown_characters": 1426,
+          "seconds": 1.53
+        },
+        {
+          "pdf_page": 217,
+          "native_characters": 1234,
+          "markdown_characters": 1416,
+          "seconds": 1.48
+        },
+        {
+          "pdf_page": 218,
+          "native_characters": 1297,
+          "markdown_characters": 1478,
+          "seconds": 1.27
+        },
+        {
+          "pdf_page": 219,
+          "native_characters": 1219,
+          "markdown_characters": 1392,
+          "seconds": 1.37
+        },
+        {
+          "pdf_page": 220,
+          "native_characters": 1808,
+          "markdown_characters": 1815,
+          "seconds": 2.45
+        },
+        {
+          "pdf_page": 221,
+          "native_characters": 1614,
+          "markdown_characters": 1618,
+          "seconds": 0.91
+        },
+        {
+          "pdf_page": 222,
+          "native_characters": 784,
+          "markdown_characters": 940,
+          "seconds": 1.24
+        },
+        {
+          "pdf_page": 223,
+          "native_characters": 453,
+          "markdown_characters": 847,
+          "seconds": 1.47
+        },
+        {
+          "pdf_page": 224,
+          "native_characters": 839,
+          "markdown_characters": 826,
+          "seconds": 1.43
+        },
+        {
+          "pdf_page": 225,
+          "native_characters": 0,
+          "markdown_characters": 4,
+          "seconds": 0.92
+        },
+        {
+          "pdf_page": 226,
+          "native_characters": 48,
+          "markdown_characters": 119,
+          "seconds": 1.02
+        }
+      ]
+    }
+  ]
+}
