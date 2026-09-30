@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An unofficial Outgunned: Adventure homebrew field journal. A work-in-progress collection of ideas for the table.">
+  <title>{{ .Title }} | Field Notes</title>
+  {{ with (templates.Defer (dict "key" "css")) }}
+    {{ with resources.Get "css/main.css" | css.TailwindCSS (dict "minify" (not hugo.IsDevelopment)) | fingerprint }}
+    <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+    {{ end }}
+  {{ end }}
+  <style>
+    @font-face { font-family: 'Barlow Condensed'; font-style: normal; font-weight: 700; font-display: swap; src: url('{{ "fonts/barlow-condensed-latin-700-normal.woff2" | relURL }}') format('woff2'); }
+    @font-face { font-family: 'Source Sans 3'; font-style: normal; font-weight: 400; font-display: swap; src: url('{{ "fonts/source-sans-3-latin-400-normal.woff2" | relURL }}') format('woff2'); }
+  </style>
+</head>
+<body id="top" class="bg-paper text-ink font-body">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <header class="border-b border-ink/25">
+    <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-5 px-6 py-5 lg:px-10">
+      <a href="{{ site.Home.RelPermalink }}" class="brand" aria-label="Field Notes home">OUTGUNNED<span>ADVENTURE / HOMEBREW</span></a>
+      <p class="hidden text-sm text-ink/70 md:block">Unofficial ideas. Extraordinary adventures.</p>
+      <a class="eyebrow border-b border-rust pb-1" href="{{ site.Home.RelPermalink }}#about">About this project ↗</a>
+    </div>
+  </header>
+  {{ block "main" . }}{{ end }}
+  <footer class="mx-auto flex max-w-7xl flex-wrap justify-between gap-4 border-t border-ink/30 px-6 py-7 text-sm lg:px-10">
+    <span>FIELD NOTES <span class="mx-2 text-rust">/</span> An independent homebrew journal</span>
+    <a class="underline underline-offset-4" href="#top">Back to the top ↑</a>
+  </footer>
+</body>
+</html>

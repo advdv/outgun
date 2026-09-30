@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="310" viewBox="0 0 1200 310">
+<defs><pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M60 0H0V60" fill="none" stroke="#9d885f" stroke-opacity=".2"/></pattern><pattern id="lines" width="360" height="310" patternUnits="userSpaceOnUse"><g fill="none" stroke="#9b875f" stroke-opacity=".32"><path d="M-60 230Q20 90 100 160T300 60T450 150M-60 245Q20 105 100 175T300 75T450 165M-60 260Q20 120 100 190T300 90T450 180M-60 275Q20 135 100 205T300 105T450 195M-60 290Q20 150 100 220T300 120T450 210M-60 305Q20 165 100 235T300 135T450 225"/></g></pattern></defs>
+<path fill="#e6d9b9" d="M0 0h1200v310H0z"/><path fill="url(#grid)" d="M0 0h1200v310H0z"/><path fill="url(#lines)" d="M0 0h1200v310H0z"/>
+<path d="M0 60Q160 20 235 105T460 200T700 160T930 280T1200 250" fill="none" stroke="#83928a" stroke-width="12" opacity=".4"/>
+<path d="M120 230C280 210 240 55 410 80S560 270 700 210 800 65 950 90" fill="none" stroke="#8c4928" stroke-width="3" stroke-dasharray="9 8"/>
+<g fill="#8c4928"><circle cx="120" cy="230" r="7"/><circle cx="410" cy="80" r="7"/><path d="m940 80 20 20m0-20-20 20" stroke="#8c4928" stroke-width="4"/></g>
+<g fill="#655941" font-family="Georgia,serif" font-style="italic" font-size="18"><text x="70" y="266">Base camp</text><text x="380" y="58">The old pass</text><text x="775" y="55">Terra incognita</text><text x="530" y="290" letter-spacing="5" font-size="13">THE UNCHARTED INTERIOR</text></g>
+<g transform="translate(1080 150)" stroke="#655941" fill="none"><circle r="48"/><circle r="39" stroke-width=".5"/><path d="M0-66V66M-66 0H66"/><path d="M0-56 10 0 0 56-10 0Z" fill="#655941"/><path d="m-56 0 56-10 56 10-56 10Z" fill="#e6d9b9"/></g><text x="1080" y="72" text-anchor="middle" font-family="Georgia,serif" font-size="19" fill="#655941">N</text>
+</svg>

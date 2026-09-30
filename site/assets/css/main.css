@@ -1,0 +1,56 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@source "../../../hugo_stats.json";
+
+@theme {
+  --color-paper: #f3eddf;
+  --color-ink: #29281f;
+  --color-rust: #8c4928;
+  --color-sand: #e7d7b7;
+  --font-display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --font-body: 'Source Sans 3', sans-serif;
+}
+
+@layer base {
+  body { background-image: url('../images/paper.svg'); }
+  ::selection { background: #dcc397; color: #29281f; }
+  :focus-visible { outline: 3px solid #8c4928; outline-offset: 5px; }
+  [id] { scroll-margin-top: 2rem; }
+}
+
+@layer components {
+  .eyebrow { @apply font-display text-sm uppercase tracking-[0.16em]; }
+  .brand { @apply font-display text-3xl leading-none tracking-tight; }
+  .brand span { @apply mt-1.5 block text-[11px] tracking-[0.2em] text-rust; }
+  .display-title { @apply font-display text-[clamp(4rem,9vw,7.8rem)] leading-[0.88] tracking-[-0.025em]; }
+  .button { @apply inline-flex items-center gap-8 bg-ink px-5 py-3 font-display text-base uppercase tracking-wider text-paper transition-colors hover:bg-rust; }
+  .button-secondary { @apply inline-flex items-center border border-ink/40 px-5 py-3 font-display text-base uppercase tracking-wider hover:bg-sand/60; }
+  .stamp { @apply inline-block -rotate-6 border-2 border-rust/65 px-3 py-2 text-center font-display text-lg leading-tight tracking-wider text-rust; }
+  #TableOfContents ul { @apply flex flex-wrap gap-x-5 gap-y-3 lg:flex-col lg:gap-y-0; counter-reset: chapters; }
+  #TableOfContents li { counter-increment: chapters; }
+  #TableOfContents a { @apply block py-2 font-display text-base uppercase tracking-wide hover:text-rust; }
+  #TableOfContents a::before { content: '0' counter(chapters); @apply mr-3 text-xs text-rust; }
+}
+
+/* Override the typography plugin's utility-layer defaults for Markdown. */
+  .prose-field { --tw-prose-body: #403e34; --tw-prose-headings: #29281f; --tw-prose-links: #8c4928; --tw-prose-bold: #29281f; --tw-prose-quotes: #8c4928; --tw-prose-quote-borders: #8c4928; --tw-prose-counters: #8c4928; --tw-prose-th-borders: #8c4928; --tw-prose-td-borders: #c8bda6; font-size: 1.0625rem; }
+  .prose-field h2 { @apply mt-12 border-t border-ink/30 pt-6 font-display text-4xl uppercase; }
+  .prose-field h3 { @apply font-display text-2xl uppercase; }
+  .prose-field h4 { @apply font-display text-xl uppercase; }
+  .prose-field blockquote { @apply my-9 border-l-2 pl-6 font-display text-3xl font-normal; }
+  .prose-field blockquote p:last-child { @apply text-base; }
+  .prose-field thead { @apply bg-ink text-paper; }
+  .prose-field th { @apply p-3 font-display text-base font-bold uppercase text-paper; }
+  .prose-field td { @apply p-3; }
+  .prose-field tbody tr:nth-child(even) { @apply bg-sand/35; }
+  .prose-field pre { @apply rounded-none bg-ink text-paper; }
+  .prose-field mark { @apply bg-sand px-1 text-ink; }
+
+@layer components {
+  .field-note { @apply my-7 border-l-4 border-rust bg-sand/50 p-6; }
+  .field-note-dark { @apply border-rust bg-[#704323] text-paper; }
+  .field-note-dark strong { color: inherit; }
+  .equipment { @apply border border-ink/30 p-5 no-underline transition-colors hover:bg-sand/60; }
+  .tag { @apply border border-ink/40 px-2.5 py-1 font-display text-xs uppercase tracking-wider; }
+  .skip-link { @apply fixed top-3 left-3 z-50 -translate-y-24 bg-ink px-5 py-3 text-paper focus:translate-y-0; }
+}

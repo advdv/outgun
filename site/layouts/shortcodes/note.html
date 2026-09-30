@@ -1,0 +1,4 @@
+<aside class="not-prose field-note {{ if eq (.Get "kind") "dark" }}field-note-dark{{ end }}">
+  <p class="eyebrow mb-3">{{ .Get "title" }}</p>
+  <div>{{ .Inner | markdownify }}</div>
+</aside>

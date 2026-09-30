@@ -24,6 +24,9 @@ echo 'Installing tools declared in mise.toml'
 mise trust "$repo_root/mise.toml"
 time mise install
 
+echo 'Installing website dependencies'
+time mise exec -- npm ci
+
 echo 'Configuring the repository environment for login shells'
 marker="# outgun orb mise environment"
 if ! grep -Fqx "$marker" "$HOME/.bash_profile" 2>/dev/null; then

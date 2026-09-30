@@ -1,0 +1,31 @@
+baseURL = 'https://advdv.github.io/outgun/'
+locale = 'en'
+title = 'Field Notes — An Outgunned: Adventure homebrew'
+contentDir = 'site/content'
+layoutDir = 'site/layouts'
+assetDir = 'site/assets'
+staticDir = 'site/static'
+disableKinds = ['taxonomy', 'term', 'RSS']
+
+[build.buildStats]
+enable = true
+[[build.cachebusters]]
+source = 'assets/notwatching/hugo_stats\.json'
+target = 'css'
+
+[[module.mounts]]
+source = 'site/assets'
+target = 'assets'
+[[module.mounts]]
+source = 'hugo_stats.json'
+target = 'assets/notwatching/hugo_stats.json'
+disableWatch = true
+
+[security.exec]
+allow = ['^node$', '^tailwindcss$']
+
+[markup.goldmark.renderer]
+unsafe = false
+[markup.tableOfContents]
+startLevel = 2
+endLevel = 2
