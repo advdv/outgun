@@ -5,6 +5,12 @@ export const GROUPS = [
   ['FOCUS', ['DETECT', 'FIX', 'HEAL', 'KNOW']],
   ['CRIME', ['AWARENESS', 'DEXTERITY', 'STEALTH', 'STREETWISE']],
 ] as const;
+export type Attribute = typeof GROUPS[number][0];
+type Skill = typeof GROUPS[number][1][number];
+export type RatingKey = Attribute | Skill;
+export const BASE_RATINGS = Object.fromEntries(GROUPS.flatMap(([attribute, skills]) => [
+  [attribute, 2], ...skills.map(skill => [skill, 1]),
+])) as Record<RatingKey, number>;
 
 export const IDENTITY = ['name', 'role', 'trope', 'background', 'age', 'flaw', 'catchphrase'] as const;
 export type IdentityKey = typeof IDENTITY[number];
@@ -71,7 +77,7 @@ export const IDENTITY_CHOICES = {
 export type ChoiceField = keyof typeof IDENTITY_CHOICES;
 
 // All distinct feats offered by the tropes on pp. 45–49, cited at their full descriptions.
-// Gear follows the equipment tables on pp. 132–133; neither list is role/trope-limited.
+// Gear includes pp. 132–133 and the two role-specific entries absent from those tables.
 export const ITEM_CHOICES = {
   feats: [
     ['Archeology', '53'], ['Artist', '53'], ['Big and Strong', '53'], ['Bodyguard', '53'],
@@ -94,6 +100,7 @@ export const ITEM_CHOICES = {
     ['Machine Gun', '133'], ['Gatling Gun', '133'], ['Bow', '133'], ['Hunting Bow', '133'],
     ['Dynamite', '133'], ['Machete/Axe', '133'], ['Club/Hammer', '133'], ['Boomerang', '133'],
     ['Whip', '133'], ['Rocket Launcher', '133'], ['Projectiles', '133'], ['Mags (2)', '133'],
+    ['Precious item of choice', '32'], ['Diary and pencil', '34'],
   ],
 } as const;
 export type ItemField = keyof typeof ITEM_CHOICES;
@@ -134,11 +141,11 @@ export const ROLE_ITEMS = {
   },
   'The Star': {
     feats: ['Artist', 'Heartbreaker', 'I Meant to Do That!', 'Maverick', 'Moneybags', 'That Was Close!'],
-    gear: ['Elegant Clothes'], // The precious item is not in the equipment catalog.
+    gear: ['Elegant Clothes', 'Precious item of choice'],
   },
   'The Professor': {
     feats: ['Archeology', 'Eye for Details', 'I Meant to Do That!', 'Linguist', 'Specialist', 'Watch and Learn'],
-    gear: [], // Diary and pencil are not in the equipment catalog.
+    gear: ['Diary and pencil'],
   },
   'The Technician': {
     feats: ['Big and Strong', 'Fix-it', 'Pilot', 'Sensible Packer', 'Specialist', 'Trailblazer'],
@@ -172,6 +179,88 @@ export const TROPE_FEATS = {
   'Wild at Heart': ['Explorer', 'Favored Weapon', 'Guide', 'Skulker'],
 } satisfies Record<typeof IDENTITY_CHOICES.trope[number][0], string[]>;
 
+type PointGrant = { attributes: readonly Attribute[]; skills: readonly Skill[] };
+// Each listed skill gains one point, not a choice from the list (pp. 20, 44).
+export const ROLE_POINTS = {
+  'The Daredevil': { attributes: ['BRAWN'], skills: ['ENDURE', 'FIGHT', 'STUNT', 'COOL', 'SHOOT', 'SURVIVAL', 'FLIRT', 'LEADERSHIP', 'STEALTH', 'STREETWISE'] },
+  'The Guardian': { attributes: ['BRAWN'], skills: ['ENDURE', 'FIGHT', 'FORCE', 'COOL', 'SURVIVAL', 'LEADERSHIP', 'HEAL', 'KNOW', 'AWARENESS', 'STREETWISE'] },
+  'The Captain': { attributes: ['NERVES'], skills: ['ENDURE', 'STUNT', 'DRIVE', 'SHOOT', 'SURVIVAL', 'FLIRT', 'LEADERSHIP', 'FIX', 'AWARENESS', 'DEXTERITY'] },
+  'The Hunter': { attributes: ['NERVES'], skills: ['ENDURE', 'FORCE', 'COOL', 'SHOOT', 'SURVIVAL', 'LEADERSHIP', 'DETECT', 'HEAL', 'AWARENESS', 'STEALTH'] },
+  'The Heart': { attributes: ['SMOOTH'], skills: ['ENDURE', 'STUNT', 'DRIVE', 'FLIRT', 'SPEECH', 'STYLE', 'DETECT', 'HEAL', 'KNOW', 'STEALTH'] },
+  'The Star': { attributes: ['SMOOTH'], skills: ['STUNT', 'DRIVE', 'SHOOT', 'FLIRT', 'LEADERSHIP', 'SPEECH', 'STYLE', 'KNOW', 'DEXTERITY', 'STEALTH'] },
+  'The Professor': { attributes: ['FOCUS'], skills: ['DRIVE', 'LEADERSHIP', 'SPEECH', 'STYLE', 'DETECT', 'HEAL', 'KNOW', 'AWARENESS', 'DEXTERITY', 'STEALTH'] },
+  'The Technician': { attributes: ['FOCUS'], skills: ['ENDURE', 'FIGHT', 'FORCE', 'DRIVE', 'SHOOT', 'SURVIVAL', 'DETECT', 'FIX', 'DEXTERITY', 'STREETWISE'] },
+  'The Scoundrel': { attributes: ['CRIME'], skills: ['STUNT', 'DRIVE', 'FLIRT', 'SPEECH', 'KNOW', 'DETECT', 'FIX', 'DEXTERITY', 'STEALTH', 'STREETWISE'] },
+  'The Smuggler': { attributes: ['CRIME'], skills: ['STUNT', 'COOL', 'DRIVE', 'SHOOT', 'SURVIVAL', 'LEADERSHIP', 'DETECT', 'KNOW', 'STEALTH', 'STREETWISE'] },
+} satisfies Record<typeof IDENTITY_CHOICES.role[number][0], PointGrant>;
+
+export const TROPE_POINTS = {
+  'Action Archeologist': { attributes: ['BRAWN', 'FOCUS'], skills: ['FIGHT', 'STUNT', 'SHOOT', 'SPEECH', 'DETECT', 'KNOW', 'DEXTERITY', 'STEALTH'] },
+  'Adventuring Author': { attributes: ['BRAWN', 'FOCUS'], skills: ['STUNT', 'COOL', 'SPEECH', 'STYLE', 'DETECT', 'KNOW', 'AWARENESS', 'STEALTH'] },
+  'Born Rebel': { attributes: ['SMOOTH', 'FOCUS'], skills: ['ENDURE', 'FIGHT', 'COOL', 'SURVIVAL', 'FLIRT', 'STYLE', 'DEXTERITY', 'STREETWISE'] },
+  'Cold and Distant': { attributes: ['NERVES', 'CRIME'], skills: ['FIGHT', 'STUNT', 'COOL', 'SHOOT', 'SURVIVAL', 'STYLE', 'STEALTH', 'DEXTERITY'] },
+  'Cowardly Lion': { attributes: ['FOCUS', 'CRIME'], skills: ['STUNT', 'SHOOT', 'SPEECH', 'STYLE', 'DETECT', 'HEAL', 'KNOW', 'STEALTH'] },
+  'Detestable Bastard': { attributes: ['SMOOTH', 'CRIME'], skills: ['STUNT', 'DRIVE', 'SPEECH', 'KNOW', 'AWARENESS', 'DEXTERITY', 'STEALTH', 'STREETWISE'] },
+  'Dreamer': { attributes: ['BRAWN', 'SMOOTH'], skills: ['FIGHT', 'FORCE', 'STUNT', 'COOL', 'FLIRT', 'SPEECH', 'STYLE', 'HEAL'] },
+  'Flying Steamroller': { attributes: ['NERVES', 'SMOOTH'], skills: ['STUNT', 'COOL', 'DRIVE', 'SHOOT', 'FLIRT', 'STYLE', 'FIX', 'DEXTERITY'] },
+  'Gentle Giant': { attributes: ['BRAWN', 'SMOOTH'], skills: ['ENDURE', 'FORCE', 'FIGHT', 'STUNT', 'SURVIVAL', 'HEAL', 'FIX', 'LEADERSHIP'] },
+  'Indispensable Rogue': { attributes: ['NERVES', 'CRIME'], skills: ['STUNT', 'DRIVE', 'SURVIVAL', 'SPEECH', 'FIX', 'DEXTERITY', 'STEALTH', 'STREETWISE'] },
+  'Parental Figure': { attributes: ['SMOOTH', 'FOCUS'], skills: ['FIGHT', 'COOL', 'DRIVE', 'SURVIVAL', 'LEADERSHIP', 'SPEECH', 'DETECT', 'KNOW'] },
+  'Proper Gentleman/Lady': { attributes: ['SMOOTH', 'FOCUS'], skills: ['STUNT', 'FLIRT', 'LEADERSHIP', 'SPEECH', 'STYLE', 'DETECT', 'KNOW', 'STEALTH'] },
+  'Reluctant Hero': { attributes: ['BRAWN', 'NERVES'], skills: ['ENDURE', 'FIGHT', 'STUNT', 'DRIVE', 'LEADERSHIP', 'SPEECH', 'DETECT', 'AWARENESS'] },
+  'Salty Dog': { attributes: ['NERVES', 'FOCUS'], skills: ['ENDURE', 'FORCE', 'COOL', 'DRIVE', 'SURVIVAL', 'FIX', 'KNOW', 'STREETWISE'] },
+  'Wild at Heart': { attributes: ['BRAWN', 'NERVES'], skills: ['ENDURE', 'FIGHT', 'COOL', 'SHOOT', 'SURVIVAL', 'LEADERSHIP', 'HEAL', 'AWARENESS'] },
+} satisfies Record<typeof IDENTITY_CHOICES.trope[number][0], PointGrant>;
+
+function pointGrant(field: 'role' | 'trope', name: string): PointGrant | undefined {
+  return Object.entries(field === 'role' ? ROLE_POINTS : TROPE_POINTS).find(([key]) => key === name)?.[1];
+}
+
+export function tropeAttributes(identity: Character['identity']) {
+  const roleAttribute = pointGrant('role', identity.role)?.attributes[0];
+  return (pointGrant('trope', identity.trope)?.attributes ?? []).filter(attribute => attribute !== roleAttribute);
+}
+
+function resolveTropeAttribute(character: Character): Attribute | '' {
+  const options = tropeAttributes(character.identity);
+  if (character.tropeAttribute && options.includes(character.tropeAttribute)) return character.tropeAttribute;
+  return options.find(attribute => !character.manualPoints[attribute]) ?? options[0] ?? '';
+}
+
+export function chooseTropeAttribute(character: Character, attribute: Attribute): Character {
+  return tropeAttributes(character.identity).includes(attribute) ? { ...character, tropeAttribute: attribute } : character;
+}
+
+export function ratingDetails(character: Character) {
+  const granted = Object.fromEntries(Object.keys(BASE_RATINGS).map(key => [key, 0])) as Record<RatingKey, number>;
+  const role = pointGrant('role', character.identity.role);
+  const trope = pointGrant('trope', character.identity.trope);
+  if (role) {
+    granted[role.attributes[0]]++;
+    for (const skill of role.skills) granted[skill]++;
+  }
+  if (trope) {
+    const attribute = resolveTropeAttribute(character);
+    if (attribute) granted[attribute]++;
+    for (const skill of trope.skills) granted[skill]++;
+  }
+  return Object.fromEntries(Object.entries(BASE_RATINGS).map(([key, base]) => {
+    const name = key as RatingKey;
+    const manual = character.manualPoints[name];
+    return [name, { base, manual, granted: granted[name], total: Math.min(3, base + manual + granted[name]),
+      overlap: Math.max(0, base + manual + granted[name] - 3) }];
+  })) as Record<RatingKey, { base: number; manual: number; granted: number; total: number; overlap: number }>;
+}
+
+// Brown points are locked. Blue points always remain visible, even when a grant
+// overlaps them at the cap; removing blue points never removes a role/trope grant.
+export function changeManualPoint(character: Character, name: RatingKey, point: number): Character {
+  const { total, manual } = ratingDetails(character)[name];
+  if (!Number.isInteger(point) || point <= total - manual || point > 3) return character;
+  const next = point <= total ? point - (total - manual) - 1 : manual + point - total;
+  return { ...character, manualPoints: { ...character.manualPoints, [name]: next } };
+}
+
 export function itemChoices(field: ItemField, identity: Character['identity'], limited: boolean) {
   if (!limited) return ITEM_CHOICES[field];
   const role = Object.entries(ROLE_ITEMS).find(([name]) => name === identity.role)?.[1];
@@ -191,9 +280,10 @@ export function adventurePageUrl(page: number | string, base: string) {
 }
 
 export type Character = {
-  version: 1;
+  version: 2;
   identity: Record<IdentityKey, string>;
-  ratings: Record<string, number>;
+  manualPoints: Record<RatingKey, number>;
+  tropeAttribute: Attribute | '';
   luck: number;
   grit: number;
   cash: number;
@@ -210,11 +300,10 @@ export const MAX_BACKUP_BYTES = 1_000_000;
 
 export function newCharacter(): Character {
   return {
-    version: 1,
+    version: 2,
     identity: Object.fromEntries(IDENTITY.map(key => [key, ''])) as Character['identity'],
-    ratings: Object.fromEntries(GROUPS.flatMap(([attribute, skills]) => [
-      [attribute, 2], ...skills.map(skill => [skill, 1]),
-    ])),
+    manualPoints: Object.fromEntries(Object.keys(BASE_RATINGS).map(key => [key, 0])) as Record<RatingKey, number>,
+    tropeAttribute: '',
     luck: 0, grit: 0, cash: 0,
     feats: Array(6).fill(''), gear: Array(6).fill(''), ammo: [0, 0, 0],
     backpack: '', bag: '', portrait: null,
@@ -222,8 +311,9 @@ export function newCharacter(): Character {
 }
 
 export function chooseIdentity(character: Character, field: ChoiceField, value: string): Character {
-  if (!IDENTITY_CHOICES[field].some(([name]) => name === value)) return character;
-  return { ...character, identity: { ...character.identity, [field]: value } };
+  if (!(value === '' && (field === 'role' || field === 'trope')) && !IDENTITY_CHOICES[field].some(([name]) => name === value)) return character;
+  const chosen = { ...character, identity: { ...character.identity, [field]: value } };
+  return field === 'role' || field === 'trope' ? { ...chosen, tropeAttribute: resolveTropeAttribute(chosen) } : chosen;
 }
 
 export function chooseItem(character: Character, field: ItemField, index: number, value: string): Character {
@@ -239,7 +329,7 @@ export function markValue(current: number, mark: number, minimum = 0) {
 export function parseCharacter(raw: string): Character {
   if (raw.length > MAX_BACKUP_BYTES) throw new Error('This backup is too large.');
   const value = JSON.parse(raw);
-  const invalid = () => { throw new Error('This is not a valid version 1 character backup.'); };
+  const invalid = () => { throw new Error('This is not a valid character backup (version 1 or 2).'); };
   const record = (v: unknown): Record<string, unknown> =>
     v !== null && typeof v === 'object' && !Array.isArray(v) ? v as Record<string, unknown> : invalid();
   const string = (v: unknown, max = 4000): string =>
@@ -249,14 +339,23 @@ export function parseCharacter(raw: string): Character {
   const list = (v: unknown, count: number): unknown[] =>
     Array.isArray(v) && v.length === count ? v : invalid();
   const data = record(value);
-  if (data.version !== 1) invalid();
+  if (data.version !== 1 && data.version !== 2) invalid();
   const identity = record(data.identity);
-  const ratings = record(data.ratings);
+  const points = record(data.version === 1 ? data.ratings : data.manualPoints);
   const result = newCharacter();
   for (const key of IDENTITY) result.identity[key] = string(identity[key], 300);
-  for (const [attribute, skills] of GROUPS) {
-    result.ratings[attribute] = number(ratings[attribute], 2, 3);
-    for (const skill of skills) result.ratings[skill] = number(ratings[skill], 1, 3);
+  for (const [key, base] of Object.entries(BASE_RATINGS)) {
+    result.manualPoints[key as RatingKey] = data.version === 1 ? number(points[key], base, 3) - base : number(points[key], 0, 3 - base);
+  }
+  if (data.version === 1) {
+    // Old sheets recorded only manual totals. Never guess which were intended
+    // as role points: preserve every non-baseline point as an editable addition.
+    result.tropeAttribute = resolveTropeAttribute(result);
+  } else {
+    const attribute = string(data.tropeAttribute);
+    const options = tropeAttributes(result.identity);
+    if (attribute === '' ? options.length !== 0 : !options.some(option => option === attribute)) invalid();
+    result.tropeAttribute = attribute as Attribute | '';
   }
   result.luck = number(data.luck, 0, 6);
   result.grit = number(data.grit, 0, 12);

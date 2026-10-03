@@ -16,6 +16,10 @@
 .builder-message, .builder-warning { padding: 12px 16px; margin-bottom: 16px; background: #eee1c4; border-left: 3px solid #8c4928; }
 .builder-message button { float: right; padding-inline: 8px; cursor: pointer; }
 .builder-warning { background: #fce9dc; color: #7e2514; }
+.rating-legend { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 12px; color: #634123; font-size: 14px; }
+.rating-legend b { margin-right: 4px; }
+.rating-legend .manual-key { color: #156a92; }
+.rating-overlap { padding: 12px 16px; background: #eee1c4; border-left: 3px solid #8c4928; }
 .sheet-viewport { width: 100%; overflow: auto; padding: 0 0 14px; }
 .sheet-stage { position: relative; margin: 0 auto; }
 .character-sheet { position: relative; width: 297mm; height: 210mm; transform-origin: top left; margin: 0; padding: 0; border: 0; background: #f7eed7; box-shadow: 0 3px 10px #37281630; color: #33261c; font-family: 'Source Sans 3', sans-serif; font-size: 10pt; line-height: normal; }
@@ -64,8 +68,14 @@
 .picker-filter label { display: flex; align-items: center; gap: 10px; cursor: pointer; }
 .picker-filter input { width: 18px; height: 18px; flex-shrink: 0; accent-color: #634123; }
 .picker-filter input:focus-visible { outline: 2px solid #8c4928; outline-offset: 3px; }
-.picker-filter p, .picker-notice { font-size: 14px; line-height: 1.5; color: #645848; }
+.picker-filter p, .picker-notice, .picker-attribute p { font-size: 14px; line-height: 1.5; color: #645848; }
 .picker-filter p { margin-top: 8px; }
+.picker-attribute { margin: 0 28px 20px; }
+.picker-attribute label { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; font-weight: bold; }
+.picker-attribute select { padding: 8px 12px; background: #fbf8f0; border: 1px solid #a8987e; font-weight: normal; }
+.picker-attribute select:focus-visible { outline: 2px solid #8c4928; outline-offset: 2px; }
+.picker-attribute select:disabled { opacity: 1; color: #645848; }
+.picker-attribute p { margin-top: 8px; }
 .picker-notice { margin-bottom: 16px; }
 .picker-list { position: relative; min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; padding: 0 28px 24px; }
 .picker-list fieldset { min-width: 0; margin: 0; padding: 0; border: 0; border-top: 1px solid #d8cdbb; }
@@ -103,7 +113,7 @@
 @page { size: A4 landscape; margin: 0; }
 @media print {
   html, body { width: 297mm; height: auto; margin: 0 !important; padding: 0 !important; overflow: visible !important; background: white !important; }
-  body > :not(main), .builder-intro, .builder-toolbar, .builder-message, .builder-warning, .builder-notes, .choice-picker, .book-viewer, .book-viewer::backdrop { display: none !important; }
+  body > :not(main), .builder-intro, .builder-toolbar, .builder-message, .builder-warning, .builder-notes, .rating-legend, .choice-picker, .book-viewer, .book-viewer::backdrop { display: none !important; }
   .builder-main { width: 297mm; max-width: none; margin: 0; padding: 0; }
   .sheet-viewport { width: 297mm; margin: 0; padding: 0; overflow: visible; }
   /* Anchor the sheet in normal document flow, not the screen viewport.

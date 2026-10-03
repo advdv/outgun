@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { CSSProperties, ChangeEvent } from 'react';
 import { createRoot } from 'react-dom/client';
-import { GROUPS, IDENTITY, IDENTITY_CHOICES, MAX_BACKUP_BYTES, STORAGE_KEY, WEAPONS, adventurePageUrl, chooseIdentity, chooseItem, itemChoices, markValue, newCharacter, parseCharacter, referencePages } from './model';
-import type { Character, ChoiceField, IdentityKey, ItemField } from './model';
+import { GROUPS, IDENTITY, IDENTITY_CHOICES, MAX_BACKUP_BYTES, STORAGE_KEY, WEAPONS, adventurePageUrl, changeManualPoint, chooseIdentity, chooseItem, chooseTropeAttribute, itemChoices, markValue, newCharacter, parseCharacter, ratingDetails, referencePages, tropeAttributes } from './model';
+import type { Attribute, Character, ChoiceField, IdentityKey, ItemField, RatingKey } from './model';
 
 const root = document.getElementById('character-builder')!;
 const artwork = root.dataset.artwork!;
@@ -11,15 +11,18 @@ const place = (x: number, y: number, w: number, h: number): CSSProperties => ({
   left: `${x}pt`, top: `${y}pt`, width: `${w}pt`, height: `${h}pt`,
 });
 const title = (word: string) => word[0].toUpperCase() + word.slice(1).toLowerCase();
+const legacyPointsNotice = 'Existing saved points are kept as blue manual points. Role/trope bonuses now apply automatically; overlapping points are retained, with totals capped at 3.';
 
 function loadDraft() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return { character: raw ? parseCharacter(raw) : newCharacter(), error: '' };
+    return { character: raw ? parseCharacter(raw) : newCharacter(), error: '',
+      notice: raw && JSON.parse(raw).version === 1 ? legacyPointsNotice : '' };
   } catch {
     return {
       character: newCharacter(),
       error: 'Your saved draft could not be loaded. It has not been overwritten. Import a backup or start a new sheet; you can still edit and export this one.',
+      notice: '',
     };
   }
 }
@@ -74,10 +77,11 @@ function Field({ label, value, x, y, w, h, line = 14, multiline = false, max = 3
   </div>;
 }
 
-function ChoicePicker({ field, heading, choices, value, canClear = false, filter, select, readPage, close }: {
+function ChoicePicker({ field, heading, choices, value, canClear = false, filter, attributeChoice, select, readPage, close }: {
   field: ChoiceField | ItemField;
   heading: string; choices: readonly (readonly [string, string])[]; value: string; canClear?: boolean;
   filter?: { enabled: boolean; label: string; change: (enabled: boolean) => void };
+  attributeChoice?: { value: Attribute; options: Attribute[]; change: (value: Attribute) => void };
   select: (value: string) => void; close: () => void;
   readPage: (name: string, pages: number[], trigger: HTMLButtonElement) => void;
 }) {
@@ -96,6 +100,7 @@ function ChoicePicker({ field, heading, choices, value, canClear = false, filter
     { label: 'Weapons', options: choices.filter(([name]) => WEAPONS.includes(name)) },
     { label: 'Non-weapons', options: choices.filter(([name]) => !WEAPONS.includes(name)) },
   ] : [{ label: '', options: [...empty, ...choices] }];
+  const emptyLabel = field === 'role' ? 'No role' : field === 'trope' ? 'No trope' : 'Empty slot';
   return <div id="choice-picker" className="choice-picker" role="dialog" aria-labelledby="picker-heading">
     <div className="picker-header">
       <div><h2 id="picker-heading">{heading}</h2><p>Outgunned Adventure</p></div>
@@ -106,6 +111,17 @@ function ChoicePicker({ field, heading, choices, value, canClear = false, filter
         onChange={event => { list.current!.scrollTop = 0; filter.change(event.target.checked); }} />{filter.label}</label>
       <p id="picker-filter-help">Filters this catalog only; quantities aren’t checked.</p>
     </div>}
+    {attributeChoice && <div className="picker-attribute">
+      <label>Trope attribute +1
+        <select value={attributeChoice.value} disabled={attributeChoice.options.length === 1}
+          aria-describedby="trope-attribute-help" onChange={event => attributeChoice.change(event.target.value as Attribute)}>
+          {attributeChoice.options.map(attribute => <option key={attribute} value={attribute}>{title(attribute)}</option>)}
+        </select>
+      </label>
+      <p id="trope-attribute-help">{attributeChoice.options.length === 1
+        ? 'Your role grants the other attribute, so this one is required.'
+        : 'Choose which of the trope’s two attributes gets its point.'}</p>
+    </div>}
     <div className="picker-list" ref={list}>
       {!choices.length && <p className="picker-notice" role="status">No matching choices in this catalog. Check your role/trope or turn off the filter.</p>}
       {filter && value && !choices.some(([name]) => name === value) && <p className="picker-notice" role="status">Your current selection is outside this list and remains on the sheet.</p>}
@@ -114,9 +130,9 @@ function ChoicePicker({ field, heading, choices, value, canClear = false, filter
           {label && <h3 className="picker-group-heading">{label}</h3>}
           {options.map(([name, page]) => <div className="picker-option" key={name}>
             <label className="picker-select">
-              <input type="radio" name="sheet-choice" value={name} aria-label={name || 'Empty slot'}
+              <input type="radio" name="sheet-choice" value={name} aria-label={name || emptyLabel}
                 checked={value === name} onChange={() => select(name)} />
-              <span className="picker-name">{name || 'Empty slot'}</span>
+              <span className="picker-name">{name || emptyLabel}</span>
               <span className="picker-check" aria-hidden="true">{value === name ? '✓' : ''}</span>
             </label>
             {page && field !== 'background' && <button type="button" className="picker-page" aria-haspopup="dialog"
@@ -186,12 +202,12 @@ function BookReader({ reference, close }: { reference: { name: string; pages: nu
 
 type MarkProps = {
   label: string; value: number; count: number; minimum?: number;
-  x: number; y: number; step: number; kind: 'diamond' | 'luck' | 'grit' | 'cash' | 'ammo';
+  x: number; y: number; step: number; kind: 'luck' | 'grit' | 'cash' | 'ammo';
   change: (value: number) => void;
 };
 
 function Marks({ label, value, count, minimum = 0, x, y, step, kind, change }: MarkProps) {
-  const [w, h] = { diamond: [12, 12], luck: [19, 26], grit: [21, 21], cash: [14, 14], ammo: [10, 20] }[kind];
+  const [w, h] = { luck: [19, 26], grit: [21, 21], cash: [14, 14], ammo: [10, 20] }[kind];
   return <div role="group" aria-label={`${label}: ${value} of ${count}`}>
     {Array.from({ length: count }, (_, i) => <button type="button" key={i}
       className={`sheet-mark ${kind}`} style={place(x + step * i, y, w, h)}
@@ -200,7 +216,6 @@ function Marks({ label, value, count, minimum = 0, x, y, step, kind, change }: M
       title={i < minimum ? `${label}: starting point` : `${label}: set to ${markValue(value, i + 1, minimum)}`}
       onClick={() => change(markValue(value, i + 1, minimum))}>
       <svg viewBox={`0 0 ${w} ${h}`} aria-hidden="true">
-        {kind === 'diamond' && <path d="M6 2.6 9.4 6 6 9.4 2.6 6Z" fill={i < value ? '#634123' : '#fcfaf4'} stroke="#634123" strokeWidth=".7" />}
         {i < value && kind === 'luck' && <><rect x=".4" y=".4" width="18.2" height="25.2" fill="#634123" /><path d="M11 4 4 14 9 14 6 22 15 11 10 11Z" fill="#fcfaf4" /></>}
         {i < value && kind === 'grit' && <path d="M0 3 10.5 0 21 3 20 12 16 18 10.5 21 5 18 1 12Z" transform="translate(3.99 3.8) scale(.62)" fill="#634123" />}
         {i < value && kind === 'cash' && <><circle cx="7" cy="7" r="6.2" fill="#634123" /><text x="7" y="10.1" textAnchor="middle" fill="#fcfaf4" fontFamily="Arial" fontWeight="bold" fontSize="9">$</text></>}
@@ -210,12 +225,36 @@ function Marks({ label, value, count, minimum = 0, x, y, step, kind, change }: M
   </div>;
 }
 
+function RatingMarks({ name, points, y, change }: {
+  name: RatingKey; points: ReturnType<typeof ratingDetails>[RatingKey]; y: number; change: (point: number) => void;
+}) {
+  const { total, base, manual, granted, overlap } = points;
+  return <div role="group" aria-label={`${title(name)}: ${total} of 3; ${base} starting, ${granted} role/trope, ${manual} manual${overlap ? `, ${overlap} overlapping` : ''}`}>
+    {[0, 1, 2].map(index => {
+      const isManual = index >= total - manual && index < total;
+      const locked = index < total - manual;
+      const description = isManual ? 'Manual point; click to remove. Role/trope points are retained.'
+        : locked ? index < base ? 'Starting point' : 'Role/trope point; change the role or trope to remove it.' : 'Add manual points';
+      const color = isManual ? '#156a92' : '#634123';
+      return <button key={index} type="button" className={`sheet-mark rating-mark${isManual ? ' manual-point' : ''}`}
+        style={place(182 + 15 * index, y, 12, 12)} aria-label={`${title(name)} ${index + 1} of 3`}
+        aria-description={description} aria-pressed={index < total} disabled={locked} title={description}
+        onClick={() => change(index + 1)}>
+        <svg viewBox="0 0 12 12" aria-hidden="true">
+          <path d="M6 2.6 9.4 6 6 9.4 2.6 6Z" fill={index < total ? color : '#fcfaf4'} stroke={color} strokeWidth=".7" />
+          {isManual && <circle cx="6" cy="6" r=".85" fill="#fcfaf4" />}
+        </svg>
+      </button>;
+    })}
+  </div>;
+}
+
 function App() {
   const [loaded] = useState(loadDraft);
   const [character, setCharacter] = useState(loaded.character);
   const [savingEnabled, setSavingEnabled] = useState(!loaded.error);
   const [saveStatus, setSaveStatus] = useState(loaded.error ? 'Local saving unavailable' : 'Saved on this device');
-  const [message, setMessage] = useState(loaded.error);
+  const [message, setMessage] = useState(loaded.error || loaded.notice);
   const [overflows, setOverflows] = useState<Record<string, boolean>>({});
   const [zoom, setZoom] = useState('fit');
   const [availableWidth, setAvailableWidth] = useState(1123);
@@ -229,6 +268,9 @@ function App() {
   const portraitInput = useRef<HTMLInputElement>(null);
   const invalidFields = Object.keys(overflows).filter(key => overflows[key]);
   const scale = zoom === 'fit' ? Math.min(1, availableWidth / (297 * 96 / 25.4)) : 1;
+  const ratings = ratingDetails(character);
+  const overlaps = Object.entries(ratings).filter(([, points]) => points.overlap);
+  const attributeOptions = tropeAttributes(character.identity);
 
   const closePicker = useCallback(() => {
     setPicker(null);
@@ -275,8 +317,8 @@ function App() {
     setCharacter(previous => ({ ...previous, [key]: value }));
   const updateList = (key: ItemField, index: number, value: string) =>
     setCharacter(previous => chooseItem(previous, key, index, value));
-  const rating = (name: string, value: number) =>
-    setCharacter(previous => ({ ...previous, ratings: { ...previous.ratings, [name]: value } }));
+  const rating = (name: RatingKey, point: number) =>
+    setCharacter(previous => changeManualPoint(previous, name, point));
 
   async function importBackup(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -284,11 +326,12 @@ function App() {
     if (!file) return;
     try {
       if (file.size > MAX_BACKUP_BYTES) throw new Error('Backups must be smaller than 1 MB.');
-      const imported = parseCharacter(await file.text());
+      const raw = await file.text();
+      const imported = parseCharacter(raw);
       if (!window.confirm('Replace the current sheet with this backup? Export first if you want to keep it.')) return;
       setCharacter(imported);
       setSavingEnabled(true);
-      setMessage('Character imported.');
+      setMessage(`Character imported.${JSON.parse(raw).version === 1 ? ` ${legacyPointsNotice}` : ''}`);
     } catch (error) {
       setMessage(`Import failed; your sheet is unchanged. ${error instanceof Error ? error.message : ''}`);
     }
@@ -358,6 +401,10 @@ function App() {
     </div>
     {message && <p className="builder-message" role="status">{message} <button type="button" onClick={() => setMessage('')} aria-label="Dismiss message">×</button></p>}
     {invalidFields.length > 0 && <p className="builder-warning" role="alert">Text exceeds the printed space in {invalidFields.join(', ')}. Shorten it before printing; the sheet will not shrink or add pages.</p>}
+    <div className="rating-legend">
+      <span><b aria-hidden="true">◆</b> Starting + role/trope points</span>
+      <span className="manual-key"><b aria-hidden="true">◇</b> Manual points — click blue to remove</span>
+    </div>
     <div className="sheet-viewport" ref={viewport}>
       <div className="sheet-stage" style={{ width: `${297 * scale}mm`, height: `${210 * scale}mm` }}>
         <form className="character-sheet" aria-label="Outgunned Adventure character sheet" onSubmit={event => event.preventDefault()}
@@ -381,10 +428,9 @@ function App() {
           <Marks label="Luck" kind="luck" value={character.luck} count={6} x={548} y={62} step={42} change={value => update('luck', value)} />
           <Marks label="Grit" kind="grit" value={character.grit} count={12} x={520} y={159} step={24.7} change={value => update('grit', value)} />
           {GROUPS.map(([attribute, skills], group) => <div key={attribute} role="group" aria-label={title(attribute)}>
-            <Marks label={title(attribute)} kind="diamond" value={character.ratings[attribute]} count={3} minimum={2}
-              x={182} y={221 + group * 72} step={15} change={value => rating(attribute, value)} />
-            {skills.map((skill, index) => <Marks key={skill} label={title(skill)} kind="diamond" value={character.ratings[skill]} count={3} minimum={1}
-              x={182} y={237 + group * 72 + index * 12.5} step={15} change={value => rating(skill, value)} />)}
+            <RatingMarks name={attribute} points={ratings[attribute]} y={221 + group * 72} change={point => rating(attribute, point)} />
+            {skills.map((skill, index) => <RatingMarks key={skill} name={skill} points={ratings[skill]}
+              y={237 + group * 72 + index * 12.5} change={point => rating(skill, point)} />)}
           </div>)}
           {character.feats.map((value, index) => <Field key={`feat-${index}`} label={`Feat ${index + 1}`} value={value}
             x={264} y={247 + index * 53} w={231} h={42} multiline max={4000} line={14}
@@ -410,8 +456,9 @@ function App() {
       </div>
     </div>
     <div className="builder-notes">
+      {overlaps.length > 0 && <p className="rating-overlap" role="status">Manual points overlap role/trope bonuses in {overlaps.map(([name, points]) => `${title(name)} (${points.overlap})`).join(', ')}. Totals are capped at 3; your blue points are kept. Remove or reassign them, or change your role/trope.</p>}
       <p><strong>A4 landscape · 297 × 210 mm.</strong> The screen and print use this same sheet. Click a chevron to choose from the book; click other writing lines to type. Click a tracker to fill through it, or its last filled mark to erase it. On a small screen, use 100% and scroll to edit comfortably.</p>
-      <p>Selections update immediately. Click outside a panel or press Escape to close it. Feats default to role/trope choices and gear to role starting choices; turn off each panel’s filter to browse its full catalog. Filters don’t remove existing picks or enforce quantities. Flavor choices remain unrestricted; this variant uses Adult only. Choose Empty slot to remove a feat or gear entry. Ratings, Hot and other resources remain manual. Drafts stay in this browser; export a backup to move devices or keep another character. When printing, use A4 landscape, 100% scale, no margins and no browser headers/footers.</p>
+      <p>Selections update immediately. Click outside a panel or press Escape to close it. Role/trope points apply automatically; No role or No trope removes only their bonuses. Choose the trope’s attribute in its panel. Brown points are locked; click an empty diamond to add manual points or a blue diamond to remove them. Manual additions survive role/trope changes; free-point budgets aren’t enforced. Feats default to role/trope choices and gear to role starting choices; turn off each panel’s filter to browse its full catalog. Filters don’t remove existing picks or enforce quantities. Flavor choices remain unrestricted; this variant uses Adult only. Choose Empty slot to remove a feat or gear entry. Hot and other resources remain manual. Drafts stay in this browser; export a backup to move devices or keep another character. When printing, use A4 landscape, 100% scale, no margins and no browser headers/footers.</p>
       {character.portrait && <button type="button" onClick={() => update('portrait', null)}>Remove portrait</button>}
     </div>
     {picker && <ChoicePicker key={typeof picker === 'string' ? picker : `${picker.field}-${picker.index}`}
@@ -419,7 +466,11 @@ function App() {
       heading={typeof picker === 'string' ? `Choose ${picker === 'age' ? 'an' : 'a'} ${picker}` : picker.field === 'feats' ? 'Choose a feat' : 'Choose guns & gear'}
       choices={typeof picker === 'string' ? IDENTITY_CHOICES[picker] : itemChoices(picker.field, character.identity, itemLimits[picker.field])}
       value={typeof picker === 'string' ? character.identity[picker] : character[picker.field][picker.index]}
-      canClear={typeof picker !== 'string'}
+      canClear={typeof picker !== 'string' || picker === 'role' || picker === 'trope'}
+      attributeChoice={picker === 'trope' && attributeOptions.length ? {
+        value: character.tropeAttribute as Attribute, options: attributeOptions,
+        change: attribute => setCharacter(previous => chooseTropeAttribute(previous, attribute)),
+      } : undefined}
       filter={typeof picker === 'string' ? undefined : {
         enabled: itemLimits[picker.field],
         label: picker.field === 'feats' ? 'Only role & trope feats' : 'Only role starting gear',

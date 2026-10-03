@@ -43,9 +43,23 @@ Neither the source PDFs nor `html/` is copied into the published site.
 
 ### Editable character sheet
 
-Open `/character-builder/` from the homepage. This is a manual-entry sheet,
-not yet a rules-guided character builder. Text, ratings, trackers, and a portrait
-save in this browser only. Export/import a JSON backup to transfer a character
+Open `/character-builder/` from the homepage. Role and trope selections grant
+their attribute/skill points automatically; clearing or switching a selection
+removes only its grants. Choose the trope's attribute in its panel; the role's
+attribute cannot also receive the trope point. The gear catalog includes the
+Star's precious item and the Professor's diary and pencil, cited to their role pages.
+
+Brown diamonds are starting/role/trope points; blue diamonds with a pale center
+are manual additions. Click an empty diamond to add manual points, or a blue
+diamond to remove them. Totals cap at 3. Manual points are never discarded when
+grants overlap them: they stay blue and an overlap notice appears below the sheet.
+Free-point budgets are not enforced. Resources, feats, and gear remain manual selections.
+
+Version 2 backups store manual additions separately from the derived totals.
+Version 1 drafts/backups are migrated with all non-baseline points preserved as
+manual additions; the old format cannot identify which were intended as role bonuses.
+Text, ratings, trackers, and a portrait save in this browser only.
+Export/import a JSON backup to transfer a character
 or protect against cleared browser storage. No account or server storage is used.
 
 The sheet stays **297 × 210 mm (A4 landscape)** in both screen and print styles.

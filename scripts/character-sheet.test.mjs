@@ -1,31 +1,32 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { IDENTITY_CHOICES, ITEM_CHOICES, ROLE_ITEMS, TROPE_FEATS, WEAPONS, adventurePageUrl, chooseIdentity, chooseItem, itemChoices, newCharacter, parseCharacter, markValue, referencePages } from '../site/assets/character-sheet/model.ts';
+import { BASE_RATINGS, GROUPS, IDENTITY_CHOICES, ITEM_CHOICES, ROLE_ITEMS, ROLE_POINTS, TROPE_FEATS, TROPE_POINTS, WEAPONS, adventurePageUrl, changeManualPoint, chooseIdentity, chooseItem, chooseTropeAttribute, itemChoices, newCharacter, parseCharacter, markValue, ratingDetails, referencePages, tropeAttributes } from '../site/assets/character-sheet/model.ts';
 
-const pageText = page => readFileSync(new URL(
+const pageSource = page => readFileSync(new URL(
   `../html/outgunned-adventure-standalone-genre-book-v1.1-en/page-${String(page + 2).padStart(4, '0')}.md`,
   import.meta.url,
-), 'utf8').toLowerCase();
+), 'utf8');
+const pageText = page => pageSource(page).toLowerCase();
 
 test('defaults preserve baselines and independent character records', () => {
   const a = newCharacter();
   const b = newCharacter();
-  assert.equal(Object.keys(a.ratings).length, 25);
-  assert.equal(a.ratings.NERVES, 2);
-  assert.equal(a.ratings.STEALTH, 1);
+  assert.equal(Object.keys(a.manualPoints).length, 25);
+  assert.equal(ratingDetails(a).NERVES.total, 2);
+  assert.equal(ratingDetails(a).STEALTH.total, 1);
   a.feats[1] = 'Changed';
-  a.ratings.STEALTH = 3;
+  a.manualPoints.STEALTH = 2;
   assert.equal(b.feats[1], '');
-  assert.equal(b.ratings.STEALTH, 1);
+  assert.equal(b.manualPoints.STEALTH, 0);
 });
 
 test('asymmetric edited character round-trips without losing zeroes or line breaks', () => {
   const a = newCharacter();
   a.identity.name = 'Élodie van Rijn';
   a.identity.catchphrase = 'Maps lie. People lie more.';
-  a.ratings.FOCUS = 3;
-  a.ratings.HEAL = 2;
+  a.manualPoints.FOCUS = 1;
+  a.manualPoints.HEAL = 1;
   a.luck = 4;
   a.grit = 12;
   a.cash = 0;
@@ -37,12 +38,18 @@ test('asymmetric edited character round-trips without losing zeroes or line brea
 
 test('invalid imports are rejected, not clamped or partially accepted', () => {
   for (const edit of [
-    a => a.version = 2,
+    a => a.version = 3,
     a => a.grit = 13,
     a => a.luck = -1,
     a => a.cash = 1.5,
-    a => a.ratings.BRAWN = 1,
-    a => a.ratings.FIGHT = 4,
+    a => a.manualPoints.BRAWN = 2,
+    a => a.manualPoints.FIGHT = 3,
+    a => a.manualPoints.FIGHT = -1,
+    a => a.manualPoints.FIGHT = 0.5,
+    a => delete a.manualPoints.KNOW,
+    a => a.manualPoints = null,
+    a => a.tropeAttribute = 'BRAWN',
+    a => delete a.tropeAttribute,
     a => a.gear.pop(),
     a => a.ammo = [1, '2', 0],
     a => a.identity = null,
@@ -116,9 +123,9 @@ test('only role references open two consecutive pages, including the last standa
 
 test('every flavor choice is available across roles and tropes without changing mechanics', () => {
   for (const [role, trope] of [['', ''], ['The Professor', 'Born Rebel'], ['The Guardian', 'Salty Dog']]) {
-    const original = newCharacter();
-    Object.assign(original.identity, { role, trope, background: 'Librarian', age: 'Old', flaw: 'A custom flaw', catchphrase: 'Keep moving!' });
-    original.ratings.FOCUS = 3;
+    const original = chooseIdentity(chooseIdentity(newCharacter(), 'role', role), 'trope', trope);
+    Object.assign(original.identity, { background: 'Librarian', age: 'Old', flaw: 'A custom flaw', catchphrase: 'Keep moving!' });
+    original.manualPoints.FOCUS = 1;
     original.luck = 2;
     original.feats[1] = 'Linguist';
     const untouched = structuredClone(original);
@@ -135,10 +142,10 @@ test('every flavor choice is available across roles and tropes without changing 
   }
 });
 
-test('selections immediately replace only the chosen field and survive a backup round-trip', () => {
+test('selections preserve manual points and other data and survive a backup round-trip', () => {
   const original = newCharacter();
   original.identity.background = 'Librarian';
-  original.ratings.FOCUS = 3;
+  original.manualPoints.FOCUS = 1;
   original.feats[2] = 'Linguist\nSpeaks Dutch';
   original.gear[4] = 'Old map';
   original.cash = 4;
@@ -146,6 +153,7 @@ test('selections immediately replace only the chosen field and survive a backup 
   const expected = structuredClone(original);
   expected.identity.role = 'The Smuggler';
   expected.identity.trope = 'Wild at Heart';
+  expected.tropeAttribute = 'BRAWN';
   let chosen = chooseIdentity(original, 'role', 'The Professor');
   chosen = chooseIdentity(chosen, 'trope', 'Action Archeologist');
   chosen = chooseIdentity(chosen, 'role', 'The Smuggler');
@@ -160,7 +168,7 @@ test('unlisted values, excluded special role, and choices from the wrong field c
   const original = newCharacter();
   for (const [field, value] of [
     ['role', 'Custom explorer'], ['role', 'The Fortune Seeker'], ['role', 'Born Rebel'],
-    ['trope', 'The Professor'], ['trope', ''], ['age', 'Young'], ['age', 'Old'],
+    ['trope', 'The Professor'], ['background', ''], ['age', 'Young'], ['age', 'Old'],
     ['background', 'The Fortune Seeker'], ['flaw', 'Leave it to me'], ['catchphrase', 'I can’t swim'],
   ]) assert.strictEqual(chooseIdentity(original, field, value), original);
 });
@@ -186,7 +194,7 @@ test('legacy manual values remain intact until that field receives a book select
 });
 
 test('feat and gear catalogs cite their descriptions, with distinct source-backed entries', () => {
-  for (const [field, count, pages] of [['feats', 37, [53, 54, 55, 56, 57, 58, 59]], ['gear', 32, [132, 133]]]) {
+  for (const [field, count, pages] of [['feats', 37, [53, 54, 55, 56, 57, 58, 59]], ['gear', 34, [32, 34, 132, 133]]]) {
     const options = ITEM_CHOICES[field];
     assert.equal(options.length, count);
     assert.equal(new Set(options.map(([name]) => name)).size, count);
@@ -224,11 +232,10 @@ test('weapon grouping includes knives and uncommon weapons but excludes ammuniti
 
 test('any role or trope can select and clear any item in any slot without altering other data', () => {
   for (const [role, trope] of [['', ''], ['The Professor', 'Born Rebel'], ['The Guardian', 'Salty Dog']]) {
-    const original = newCharacter();
-    Object.assign(original.identity, { role, trope });
+    const original = chooseIdentity(chooseIdentity(newCharacter(), 'role', role), 'trope', trope);
     original.feats = ['Custom feat\nWith notes', 'Artist', '', 'Guide', 'Sailor', 'Linguist'];
     original.gear = ['Old map', '', 'Compass', 'Radio', 'Knife', 'Rope'];
-    original.ratings.FOCUS = 3;
+    original.manualPoints.FOCUS = 1;
     original.cash = 4;
     original.ammo = [2, 0, 3];
     const untouched = structuredClone(original);
@@ -300,7 +307,7 @@ test('gear filtering respects fixed kits, price allowances and ordinary weapon c
     ['The Captain', ['Pistol/Revolver', 'Old Ride', 'Compass']],
     ['The Smuggler', ['Pistol/Revolver', 'Rope', 'Lockpicking Set']],
     ['The Technician', ['Old Rifle', 'Dynamite', 'Tool-bag', 'Knife', 'Lighter']],
-    ['The Star', ['Elegant Clothes']], ['The Professor', []], ['', []],
+    ['The Star', ['Elegant Clothes', 'Precious item of choice']], ['The Professor', ['Diary and pencil']], ['', []],
   ]) assert.deepEqual(names(role), expected.sort());
 
   // Derive price groups independently from the book tables, including OCR spacing.
@@ -332,4 +339,147 @@ test('filtering preserves existing out-of-list selections, citations and the unr
     assert.strictEqual(itemChoices(field, character.identity, false), ITEM_CHOICES[field]);
   }
   assert.deepEqual(character, before);
+});
+
+test('all point-grant lists match the book columns: ten role skills, eight trope skills', () => {
+  const title = name => name[0] + name.slice(1).toLowerCase();
+  const skillPattern = new RegExp(`\\b(${GROUPS.flatMap(([, skills]) => skills).map(title).join('|')})(?![-a-zA-Z])\\b`, 'g');
+  const attributePattern = /\b(Brawn|Nerves|Smooth|Focus|Crime)\b/g;
+  for (const [field, data, count] of [['role', ROLE_POINTS, 10], ['trope', TROPE_POINTS, 8]]) {
+    assert.deepEqual(Object.keys(data).sort(), IDENTITY_CHOICES[field].map(([name]) => name).sort());
+    for (const [name, page] of IDENTITY_CHOICES[field]) {
+      let source = pageSource(Number(page));
+      if (field === 'trope') source = source.split(/^# <mark>/m).find(section => section.toLowerCase().startsWith(`${name.toLowerCase()}</mark>`));
+      source = source.slice(source.indexOf('**Attribute Point:'));
+      const actualSkills = [...new Set([...source.matchAll(skillPattern)].map(match => match[1].toUpperCase()))];
+      const actualAttributes = [...new Set([...source.matchAll(attributePattern)].map(match => match[1].toUpperCase()))];
+      assert.equal(data[name].skills.length, count, name);
+      assert.equal(data[name].attributes.length, field === 'role' ? 1 : 2, name);
+      assert.deepEqual([...data[name].skills].sort(), actualSkills.sort(), name);
+      assert.deepEqual([...data[name].attributes].sort(), actualAttributes.sort(), name);
+    }
+  }
+});
+
+test('every role/trope combination grants two attributes and eighteen skills without accumulating points', () => {
+  let c = newCharacter();
+  for (const [role] of IDENTITY_CHOICES.role) {
+    for (const [trope] of IDENTITY_CHOICES.trope) {
+      c = chooseIdentity(chooseIdentity(c, 'role', role), 'trope', trope);
+      const details = ratingDetails(c);
+      assert.equal(GROUPS.reduce((sum, [attribute]) => sum + details[attribute].total - 2, 0), 2, `${role}/${trope}`);
+      assert.equal(GROUPS.flatMap(([, skills]) => skills).reduce((sum, skill) => sum + details[skill].total - 1, 0), 18);
+      assert(Object.values(details).every(p => p.overlap === 0 && p.total <= 3));
+      assert.deepEqual(chooseIdentity(chooseIdentity(c, 'role', role), 'trope', trope), c);
+      assert.deepEqual(parseCharacter(JSON.stringify(c)), c);
+      const cleared = chooseIdentity(chooseIdentity(c, 'trope', ''), 'role', '');
+      assert.deepEqual(cleared, newCharacter());
+    }
+  }
+});
+
+test('role and trope skill overlap stacks, while clearing one removes only its contribution', () => {
+  let c = chooseIdentity(chooseIdentity(newCharacter(), 'role', 'The Daredevil'), 'trope', 'Action Archeologist');
+  assert.equal(c.tropeAttribute, 'FOCUS');
+  assert.deepEqual(Object.fromEntries(Object.entries(ratingDetails(c)).map(([key, value]) => [key, value.total])), {
+    BRAWN: 3, ENDURE: 2, FIGHT: 3, FORCE: 1, STUNT: 3,
+    NERVES: 2, COOL: 2, DRIVE: 1, SHOOT: 3, SURVIVAL: 2,
+    SMOOTH: 2, FLIRT: 2, LEADERSHIP: 2, SPEECH: 2, STYLE: 1,
+    FOCUS: 3, DETECT: 2, FIX: 1, HEAL: 1, KNOW: 2,
+    CRIME: 2, AWARENESS: 1, DEXTERITY: 2, STEALTH: 3, STREETWISE: 2,
+  });
+  c = chooseIdentity(c, 'role', '');
+  assert.equal(ratingDetails(c).BRAWN.total, 2);
+  assert.equal(ratingDetails(c).FOCUS.total, 3);
+  assert.equal(ratingDetails(c).FIGHT.total, 2);
+  assert.equal(ratingDetails(c).ENDURE.total, 1);
+  assert.equal(ratingDetails(c).KNOW.total, 2);
+  c = chooseIdentity(c, 'trope', '');
+  assert.deepEqual(c, newCharacter());
+});
+
+test('trope attribute choice respects the role, preserves valid choices, and avoids manual overlap by default', () => {
+  let c = changeManualPoint(newCharacter(), 'BRAWN', 3);
+  c = chooseIdentity(c, 'trope', 'Action Archeologist');
+  assert.equal(c.tropeAttribute, 'FOCUS');
+  assert.deepEqual(tropeAttributes(c.identity), ['BRAWN', 'FOCUS']);
+  c = chooseTropeAttribute(c, 'BRAWN');
+  assert.equal(ratingDetails(c).BRAWN.overlap, 1);
+  c = chooseIdentity(c, 'role', 'The Daredevil');
+  assert.deepEqual(tropeAttributes(c.identity), ['FOCUS']);
+  assert.equal(c.tropeAttribute, 'FOCUS');
+  assert.strictEqual(chooseTropeAttribute(c, 'BRAWN'), c);
+  assert.strictEqual(chooseTropeAttribute(c, 'NERVES'), c);
+  c = chooseIdentity(c, 'role', 'The Captain');
+  assert.equal(c.tropeAttribute, 'FOCUS');
+  c = chooseIdentity(c, 'role', 'The Professor');
+  assert.equal(c.tropeAttribute, 'BRAWN');
+  assert.equal(c.manualPoints.BRAWN, 1);
+  assert.throws(() => parseCharacter(JSON.stringify({ ...c, tropeAttribute: 'FOCUS' })));
+  assert.throws(() => parseCharacter(JSON.stringify({ ...c, tropeAttribute: '' })));
+});
+
+test('manual additions survive capped grants, switching, clearing and round-trips', () => {
+  let c = changeManualPoint(newCharacter(), 'FIGHT', 3);
+  c = changeManualPoint(c, 'HEAL', 2);
+  c = changeManualPoint(c, 'SMOOTH', 3);
+  const original = structuredClone(c);
+  for (const [role] of IDENTITY_CHOICES.role) {
+    for (const [trope] of IDENTITY_CHOICES.trope) {
+      c = chooseIdentity(chooseIdentity(c, 'role', role), 'trope', trope);
+      assert.deepEqual(c.manualPoints, original.manualPoints);
+      assert(Object.values(ratingDetails(c)).every(p => p.total <= 3 && p.manual <= p.total - p.base));
+      c = parseCharacter(JSON.stringify(c));
+      const cleared = chooseIdentity(chooseIdentity(c, 'role', ''), 'trope', '');
+      assert.deepEqual(cleared, original);
+    }
+  }
+  c = chooseIdentity(chooseIdentity(original, 'role', 'The Daredevil'), 'trope', 'Action Archeologist');
+  assert.deepEqual(ratingDetails(c).FIGHT, { base: 1, manual: 2, granted: 2, total: 3, overlap: 2 });
+  c = changeManualPoint(c, 'FIGHT', 3);
+  assert.deepEqual(ratingDetails(c).FIGHT, { base: 1, manual: 1, granted: 2, total: 3, overlap: 1 });
+  c = changeManualPoint(c, 'FIGHT', 3);
+  assert.deepEqual(ratingDetails(c).FIGHT, { base: 1, manual: 0, granted: 2, total: 3, overlap: 0 });
+  assert.strictEqual(changeManualPoint(c, 'FIGHT', 3), c, 'automatic point is locked');
+  assert.equal(c.manualPoints.HEAL, 1);
+  c = chooseIdentity(chooseIdentity(c, 'role', ''), 'trope', '');
+  assert.equal(ratingDetails(c).FIGHT.total, 1);
+  assert.equal(ratingDetails(c).HEAL.total, 2);
+  assert.equal(ratingDetails(c).SMOOTH.total, 3);
+});
+
+test('manual clicks fill empty slots, remove only blue points and never alter grants', () => {
+  let c = chooseIdentity(newCharacter(), 'role', 'The Captain');
+  c = changeManualPoint(c, 'SHOOT', 3);
+  assert.equal(c.manualPoints.SHOOT, 1);
+  assert.equal(ratingDetails(c).SHOOT.total, 3);
+  assert.strictEqual(changeManualPoint(c, 'SHOOT', 2), c);
+  c = changeManualPoint(c, 'SHOOT', 3);
+  assert.equal(c.manualPoints.SHOOT, 0);
+  assert.equal(ratingDetails(c).SHOOT.total, 2);
+  c = changeManualPoint(c, 'FORCE', 3);
+  assert.equal(c.manualPoints.FORCE, 2);
+  c = changeManualPoint(c, 'FORCE', 2);
+  assert.equal(c.manualPoints.FORCE, 0);
+  for (const point of [0, -1, 4, 1.5]) assert.strictEqual(changeManualPoint(c, 'FORCE', point), c);
+});
+
+test('v1 migration preserves every manual addition and never reapplies bonuses on subsequent loads', () => {
+  const { manualPoints, tropeAttribute, ...old } = newCharacter();
+  old.version = 1;
+  old.ratings = { ...BASE_RATINGS, NERVES: 3, FORCE: 3, KNOW: 2 };
+  Object.assign(old.identity, { role: 'The Captain', trope: 'Salty Dog' });
+  old.gear[5] = 'Legacy item';
+  let c = parseCharacter(JSON.stringify(old));
+  assert.equal(c.version, 2);
+  assert.equal(c.tropeAttribute, 'FOCUS');
+  assert.deepEqual(c.manualPoints, { ...manualPoints, NERVES: 1, FORCE: 2, KNOW: 1 });
+  assert.equal(ratingDetails(c).NERVES.overlap, 1);
+  for (let i = 0; i < 3; i++) assert.deepEqual(parseCharacter(JSON.stringify(c)), c);
+  c = chooseIdentity(chooseIdentity(c, 'role', ''), 'trope', '');
+  assert.deepEqual(Object.fromEntries(Object.entries(ratingDetails(c)).map(([key, value]) => [key, value.total])), old.ratings);
+  assert.equal(c.gear[5], 'Legacy item');
+  for (const invalid of [{ ...old.ratings, NERVES: 1 }, { ...old.ratings, FORCE: 4 }]) {
+    assert.throws(() => parseCharacter(JSON.stringify({ ...old, ratings: invalid })));
+  }
 });
