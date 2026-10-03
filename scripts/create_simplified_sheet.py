@@ -60,7 +60,6 @@ def create_sheet(destination):
     paper_texture = asset(179)
     logo = asset(180)
     backpack = asset(379)
-    leather = asset(472)
     pdf = canvas.Canvas(str(destination), pagesize=(width, height), invariant=1)
     pdf.setTitle("Outgunned Adventure - Textured Simplified Player Sheet")
     pdf.setAuthor("Unofficial homebrew adaptation")
@@ -136,9 +135,8 @@ def create_sheet(destination):
         line(x, y + 6, x + 5, y + 6, color=BROWN, weight=0.4)
         box(x - 0.7, y + 15, 6.4, 1.5, fill=PAPER, weight=0.5)
 
-    # Reuse the actual antique map and leather-edge textures from the original.
+    # Reuse the antique map without the original's brown leather edge.
     image(map_texture, 0, 0, width, height)
-    image(leather, 818, -2, 175, 638)
 
     # A tilted, textured photograph card with the original logo and a paperclip.
     pdf.saveState()
@@ -241,9 +239,10 @@ def create_sheet(destination):
         pdf.circle(x, height - 412, 6.2, fill=1, stroke=1)
         text(x, 415.1, "$", size=9, bold=True, color=BROWN, align="center")
 
-    image(backpack, 493, 431, 112, 124)
-    for x, label in ((607, "BACKPACK"), (716, "BAG")):
-        w = 98
+    # Tuck the illustration behind its paper panel, as on the original sheet.
+    image(backpack, 505, 429, 118, 131)
+    for x, label in ((551, "BACKPACK"), (692, "BAG")):
+        w = 123 if label == "BACKPACK" else 122
         banner(x, 442, w, label, size=13)
         image(paper_texture, x, 461, w, 99)
         box(x, 460, w, 100)
