@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { CSSProperties, ChangeEvent } from 'react';
 import { createRoot } from 'react-dom/client';
-import { GROUPS, IDENTITY, IDENTITY_CHOICES, MAX_BACKUP_BYTES, STORAGE_KEY, chooseIdentity, markValue, newCharacter, parseCharacter } from './model';
+import { GROUPS, IDENTITY, IDENTITY_CHOICES, MAX_BACKUP_BYTES, STORAGE_KEY, adventurePageUrl, chooseIdentity, markValue, newCharacter, parseCharacter } from './model';
 import type { Character, ChoiceField, IdentityKey } from './model';
 
 const root = document.getElementById('character-builder')!;
@@ -81,24 +81,27 @@ function IdentityPicker({ field, value, select, close }: {
     const element = list.current!;
     const selected = element.querySelector<HTMLInputElement>('input:checked') || element.querySelector<HTMLInputElement>('input')!;
     selected.focus({ preventScroll: true });
-    const row = selected.closest('label')!;
+    const row = selected.closest<HTMLElement>('.picker-option')!;
     element.scrollTop = row.offsetTop - (element.clientHeight - row.clientHeight) / 2;
   }, []);
 
   return <div id="identity-picker" className="identity-picker" role="dialog" aria-labelledby="picker-heading">
     <div className="picker-header">
-      <div><h2 id="picker-heading">Choose a {field}</h2><p>Outgunned Adventure</p></div>
+      <div><h2 id="picker-heading">Choose {field === 'age' ? 'an' : 'a'} {field}</h2><p>Outgunned Adventure</p></div>
       <button type="button" className="picker-close" aria-label="Close picker" onClick={close}>×</button>
     </div>
     <div className="picker-list" ref={list}>
       <fieldset aria-label={title(field)}>
-        {IDENTITY_CHOICES[field].map(([name, page]) => <label className="picker-option" key={name}>
-          <input type="radio" name={`choose-${field}`} value={name} aria-label={name}
-            checked={value === name} onChange={() => select(name)} />
-          <span className="picker-name">{name}</span>
-          <span className="picker-check" aria-hidden="true">{value === name ? '✓' : ''}</span>
-          <span className="picker-page">p. {page}</span>
-        </label>)}
+        {IDENTITY_CHOICES[field].map(([name, page]) => <div className="picker-option" key={name}>
+          <label className="picker-select">
+            <input type="radio" name={`choose-${field}`} value={name} aria-label={name}
+              checked={value === name} onChange={() => select(name)} />
+            <span className="picker-name">{name}</span>
+            <span className="picker-check" aria-hidden="true">{value === name ? '✓' : ''}</span>
+          </label>
+          <a className="picker-page" href={adventurePageUrl(page)} target="_blank" rel="noreferrer"
+            aria-label={`${name}: Outgunned Adventure, page ${page} (opens in a new tab)`}>p. {page}</a>
+        </div>)}
       </fieldset>
     </div>
   </div>;
@@ -281,8 +284,9 @@ function App() {
           </button>
           {IDENTITY.map(key => {
             const [x, y, w] = identityPositions[key];
-            return <Field key={key} label={title(key)} value={character.identity[key]} x={x} y={y + 1} w={w} h={14}
-              picker={key === 'role' || key === 'trope' ? {
+            const label = title(key) + (key === 'name' || key === 'role' || key === 'trope' ? '' : ' (flavor)');
+            return <Field key={key} label={label} value={character.identity[key]} x={x} y={y + 1} w={w} h={14}
+              picker={key !== 'name' ? {
                 expanded: picker === key,
                 open: trigger => { pickerTrigger.current = trigger; setPicker(key); },
               } : undefined}
@@ -310,8 +314,8 @@ function App() {
       </div>
     </div>
     <div className="builder-notes">
-      <p><strong>A4 landscape · 297 × 210 mm.</strong> The screen and print use this same sheet. Click Role or Trope to choose from the book; click another line to write. Click a tracker to fill through it, or its last filled mark to erase it. On a small screen, use 100% and scroll to edit comfortably.</p>
-      <p>Role and trope selections update immediately. Ratings, feats, gear, Hot and other resources remain manual. Drafts stay in this browser; export a backup to move devices or keep another character. When printing, use A4 landscape, 100% scale, no margins and no browser headers/footers.</p>
+      <p><strong>A4 landscape · 297 × 210 mm.</strong> The screen and print use this same sheet. Click a chevron to choose from the book; click other writing lines to type. Click a tracker to fill through it, or its last filled mark to erase it. On a small screen, use 100% and scroll to edit comfortably.</p>
+      <p>Selections update immediately. Flavor choices help the Director and are available regardless of role or trope; this variant uses Adult only. Ratings, feats, gear, Hot and other resources remain manual. Drafts stay in this browser; export a backup to move devices or keep another character. When printing, use A4 landscape, 100% scale, no margins and no browser headers/footers.</p>
       {character.portrait && <button type="button" onClick={() => update('portrait', null)}>Remove portrait</button>}
     </div>
     {picker && <IdentityPicker key={picker} field={picker} value={character.identity[picker]}

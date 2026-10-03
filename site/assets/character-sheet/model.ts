@@ -10,7 +10,8 @@ export const IDENTITY = ['name', 'role', 'trope', 'background', 'age', 'flaw', '
 export type IdentityKey = typeof IDENTITY[number];
 
 // Outgunned Adventure, printed pages (the extracted files are numbered two higher).
-// Standard roles: pp. 20–41. Tropes: pp. 44–49. Fortune Seeker is intentionally omitted.
+// Standard roles: pp. 20–41. Tropes: pp. 44–49. Fortune Seeker is omitted as a role.
+// Personal-data suggestions are pooled across roles, with duplicates listed once.
 export const IDENTITY_CHOICES = {
   role: [
     ['The Daredevil', '22'], ['The Guardian', '24'], ['The Captain', '26'],
@@ -25,8 +26,54 @@ export const IDENTITY_CHOICES = {
     ['Indispensable Rogue', '48'], ['Parental Figure', '48'], ['Proper Gentleman/Lady', '48'],
     ['Reluctant Hero', '49'], ['Salty Dog', '49'], ['Wild at Heart', '49'],
   ],
+  background: [
+    ['Former Soldier', '22'], ['Explorer', '22'], ['Tomb Robber', '22'],
+    ['Bodyguard', '24'], ['Field Medic', '24'], ['Ancient Order', '24'],
+    ['Aviator', '26'], ['Ship Captain', '26'], ['Veteran', '26'],
+    ['Saved by Natives', '28'], ['Poacher', '28'], ['Military Veteran', '28'],
+    ['Musician', '30'], ['Cook', '30'], ['University Professor', '30'],
+    ['Heir', '32'], ['Great Performer', '32'], ['Aristocrat', '32'],
+    ['Librarian', '34'], ['Researcher', '34'],
+    ['Mechanic', '36'], ['Demolition Expert', '36'], ['Sapper', '36'],
+    ['Criminal', '38'], ['Salesperson', '38'],
+    ['Archeologist', '40'], ['Grave Robber', '40'], ['Pilot', '40'],
+  ],
+  age: [['Adult', '19']],
+  flaw: [
+    ['I’m afraid of spiders', '18'],
+    ['I act without thinking', '22'], ['I never back down from a challenge', '22'], ['I hide a dangerous secret', '22'],
+    ['I never change my mind', '24'], ['I don’t cooperate with the enemy', '24'], ['My mission comes first', '24'],
+    ['I can’t resist a challenge', '26'], ['I have a debt to repay', '26'], ['I have a peg-leg', '26'],
+    ['I’m obsessed with the past', '28'], ['I never listen to advice', '28'], ['I have an old wound', '28'],
+    ['I believe I can save everyone', '30'], ['I feel like a burden', '30'], ['I always have to do what’s right', '30'],
+    ['I hate getting dirty', '32'], ["I'm afraid of bugs", '32'], ['I’m picky about food', '32'],
+    ['I always have a theory to test', '34'], ['I don’t know when to shut up', '34'], ['Without my glasses, I am nearly blind', '34'],
+    ['I don’t take advice', '36'], ['I’m a fatalist and a pessimist', '36'], ['I can’t swim', '36'],
+    ['I never tell the whole truth', '38'], ['I have a secret', '38'], ['I never go first', '38'],
+    ['I need money', '40'], ['I have unfinished business', '40'], ['I don’t believe in my friends', '40'],
+    ['I never know when to stop', '42'], ['I always put the Treasure first', '42'], ['I have an eyepatch', '42'],
+  ],
+  catchphrase: [
+    ['I’ve had worse!', '18'],
+    ['Leave it to me', '22'], ['Nothing ventured nothing gained', '22'], ['I only gamble with my life', '22'],
+    ['If it were to fall into the wrong hands…', '24'], ['Nobody gets left behind', '24'], ['Go! I’ll take care of this', '24'],
+    ['I chart my own course', '26'], ['Of course I can drive that', '26'], ['First time for everything', '26'],
+    ['Try not to do anything stupid', '28'], ['I don’t like this silence', '28'], ['You can never win against Nature', '28'],
+    ['We can do this. Together', '30'], ['We won’t let this stop us', '30'], ['You’re stronger than you think', '30'],
+    ['I performed in the greatest theaters', '32'], ['No one says no to me', '32'], ['Everything has a price', '32'],
+    ['I’ve read it in a book', '34'], ['We never stop learning', '34'], ['The pen is mightier than the sword', '34'],
+    ['It doesn’t work like that…', '36'], ['What did I tell you?', '36'], ['Step back a little', '36'],
+    ['Do you trust me?', '38'], ['I’ve never seen this man before', '38'], ['It’s fine, they will never find us', '38'],
+    ["Who d’you think you're talking to?", '40'], ['They don’t need it anymore', '40'], ['Either I do this, or somebody else will', '40'],
+    ['Could we talk about it later?', '42'], ['I’m sorry, I have to do this', '42'], ['I am the master of my own destiny', '42'],
+  ],
 } as const;
 export type ChoiceField = keyof typeof IDENTITY_CHOICES;
+
+export function adventurePageUrl(page: string) {
+  const extractedPage = String(Number(page) + 2).padStart(4, '0');
+  return `https://github.com/advdv/outgun/blob/main/html/outgunned-adventure-standalone-genre-book-v1.1-en/page-${extractedPage}.md`;
+}
 
 export type Character = {
   version: 1;

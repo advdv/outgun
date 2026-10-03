@@ -177,10 +177,10 @@ def create_sheet(destination):
     field(155, 39, 338, "NAME")
     field(155, 69, 338, "ROLE")
     field(155, 99, 338, "TROPE")
-    field(155, 129, 245, "BACKGROUND")
-    field(417, 129, 76, "AGE")
-    field(155, 159, 338, "FLAW")
-    field(155, 189, 338, "CATCHPHRASE")
+    field(155, 129, 245, "BACKGROUND (flavor)")
+    field(417, 129, 76, "AGE (flavor)")
+    field(155, 159, 338, "FLAW (flavor)")
+    field(155, 189, 338, "CATCHPHRASE (flavor)")
 
     # Six illustrated Luck tickets; no Spotlight conversion reminder.
     text(664, 44, "LUCK!", size=18, display=True, color=BROWN, align="center")
