@@ -156,7 +156,8 @@ def create_sheet(destination):
     pdf.setFillColor(HexColor("#f8f7f3"))
     pdf.setStrokeColor(INK)
     pdf.roundRect(-52, -54, 101, 142, 2, fill=1, stroke=1)
-    pdf.drawImage(logo, -46, -86, 90, 33, mask="auto")
+    # Center the smaller logo in the lower border, clear of an uploaded portrait.
+    pdf.drawImage(logo, -37, -86.2, 72, 26.4, mask="auto")
     pdf.restoreState()
     pdf.saveState()
     pdf.translate(29, height - 13)
