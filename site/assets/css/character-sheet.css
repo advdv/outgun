@@ -48,12 +48,14 @@
 /* No alternative print composition: same sheet, coordinates, type and artwork. */
 @page { size: A4 landscape; margin: 0; }
 @media print {
-  html, body { width: 297mm; height: 210mm; margin: 0 !important; padding: 0 !important; background: white !important; }
+  html, body { width: 297mm; height: auto; margin: 0 !important; padding: 0 !important; background: white !important; }
   body > :not(main), .builder-intro, .builder-toolbar, .builder-message, .builder-warning, .builder-notes { display: none !important; }
   .builder-main { width: 297mm; max-width: none; margin: 0; padding: 0; }
   .sheet-viewport { width: 297mm; margin: 0; padding: 0; overflow: visible; }
-  .sheet-stage { width: 297mm !important; height: 210mm !important; margin: 0; }
-  .character-sheet { transform: none !important; box-shadow: none; print-color-adjust: exact; -webkit-print-color-adjust: exact; break-inside: avoid; }
+  /* Reserve one nonempty page; a full-height flow box can round onto page two
+     in WebKit. The fixed A4 canvas keeps every field at its original position. */
+  .sheet-stage { width: 297mm !important; height: 1px !important; margin: 0; }
+  .character-sheet { position: fixed; top: 0; left: 0; transform: none !important; box-shadow: none; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   .sheet-field input, .sheet-field textarea { display: none; }
   .sheet-field .print-value { visibility: visible; }
   .sheet-mark { outline: none !important; }
