@@ -1,21 +1,36 @@
 #!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.10"
-# dependencies = ["reportlab==4.4.10"]
+# dependencies = ["reportlab==4.4.10", "pymupdf==1.28.2"]
 # ///
-"""Build a printable A4 landscape sheet with the requested sections omitted.
+"""Build a textured A4 landscape sheet without the omitted homebrew mechanics.
 
 Source: html/outgunned-adventure-sheets-en/
 outgunned-adventure-adventurer-sheet-blank-en/page-0001.md.
-The original PDF also supplies the rating marks and non-text trackers.
+The supplied original PDF provides its map/paper textures, logo, backpack,
+and embedded display font. These are reused locally, not published to the site.
 """
 
 import argparse
+from io import BytesIO
 from pathlib import Path
 
+import pymupdf
+from reportlab.lib.colors import HexColor
 from reportlab.lib.pagesizes import A4, landscape
+from reportlab.lib.utils import ImageReader
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
+
+SOURCE = Path(__file__).resolve().parents[1] / (
+    "outgunned-adventure-sheets-en/outgunned-adventure-adventurer-sheet-blank-en.pdf"
+)
+BROWN = HexColor("#634123")
+INK = HexColor("#33261c")
+RULE = HexColor("#bcb4a4")
+PAPER = HexColor("#fcfaf4")
 
 ATTRIBUTES = {
     "BRAWN": ("ENDURE", "FIGHT", "FORCE", "STUNT"),
@@ -29,143 +44,227 @@ ATTRIBUTES = {
 def create_sheet(destination):
     destination.parent.mkdir(parents=True, exist_ok=True)
     width, height = landscape(A4)
+    source = pymupdf.open(SOURCE)
+    font = source.extract_font(157)[3]
+    pdfmetrics.registerFont(TTFont("Adventure", BytesIO(font)))
+
+    def asset(xref):
+        image = source.extract_image(xref)
+        pixmap = pymupdf.Pixmap(source, xref)
+        if image["smask"]:
+            pixmap = pymupdf.Pixmap(pixmap, pymupdf.Pixmap(source, image["smask"]))
+        return ImageReader(BytesIO(pixmap.tobytes("png")))
+
+    # Xrefs refer to the unchanged supplied original, not rendered page crops.
+    map_texture = asset(326)
+    paper_texture = asset(179)
+    logo = asset(180)
+    backpack = asset(379)
+    leather = asset(472)
     pdf = canvas.Canvas(str(destination), pagesize=(width, height), invariant=1)
-    pdf.setTitle("Outgunned Adventure - Simplified Player Sheet")
+    pdf.setTitle("Outgunned Adventure - Textured Simplified Player Sheet")
     pdf.setAuthor("Unofficial homebrew adaptation")
-    pdf.setSubject("Printable single-page adventurer sheet")
+    pdf.setSubject("Single-page adventurer sheet without conditions or Bad")
 
     # Coordinates below are measured from the top-left, in PDF points.
-    def text(x, y, value, size=9, bold=False, gray=0.12, align="left"):
-        pdf.setFillGray(gray)
-        pdf.setFont("Helvetica-Bold" if bold else "Helvetica", size)
+    def text(x, y, value, size=9, bold=False, color=INK, align="left", display=False):
+        pdf.setFillColor(color)
+        face = "Adventure" if display else "Helvetica-Bold" if bold else "Helvetica"
+        pdf.setFont(face, size)
         draw = {"left": pdf.drawString, "right": pdf.drawRightString,
                 "center": pdf.drawCentredString}[align]
         draw(x, height - y, value)
 
-    def line(x1, y1, x2, y2, gray=0.65, weight=0.5):
-        pdf.setStrokeGray(gray)
+    def line(x1, y1, x2, y2, color=RULE, weight=0.5):
+        pdf.setStrokeColor(color)
         pdf.setLineWidth(weight)
         pdf.line(x1, height - y1, x2, height - y2)
 
-    def box(x, y, w, h, weight=0.7, gray=0.25):
-        pdf.setStrokeGray(gray)
+    def box(x, y, w, h, fill=None, weight=0.7, color=BROWN):
+        pdf.setStrokeColor(color)
+        if fill is not None:
+            pdf.setFillColor(fill)
         pdf.setLineWidth(weight)
-        pdf.rect(x, height - y - h, w, h, fill=0, stroke=1)
+        pdf.rect(x, height - y - h, w, h, fill=int(fill is not None), stroke=1)
 
-    def circle(x, y, radius=5, weight=0.8):
-        pdf.setStrokeGray(0.15)
+    def image(asset_image, x, y, w, h):
+        pdf.drawImage(asset_image, x, height - y - h, w, h, mask="auto")
+
+    def polygon(points, fill=BROWN, stroke=None, weight=0.7):
+        path = pdf.beginPath()
+        path.moveTo(points[0][0], height - points[0][1])
+        for x, y in points[1:]:
+            path.lineTo(x, height - y)
+        path.close()
+        pdf.setFillColor(fill)
+        pdf.setStrokeColor(stroke or fill)
         pdf.setLineWidth(weight)
-        pdf.circle(x, height - y, radius, fill=0, stroke=1)
+        pdf.drawPath(path, fill=1, stroke=int(stroke is not None))
+
+    def banner(x, y, w, label, size=15):
+        polygon([(x + 7, y), (x + w, y), (x + w - 2, y + 18), (x, y + 18)])
+        text(x + w / 2 + 2, y + 13.5, label, size=size, display=True,
+             color=PAPER, align="center")
 
     def ratings(x, y, filled):
         for index in range(3):
             cx = x + index * 15
-            cy = height - y
-            path = pdf.beginPath()
-            path.moveTo(cx, cy + 3.3)
-            path.lineTo(cx + 3.3, cy)
-            path.lineTo(cx, cy - 3.3)
-            path.lineTo(cx - 3.3, cy)
-            path.close()
-            pdf.setFillGray(0.12)
-            pdf.setStrokeGray(0.12)
-            pdf.setLineWidth(0.7)
-            pdf.drawPath(path, fill=int(index < filled), stroke=1)
+            polygon([(cx, y - 3.4), (cx + 3.4, y),
+                     (cx, y + 3.4), (cx - 3.4, y)],
+                    fill=BROWN if index < filled else PAPER, stroke=BROWN)
 
     def field(x, y, w, label):
-        text(x, y, label, size=7, bold=True, gray=0.35)
-        line(x, y + 14, x + w, y + 14)
+        text(x, y, label, size=7, bold=True, color=BROWN)
+        line(x, y + 14, x + w, y + 14, color=BROWN, weight=0.7)
 
-    def section(x, y, w, label):
-        text(x, y, label, size=10, bold=True)
-        line(x, y + 7, x + w, y + 7, gray=0.18, weight=1)
+    def shield(x, y):
+        # Hollow shields echo the original, leaving their centers writable.
+        points = [(0, 3), (10.5, 0), (21, 3), (20, 12), (16, 18),
+                  (10.5, 21), (5, 18), (1, 12)]
+        polygon([(x + dx, y + dy) for dx, dy in points])
+        polygon([(x + 10.5 + (dx - 10.5) * 0.62,
+                  y + 10 + (dy - 10) * 0.62) for dx, dy in points], fill=PAPER)
 
-    # Identity and portrait.
-    text(28, 24, "OUTGUNNED", size=8, bold=True, gray=0.4)
-    text(27, 53, "ADVENTURE", size=23, bold=True)
-    text(width - 28, 43, "SIMPLIFIED PLAYER SHEET", size=10,
-         bold=True, align="right")
-    line(28, 65, width - 28, 65, gray=0.18, weight=1)
-    box(28, 80, 82, 120, gray=0.65)
-    text(69, 191, "PORTRAIT", size=6.5, gray=0.5, align="center")
-    field(126, 85, 375, "NAME")
-    field(126, 110, 179, "ROLE")
-    field(322, 110, 179, "TROPE")
-    field(126, 135, 278, "BACKGROUND")
-    field(421, 135, 80, "AGE")
-    field(126, 160, 375, "FLAW")
-    field(126, 185, 375, "CATCHPHRASE")
+    def bolt(x, y):
+        polygon([(x + 9, y), (x + 2, y + 10), (x + 7, y + 10),
+                 (x + 4, y + 18), (x + 13, y + 7), (x + 8, y + 7)])
 
-    # Keep six Luck marks, but remove its conversion-to-Spotlight reminder.
-    text(520, 89, "LUCK", size=11, bold=True)
+    def cartridge(x, y):
+        polygon([(x, y + 15), (x, y + 5), (x + 2.5, y),
+                 (x + 5, y + 5), (x + 5, y + 15)], fill=PAPER,
+                stroke=BROWN, weight=0.5)
+        line(x, y + 6, x + 5, y + 6, color=BROWN, weight=0.4)
+        box(x - 0.7, y + 15, 6.4, 1.5, fill=PAPER, weight=0.5)
+
+    # Reuse the actual antique map and leather-edge textures from the original.
+    image(map_texture, 0, 0, width, height)
+    image(leather, 818, -2, 175, 638)
+
+    # A tilted, textured photograph card with the original logo and a paperclip.
+    pdf.saveState()
+    pdf.translate(77, height - 112)
+    pdf.rotate(3)
+    pdf.setFillColor(HexColor("#c2b49c"))
+    pdf.rect(-57, -95, 117, 190, fill=1, stroke=0)
+    pdf.drawImage(paper_texture, -60, -92, 117, 190, mask="auto")
+    pdf.setLineWidth(0.5)
+    pdf.setStrokeColor(RULE)
+    pdf.rect(-60, -92, 117, 190, fill=0, stroke=1)
+    pdf.setFillColor(HexColor("#f8f7f3"))
+    pdf.setStrokeColor(INK)
+    pdf.roundRect(-52, -54, 101, 142, 2, fill=1, stroke=1)
+    pdf.drawImage(logo, -46, -86, 90, 33, mask="auto")
+    pdf.restoreState()
+    pdf.saveState()
+    pdf.translate(29, height - 13)
+    pdf.rotate(-15)
+    clip = pdf.beginPath()
+    clip.moveTo(0, -35)
+    clip.lineTo(0, 1)
+    clip.curveTo(0, 12, 16, 12, 16, 1)
+    clip.lineTo(16, -41)
+    clip.curveTo(16, -56, -7, -56, -7, -41)
+    clip.lineTo(-7, -4)
+    pdf.setStrokeColor(BROWN)
+    pdf.setLineWidth(1.8)
+    pdf.drawPath(clip, fill=0, stroke=1)
+    pdf.restoreState()
+
+    field(155, 39, 338, "NAME")
+    field(155, 69, 338, "ROLE")
+    field(155, 99, 338, "TROPE")
+    field(155, 129, 245, "BACKGROUND")
+    field(417, 129, 76, "AGE")
+    field(155, 159, 338, "FLAW")
+    field(155, 189, 338, "CATCHPHRASE")
+
+    # Six illustrated Luck tickets; no Spotlight conversion reminder.
+    text(664, 44, "LUCK!", size=18, display=True, color=BROWN, align="center")
     for index in range(6):
-        circle(605 + index * 37.5, 85, radius=6)
-    text(520, 113, "SPEND 1 LUCK: GAIN +1", size=7.5, gray=0.35)
+        x = 548 + index * 42
+        box(x, 62, 19, 26, fill=PAPER, weight=0.8)
+        bolt(x + 2, 66)
+    text(664, 106, "SPEND 1 LUCK: GAIN +1", size=7.5, bold=True,
+         color=BROWN, align="center")
 
-    # Twelve Grit boxes, with the original eighth (Bad) and last (Hot) markers.
-    text(520, 140, "GRIT", size=11, bold=True)
+    # All twelve Grit shields remain. Only the final shield is special now.
+    text(520, 141, "GRIT", size=17, display=True, color=BROWN)
     for index in range(12):
-        x = 520 + index * 25.1
-        box(x, 158, 17, 17, weight=1.2 if index in (7, 11) else 0.7)
-        text(x + 8.5, 154, str(index + 1), size=5.8,
-             gray=0.45, align="center")
-        if index in (7, 11):
-            text(x + 8.5, 185, "BAD!" if index == 7 else "HOT!",
-                 size=6.5, bold=True, align="center")
-    text(520, 201, "BAD: SUFFER A CONDITION", size=7, gray=0.35)
-    text(width - 28, 201, "HOT: GAIN 2 LUCK", size=7, gray=0.35, align="right")
+        x = 520 + index * 24.7
+        shield(x, 159)
+        text(x + 10.5, 191, str(index + 1), size=6, color=BROWN, align="center")
+    # Flame above the Hot shield, not over its writable center.
+    polygon([(800, 160), (796, 156), (797, 150), (801, 145),
+             (800, 152), (804, 148), (807, 154), (805, 160)])
+    text(803, 204, "HOT!", size=7, bold=True, color=BROWN, align="center")
+    text(520, 207, "HOT: GAIN 2 LUCK", size=7, bold=True, color=BROWN)
 
     # Ratings retain the original prefilled baseline: 2 attribute / 1 skill.
-    section(28, 233, 215, "ATTRIBUTES & SKILLS")
     for index, (attribute, skills) in enumerate(ATTRIBUTES.items()):
-        y = 254 + index * 65
-        text(28, y, attribute, size=10, bold=True)
-        ratings(194, y - 3.5, filled=2)
+        y = 218 + index * 72
+        banner(24, y, 133, attribute)
+        ratings(188, y + 9, filled=2)
         for skill_index, skill in enumerate(skills):
-            sy = y + 13 + skill_index * 12.5
-            text(40, sy, skill, size=9)
-            ratings(194, sy - 3, filled=1)
+            sy = y + 28 + skill_index * 12.5
+            text(40, sy, skill, size=9, bold=True)
+            ratings(188, sy - 3, filled=1)
 
-    # Six separate feat spaces, as on the original sheet.
-    section(262, 233, 239, "FEATS")
+    # Six tabbed note cards with the original paper texture and pale ruled lines.
+    text(501, 233, "FEATS", size=17, display=True, color=BROWN, align="right")
     for index in range(6):
-        y = 253 + index * 52
-        box(262, y, 239, 46, gray=0.55)
-        text(269, y + 12, f"0{index + 1}", size=6, gray=0.5)
-        line(283, y + 15, 493, y + 15, gray=0.72)
-        line(270, y + 30, 493, y + 30, gray=0.8)
+        y = 245 + index * 53
+        polygon([(256, y - 5), (385, y - 5), (390, y), (503, y),
+                 (503, y + 45), (256, y + 45)])
+        image(paper_texture, 257, y + 2, 245, 42)
+        box(256, y + 1, 247, 44)
+        line(264, y + 16, 495, y + 16)
+        line(264, y + 30, 495, y + 30)
 
-    # Six gear rows; the first three each retain three ammunition marks.
-    section(520, 233, width - 548, "GUNS & GEAR")
-    text(width - 28, 257, "AMMO", size=6.5, gray=0.4, align="right")
+    # Six gear rows, with cartridge illustrations for the first three weapons.
+    banner(520, 220, 294, "GUNS & GEAR")
+    image(paper_texture, 520, 239, 294, 153)
+    box(520, 238, 294, 154)
+    text(804, 249, "AMMO", size=5.8, bold=True, color=BROWN, align="right")
     for index in range(6):
-        y = 279 + index * 22
-        end = 752 if index < 3 else width - 28
-        line(520, y, end, y)
+        y = 272 + index * 23
+        line(527, y, 807, y)
         if index < 3:
             for ammo in range(3):
-                circle(772 + ammo * 17, y - 5, radius=4)
+                cartridge(771 + ammo * 15, y - 19)
 
-    text(520, 417, "CA$H", size=10, bold=True)
+    text(627, 417, "CA$H", size=15, display=True, color=BROWN)
     for index in range(5):
-        circle(686 + index * 30, 413, radius=5.5)
-    for x, label in ((520, "BACKPACK"), (676, "BAG")):
-        section(x, 446, 138, label)
-        for index in range(5):
-            y = 475 + index * 21
-            line(x, y, x + 138, y)
+        x = 701 + index * 26
+        pdf.setFillColor(PAPER)
+        pdf.setStrokeColor(BROWN)
+        pdf.setLineWidth(0.6)
+        pdf.circle(x, height - 412, 6.2, fill=1, stroke=1)
+        text(x, 415.1, "$", size=9, bold=True, color=BROWN, align="center")
 
-    text(28, 582, "Unofficial homebrew sheet / Personal use", size=6, gray=0.45)
-    text(width - 28, 582, "A4 LANDSCAPE", size=6, gray=0.45, align="right")
+    image(backpack, 493, 431, 112, 124)
+    for x, label in ((607, "BACKPACK"), (716, "BAG")):
+        w = 98
+        banner(x, 442, w, label, size=13)
+        image(paper_texture, x, 461, w, 99)
+        box(x, 460, w, 100)
+        for index in range(5):
+            y = 479 + index * 19
+            line(x + 5, y, x + w - 5, y)
+
+    text(28, 582, "Unofficial homebrew sheet / Original artwork: Two Little Mice",
+         size=6, color=BROWN)
+    text(814, 582, "SIMPLIFIED PLAYER SHEET / A4 LANDSCAPE", size=6,
+         color=BROWN, align="right")
     pdf.showPage()
     pdf.save()
+    source.close()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "output", nargs="?", type=Path,
-        default=Path(".amp/in/artifacts/outgunned-adventure-simplified-sheet.pdf"),
+        default=Path(".amp/in/artifacts/outgunned-adventure-textured-sheet.pdf"),
     )
     args = parser.parse_args()
     create_sheet(args.output)
