@@ -1,0 +1,11 @@
+services:
+  web:
+    command: mise exec -- hugo server --bind 0.0.0.0 --port "$PORT" --baseURL / --appendPort=false --disableLiveReload --noHTTPCache --renderToMemory
+    health: /character-builder/
+    portal:
+      url: /character-builder/
+      title: Editable Adventure sheet
+      description: The same A4 landscape sheet on screen and in print. Edits save in your browser; use Export backup to keep a portable copy.
+    portals:
+      - url: /
+        title: Field Notes homepage

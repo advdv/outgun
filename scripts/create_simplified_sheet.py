@@ -8,14 +8,19 @@
 Source: html/outgunned-adventure-sheets-en/
 outgunned-adventure-adventurer-sheet-blank-en/page-0001.md.
 The supplied original PDF provides its map/paper textures, logo, backpack,
-and embedded display font. These are reused locally, not published to the site.
+and embedded display font. --web-backdrop exports the adapted artwork for the
+editable site prototype; confirm redistribution permission before public release.
 """
 
 import argparse
+import base64
 from io import BytesIO
 from pathlib import Path
+from tempfile import TemporaryDirectory
+import xml.etree.ElementTree as ET
 
 import pymupdf
+from PIL import Image
 from reportlab.lib.colors import HexColor
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.utils import ImageReader
@@ -259,12 +264,44 @@ def create_sheet(destination):
     source.close()
 
 
+def create_web_backdrop(destination):
+    """Reuse the approved layout as vector artwork, not a rasterized PDF page.
+
+    Only four bitmap assets are embedded (map, paper, logo, backpack). Static
+    lettering becomes paths, so no extracted font file or source PDF is shipped.
+    The browser app places accessible HTML controls over these fixed coordinates.
+    """
+    with TemporaryDirectory() as temporary:
+        pdf_path = Path(temporary) / "sheet.pdf"
+        create_sheet(pdf_path)
+        with pymupdf.open(pdf_path) as document:
+            svg = ET.fromstring(document[0].get_svg_image(text_as_path=True))
+    ET.register_namespace("", "http://www.w3.org/2000/svg")
+    ET.register_namespace("xlink", "http://www.w3.org/1999/xlink")
+    href = "{http://www.w3.org/1999/xlink}href"
+    for element in svg.iter("{http://www.w3.org/2000/svg}image"):
+        encoded = element.get(href)
+        if encoded and encoded.startswith("data:image/"):
+            bitmap = Image.open(BytesIO(base64.b64decode(encoded.split(",", 1)[1])))
+            output = BytesIO()
+            bitmap.save(output, format="WEBP", quality=90,
+                        lossless="A" in bitmap.getbands())
+            element.set(href, "data:image/webp;base64," + base64.b64encode(output.getvalue()).decode())
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    ET.ElementTree(svg).write(destination, encoding="utf-8", xml_declaration=True)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "output", nargs="?", type=Path,
         default=Path(".amp/in/artifacts/outgunned-adventure-textured-sheet.pdf"),
     )
+    parser.add_argument("--web-backdrop", action="store_true",
+                        help="Write the approved layout as an SVG web asset instead of a PDF")
     args = parser.parse_args()
-    create_sheet(args.output)
+    if args.web_backdrop:
+        create_web_backdrop(args.output)
+    else:
+        create_sheet(args.output)
     print(f"Created {args.output}")

@@ -5,7 +5,9 @@ Outgunned TTRPG Resources
 
 The website uses **Hugo 0.167.0**, **Tailwind CSS 4**, and the Tailwind
 Typography plugin. All CSS is compiled locally by Hugo's `css.TailwindCSS`
-pipeline; the browser needs no JavaScript or third-party font/CDN requests.
+pipeline. Content pages need no JavaScript; the editable character sheet uses
+React, bundled locally with Hugo's `js.Build`. No third-party font/CDN requests
+are needed.
 
 ```sh
 mise install hugo node
@@ -15,8 +17,9 @@ mise exec -- npm run check
 ```
 
 `npm run dev` starts Hugo with live reload on port 1313. `npm run build`
-writes the production site to `public/`. The check verifies local links,
-anchors, assets, the GitHub Pages subpath, and exclusion of source books.
+writes the production site to `public/`. The check runs TypeScript validation,
+character-data tests, and checks for local links, anchors, assets, the GitHub
+Pages subpath, and exclusion of source books.
 
 - **Write:** `site/content/_index.md` is the kitchen-sink homepage. Add other
   Markdown pages under `site/content/`; `site/layouts/page.html` renders them.
@@ -32,8 +35,36 @@ anchors, assets, the GitHub Pages subpath, and exclusion of source books.
 
 The theme references the Adventure standalone book's cover and printed pages
 13 and 29 (PDF pages 1, 15, and 31): parchment, cartographic detail, condensed
-type, and brown side panels. The map and paper SVGs are original site assets.
+type, and brown side panels. The general site's map and paper SVGs are original
+assets; the character sheet reuses artwork from the supplied original sheet.
 Neither the source PDFs nor `html/` is copied into the published site.
+
+### Editable character sheet
+
+Open `/character-builder/` from the homepage. This is a manual-entry sheet,
+not yet a rules-guided character builder. Text, ratings, trackers, and a portrait
+save in this browser only. Export/import a JSON backup to transfer a character
+or protect against cleared browser storage. No account or server storage is used.
+
+The sheet stays **297 × 210 mm (A4 landscape)** in both screen and print styles.
+Fit width scales the whole page; 100% allows horizontal scrolling on small
+screens. Print / Save PDF prints only the sheet. Choose A4 landscape, no margins,
+100% scale, and no browser headers/footers. Text that exceeds its writing area
+is flagged before printing rather than silently changing the layout.
+
+React and TypeScript live in `site/assets/character-sheet/`; Hugo builds the
+bundle only for this page, without a separate Vite server. The backdrop is one
+SVG containing the adapted layout, original map/paper textures, logo, backpack,
+and outlined display lettering. Regenerate it after layout changes with:
+
+```sh
+uv run scripts/create_simplified_sheet.py --web-backdrop site/static/sheet/sheet.svg
+```
+
+This prototype contains adapted Two Little Mice character-sheet artwork;
+confirm redistribution permission before a public release. In an Amp orb,
+`amp orb services ensure` starts the supervised Hugo server and prints portal
+links for the builder and homepage.
 
 ### GitHub Pages
 

@@ -88,6 +88,6 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed od
 
 **An unofficial homebrew. A work in progress.** This independent fan project is not affiliated with or endorsed by Two Little Mice. Outgunned and Outgunned: Adventure belong to their respective owners.
 
-The visual language takes inspiration from the book’s parchment pages, condensed headings, map motifs, and brown marginal panels. No source-book artwork or rules are republished here.
+The visual language takes inspiration from the book’s parchment pages, condensed headings, map motifs, and brown marginal panels. The character-sheet prototype uses adapted artwork from the original Two Little Mice sheet. Source-book PDFs are not republished here.
 
 [^specimen]: A specimen footnote. Lorem ipsum dolor sit amet, consectetur adipiscing elit.

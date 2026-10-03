@@ -1,0 +1,62 @@
+.builder-main { max-width: 1280px; margin: auto; padding: 32px 24px; }
+.builder-intro { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px; margin-bottom: 24px; }
+.builder-intro h1 { font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; font-size: 38px; line-height: 1; margin: 8px 0; }
+.builder-intro p { color: #645848; }
+.builder-intro a { text-decoration: underline; text-underline-offset: 4px; }
+.builder-toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; padding: 14px 0; border-block: 1px solid #c4b69c; margin-bottom: 20px; }
+.builder-actions, .builder-view { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.builder-toolbar button, .builder-toolbar select, .builder-notes button { border: 1px solid #a8987e; padding: 8px 12px; background: #fbf8f0; font-size: 14px; cursor: pointer; }
+.builder-toolbar button:hover, .builder-notes button:hover { background: #e7d7b7; }
+.builder-toolbar .builder-primary { background: #634123; color: #fff9eb; border-color: #634123; }
+.builder-toolbar .builder-primary:hover { background: #432b17; }
+.builder-toolbar button:disabled { opacity: .5; cursor: not-allowed; }
+.builder-view label { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.save-status { font-size: 13px; margin-right: 10px; color: #615844; }
+.file-input { display: none; }
+.builder-message, .builder-warning { padding: 12px 16px; margin-bottom: 16px; background: #eee1c4; border-left: 3px solid #8c4928; }
+.builder-message button { float: right; padding-inline: 8px; cursor: pointer; }
+.builder-warning { background: #fce9dc; color: #7e2514; }
+.sheet-viewport { width: 100%; overflow: auto; padding: 0 0 14px; }
+.sheet-stage { position: relative; margin: 0 auto; }
+.character-sheet { position: relative; width: 297mm; height: 210mm; transform-origin: top left; margin: 0; padding: 0; border: 0; background: #f7eed7; box-shadow: 0 3px 10px #37281630; color: #33261c; font-family: 'Source Sans 3', sans-serif; font-size: 10pt; line-height: normal; }
+.sheet-artwork { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; user-select: none; }
+.sheet-field, .sheet-mark, .sheet-portrait { position: absolute; box-sizing: border-box; margin: 0; padding: 0; }
+.sheet-field input, .sheet-field textarea, .sheet-field .print-value { width: 100%; height: 100%; padding: 0; margin: 0; border: 0; border-radius: 0; font: inherit; line-height: inherit; letter-spacing: 0; color: inherit; background: transparent; box-sizing: border-box; }
+.sheet-field textarea { resize: none; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
+.sheet-field input { text-overflow: clip; }
+.sheet-field input:hover, .sheet-field textarea:hover { background: #fff9eb66; }
+.sheet-field input:focus, .sheet-field textarea:focus { outline: 1pt solid #8c4928; outline-offset: 1pt; background: #fff9ebb3; }
+.sheet-field .print-value { position: absolute; inset: 0; visibility: hidden; pointer-events: none; white-space: pre; overflow: hidden; }
+.sheet-field.multiline .print-value { white-space: pre-wrap; overflow-wrap: anywhere; }
+.sheet-field.overfull { outline: 1pt solid #a52c18; }
+.sheet-mark { border: 0; border-radius: 0; background: transparent; cursor: pointer; }
+.sheet-mark svg { width: 100%; height: 100%; display: block; }
+.sheet-mark:hover:not(:disabled) { outline: 1pt dashed #8c4928; outline-offset: 1pt; }
+.sheet-mark:focus-visible { outline: 1.5pt solid #8c4928; outline-offset: 1pt; }
+.sheet-mark:disabled { cursor: default; opacity: 1; }
+.sheet-portrait { transform: rotate(-3deg); transform-origin: 52pt 88pt; overflow: hidden; background: transparent; border: 0; border-radius: 2pt; cursor: pointer; }
+.sheet-portrait img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sheet-portrait span { position: absolute; inset: auto 0 10pt; text-align: center; font-size: 8pt; color: #7b705d; }
+.sheet-portrait:has(img) span { opacity: 0; background: #fcfaf4dd; padding: 4pt; }
+.sheet-portrait:hover span, .sheet-portrait:focus-visible span { opacity: 1; }
+.sheet-overflow-note { display: none; }
+.builder-notes { max-width: 900px; margin: 20px auto 0; color: #645848; font-size: 14px; line-height: 1.6; }
+.builder-notes p + p { margin-top: 8px; }
+.builder-notes button { margin-top: 12px; }
+@media (max-width: 640px) { .builder-main { padding: 24px 12px; } .builder-intro h1 { font-size: 30px; } }
+
+/* No alternative print composition: same sheet, coordinates, type and artwork. */
+@page { size: A4 landscape; margin: 0; }
+@media print {
+  html, body { width: 297mm; height: 210mm; margin: 0 !important; padding: 0 !important; background: white !important; }
+  body > :not(main), .builder-intro, .builder-toolbar, .builder-message, .builder-warning, .builder-notes { display: none !important; }
+  .builder-main { width: 297mm; max-width: none; margin: 0; padding: 0; }
+  .sheet-viewport { width: 297mm; margin: 0; padding: 0; overflow: visible; }
+  .sheet-stage { width: 297mm !important; height: 210mm !important; margin: 0; }
+  .character-sheet { transform: none !important; box-shadow: none; print-color-adjust: exact; -webkit-print-color-adjust: exact; break-inside: avoid; }
+  .sheet-field input, .sheet-field textarea { display: none; }
+  .sheet-field .print-value { visibility: visible; }
+  .sheet-mark { outline: none !important; }
+  .sheet-portrait span { display: none; }
+  .sheet-overflow-note { display: block; position: absolute; left: 150pt; bottom: 6pt; right: 150pt; padding: 3pt; font-size: 7pt; color: #a52c18; background: white; text-align: center; }
+}

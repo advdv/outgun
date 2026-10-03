@@ -1,14 +1,24 @@
 {
   "name": "outgun-field-notes",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "hugo server --bind 0.0.0.0 --port 1313",
     "build": "hugo --minify",
-    "check": "npm run build && node scripts/check-site.mjs"
+    "test": "node --test scripts/character-sheet.test.mjs",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm test && npm run build && node scripts/check-site.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "4.3.3",
     "@tailwindcss/typography": "0.5.20",
-    "tailwindcss": "4.3.3"
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   }
 }

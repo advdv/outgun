@@ -1,0 +1,20 @@
+{{ define "head" }}
+{{ with resources.Get "css/character-sheet.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+{{ end }}
+{{ end }}
+
+{{ define "main" }}
+<main id="main" class="builder-main">
+  <div class="builder-intro">
+    <div><p class="eyebrow">Your next adventure</p><h1>Character sheet</h1><p>Write directly on the sheet. What you see is what you print.</p></div>
+    <a href="{{ site.Home.RelPermalink }}">← Back to Field Notes</a>
+  </div>
+  <div id="character-builder" data-artwork="{{ "sheet/sheet.svg" | relURL }}"></div>
+  <noscript><p>Enable JavaScript to edit and save your character. <a href="{{ "sheet/sheet.svg" | relURL }}">Open the blank sheet artwork</a>.</p></noscript>
+  {{ $options := dict "JSX" "automatic" "target" "es2022" "minify" (not hugo.IsDevelopment) "defines" (dict "process.env.NODE_ENV" (cond hugo.IsDevelopment `"development"` `"production"`)) }}
+  {{ with resources.Get "character-sheet/app.tsx" | js.Build $options | fingerprint }}
+  <script type="module" src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"></script>
+  {{ end }}
+</main>
+{{ end }}

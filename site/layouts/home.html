@@ -15,7 +15,7 @@
     <h1 class="display-title">FIELD NOTES<span class="text-rust">.</span></h1>
     <p class="mt-3 max-w-2xl font-display text-2xl uppercase tracking-wide md:text-3xl">A little less by the book.<br class="sm:hidden"> A little more adventure.</p>
     <p class="mt-5 max-w-2xl text-lg text-ink/75">An evolving homebrew for <strong>Outgunned: Adventure</strong>. New ideas, rough edges, and a few things worth taking on your next expedition.</p>
-    <div class="my-7 flex flex-wrap gap-3"><a class="button" href="#the-premise">Open the field guide <span aria-hidden="true">↘</span></a><a class="button-secondary" href="#the-toolkit">Explore the toolkit →</a></div>
+    <div class="my-7 flex flex-wrap gap-3"><a class="button" href="{{ with site.GetPage "/character-builder" }}{{ .RelPermalink }}{{ end }}">Fill in your character sheet →</a><a class="button-secondary" href="#the-premise">Open the field guide ↘</a><a class="button-secondary" href="#the-toolkit">Explore the toolkit →</a></div>
     <figure class="mb-10">
       <img class="w-full border border-ink/20" src="{{ "images/expedition-map.svg" | relURL }}" width="1200" height="310" alt="Illustrated expedition map with contour lines, a dashed trail, and a compass rose.">
       <figcaption class="mt-2 flex justify-between gap-4 text-xs text-ink/65"><span>FIG. 01 — A route into the unknown.</span><span>Illustration / field survey</span></figcaption>
