@@ -17,9 +17,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        # Source PDFs are not website assets; do not download Git LFS content.
+        # Fetch only the generated page images, not the source PDFs.
         with:
           lfs: false
+      - name: Fetch rulebook page images
+        run: git lfs pull --include="site/static/books/adventure/*.webp" --exclude=""
       - uses: jdx/mise-action@v3
         with:
           install_args: hugo node

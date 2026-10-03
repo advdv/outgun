@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { CSSProperties, ChangeEvent } from 'react';
 import { createRoot } from 'react-dom/client';
-import { GROUPS, IDENTITY, IDENTITY_CHOICES, MAX_BACKUP_BYTES, STORAGE_KEY, adventurePageUrl, chooseIdentity, chooseItem, itemChoices, markValue, newCharacter, parseCharacter } from './model';
+import { GROUPS, IDENTITY, IDENTITY_CHOICES, MAX_BACKUP_BYTES, STORAGE_KEY, adventurePageUrl, chooseIdentity, chooseItem, itemChoices, markValue, newCharacter, parseCharacter, referencePages } from './model';
 import type { Character, ChoiceField, IdentityKey, ItemField } from './model';
 
 const root = document.getElementById('character-builder')!;
 const artwork = root.dataset.artwork!;
+const bookPages = root.dataset.bookPages!;
 const place = (x: number, y: number, w: number, h: number): CSSProperties => ({
   left: `${x}pt`, top: `${y}pt`, width: `${w}pt`, height: `${h}pt`,
 });
@@ -73,10 +74,12 @@ function Field({ label, value, x, y, w, h, line = 14, multiline = false, max = 3
   </div>;
 }
 
-function ChoicePicker({ heading, choices, value, canClear = false, filter, select, close }: {
+function ChoicePicker({ field, heading, choices, value, canClear = false, filter, select, readPage, close }: {
+  field: ChoiceField | ItemField;
   heading: string; choices: readonly (readonly [string, string])[]; value: string; canClear?: boolean;
   filter?: { enabled: boolean; label: string; change: (enabled: boolean) => void };
   select: (value: string) => void; close: () => void;
+  readPage: (name: string, pages: number[], trigger: HTMLButtonElement) => void;
 }) {
   const list = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -109,12 +112,68 @@ function ChoicePicker({ heading, choices, value, canClear = false, filter, selec
             <span className="picker-name">{name || 'Empty slot'}</span>
             <span className="picker-check" aria-hidden="true">{value === name ? '✓' : ''}</span>
           </label>
-          {page && <a className="picker-page" href={adventurePageUrl(page)} target="_blank" rel="noreferrer"
-            aria-label={`${name}: Outgunned Adventure, page ${page} (opens in a new tab)`}>p. {page}</a>}
+          {page && <button type="button" className="picker-page" aria-haspopup="dialog"
+            onClick={event => readPage(name, referencePages(field, page), event.currentTarget)}
+            aria-label={`${name}: Outgunned Adventure, ${field === 'role' ? 'pages' : 'page'} ${referencePages(field, page).join('–')} (opens page viewer)`}>
+            {field === 'role' ? 'pp.' : 'p.'} {referencePages(field, page).join('–')}
+          </button>}
         </div>)}
       </fieldset>
     </div>
   </div>;
+}
+
+function BookPage({ page }: { page: number }) {
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  return <figure className="book-page">
+    <figcaption>Page {page}</figcaption>
+    {status === 'loading' && <p role="status">Loading page {page}…</p>}
+    {status === 'error' ? <p role="alert">Page {page} could not load. <button type="button" onClick={() => setStatus('loading')}>Retry</button></p>
+      : <img src={adventurePageUrl(page, bookPages)} alt={`Outgunned Adventure, page ${page}`}
+        onLoad={() => setStatus('ready')} onError={() => setStatus('error')} />}
+  </figure>;
+}
+
+function BookReader({ reference, close }: { reference: { name: string; pages: number[] }; close: () => void }) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const closeButton = useRef<HTMLButtonElement>(null);
+  const scroller = useRef<HTMLDivElement>(null);
+  const [zoomed, setZoomed] = useState(false);
+  useLayoutEffect(() => {
+    const element = dialog.current!;
+    const html = document.documentElement;
+    const { overflow, paddingRight } = html.style;
+    const gutter = window.innerWidth - html.clientWidth;
+    // Keep the sheet's width and scroll position while the modal owns scrolling.
+    html.style.paddingRight = `${parseFloat(getComputedStyle(html).paddingRight) + gutter}px`;
+    html.style.overflow = 'hidden';
+    element.showModal();
+    closeButton.current!.focus({ preventScroll: true });
+    return () => {
+      element.close();
+      html.style.overflow = overflow;
+      html.style.paddingRight = paddingRight;
+    };
+  }, []);
+
+  return <dialog ref={dialog} className="book-viewer" aria-labelledby="book-heading" aria-describedby="book-description"
+    onCancel={event => { event.preventDefault(); close(); }}>
+    <header className="book-toolbar">
+      <div><h2 id="book-heading">{reference.name}</h2>
+        <p id="book-description">Outgunned Adventure · {reference.pages.length === 2 ? 'Pages' : 'Page'} {reference.pages.join('–')}</p></div>
+      <div className="book-actions">
+        <button type="button" aria-pressed={zoomed} onClick={() => {
+          setZoomed(!zoomed); scroller.current!.scrollTo(0, 0);
+        }}>{zoomed ? 'Fit pages' : 'Zoom in'}</button>
+        <button type="button" className="book-close" ref={closeButton} aria-label="Close page viewer" onClick={close}>Close ×</button>
+      </div>
+    </header>
+    <div className="book-scroll" ref={scroller} tabIndex={0} role="region" aria-label="Rulebook pages">
+      <div className={`book-pages ${zoomed ? 'is-zoomed' : ''}`}>
+        {reference.pages.map(page => <BookPage key={page} page={page} />)}
+      </div>
+    </div>
+  </dialog>;
 }
 
 type MarkProps = {
@@ -155,6 +214,7 @@ function App() {
   const [artReady, setArtReady] = useState(false);
   const [picker, setPicker] = useState<ChoiceField | { field: ItemField; index: number } | null>(null);
   const [itemLimits, setItemLimits] = useState({ feats: true, gear: true });
+  const [reference, setReference] = useState<{ name: string; pages: number[] } | null>(null);
   const pickerTrigger = useRef<HTMLButtonElement | null>(null);
   const viewport = useRef<HTMLDivElement>(null);
   const backupInput = useRef<HTMLInputElement>(null);
@@ -168,7 +228,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!picker) return;
+    if (!picker || reference) return;
     const escape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') { event.preventDefault(); closePicker(); }
     };
@@ -181,7 +241,7 @@ function App() {
       window.removeEventListener('keydown', escape);
       document.removeEventListener('pointerdown', outside);
     };
-  }, [picker, closePicker]);
+  }, [picker, reference, closePicker]);
 
   useEffect(() => {
     const observer = new ResizeObserver(entries => setAvailableWidth(entries[0].contentRect.width));
@@ -347,6 +407,7 @@ function App() {
       {character.portrait && <button type="button" onClick={() => update('portrait', null)}>Remove portrait</button>}
     </div>
     {picker && <ChoicePicker key={typeof picker === 'string' ? picker : `${picker.field}-${picker.index}`}
+      field={typeof picker === 'string' ? picker : picker.field}
       heading={typeof picker === 'string' ? `Choose ${picker === 'age' ? 'an' : 'a'} ${picker}` : picker.field === 'feats' ? 'Choose a feat' : 'Choose guns & gear'}
       choices={typeof picker === 'string' ? IDENTITY_CHOICES[picker] : itemChoices(picker.field, character.identity, itemLimits[picker.field])}
       value={typeof picker === 'string' ? character.identity[picker] : character[picker.field][picker.index]}
@@ -358,7 +419,12 @@ function App() {
       }}
       select={value => typeof picker === 'string'
         ? setCharacter(previous => chooseIdentity(previous, picker, value)) : updateList(picker.field, picker.index, value)}
+      readPage={(name, pages, trigger) => {
+        trigger.focus({ preventScroll: true });
+        setReference({ name, pages });
+      }}
       close={closePicker} />}
+    {reference && <BookReader reference={reference} close={() => setReference(null)} />}
   </>;
 }
 

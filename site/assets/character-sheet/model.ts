@@ -178,9 +178,14 @@ export function itemChoices(field: ItemField, identity: Character['identity'], l
     role?.[field].some(item => item === name) || (field === 'feats' && trope.includes(name)));
 }
 
-export function adventurePageUrl(page: string) {
+export function referencePages(field: ChoiceField | ItemField, page: string) {
+  const first = Number(page);
+  return field === 'role' ? [first, first + 1] : [first];
+}
+
+export function adventurePageUrl(page: number | string, base: string) {
   const extractedPage = String(Number(page) + 2).padStart(4, '0');
-  return `https://github.com/advdv/outgun/blob/main/html/outgunned-adventure-standalone-genre-book-v1.1-en/page-${extractedPage}.md`;
+  return `${base}page-${extractedPage}.webp`;
 }
 
 export type Character = {

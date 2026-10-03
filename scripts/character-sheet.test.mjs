@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { IDENTITY_CHOICES, ITEM_CHOICES, ROLE_ITEMS, TROPE_FEATS, adventurePageUrl, chooseIdentity, chooseItem, itemChoices, newCharacter, parseCharacter, markValue } from '../site/assets/character-sheet/model.ts';
+import { IDENTITY_CHOICES, ITEM_CHOICES, ROLE_ITEMS, TROPE_FEATS, adventurePageUrl, chooseIdentity, chooseItem, itemChoices, newCharacter, parseCharacter, markValue, referencePages } from '../site/assets/character-sheet/model.ts';
 
 const pageText = page => readFileSync(new URL(
   `../html/outgunned-adventure-standalone-genre-book-v1.1-en/page-${String(page + 2).padStart(4, '0')}.md`,
@@ -96,11 +96,22 @@ test('flavor suggestions are deduplicated and each citation contains its exact t
   assert(!IDENTITY_CHOICES.flaw.some(([name]) => name === 'I chart my own course'));
 });
 
-test('book links account for the two-page offset between printed and extracted pages', () => {
-  const base = 'https://github.com/advdv/outgun/blob/main/html/outgunned-adventure-standalone-genre-book-v1.1-en/';
-  assert.equal(adventurePageUrl('19'), `${base}page-0021.md`);
-  assert.equal(adventurePageUrl('34'), `${base}page-0036.md`);
-  assert.equal(adventurePageUrl('42'), `${base}page-0044.md`);
+test('book image URLs preserve the site base path and two-page PDF offset', () => {
+  for (const base of ['/books/adventure/', '/outgun/books/adventure/', 'https://example.com/custom/books/adventure/']) {
+    assert.equal(adventurePageUrl('19', base), `${base}page-0021.webp`);
+    assert.equal(adventurePageUrl(34, base), `${base}page-0036.webp`);
+    assert.equal(adventurePageUrl('42', base), `${base}page-0044.webp`);
+    assert.equal(adventurePageUrl(260, base), `${base}page-0262.webp`);
+  }
+});
+
+test('only role references open two consecutive pages, including the last standard role', () => {
+  assert.deepEqual(referencePages('role', '22'), [22, 23]);
+  assert.deepEqual(referencePages('role', '40'), [40, 41]);
+  for (const field of ['trope', 'background', 'age', 'flaw', 'catchphrase', 'feats', 'gear']) {
+    assert.deepEqual(referencePages(field, '22'), [22]);
+  }
+  assert.deepEqual(referencePages('gear', '133'), [133]);
 });
 
 test('every flavor choice is available across roles and tropes without changing mechanics', () => {
@@ -188,10 +199,10 @@ test('feat and gear catalogs cite only the requested pages, with distinct source
   }
   assert.equal(ITEM_CHOICES.gear.filter(([, page]) => page === '132').length, 16);
   assert.equal(ITEM_CHOICES.gear.filter(([, page]) => page === '133').length, 16);
-  assert.equal(adventurePageUrl('45').split('/').at(-1), 'page-0047.md');
-  assert.equal(adventurePageUrl('49').split('/').at(-1), 'page-0051.md');
-  assert.equal(adventurePageUrl('132').split('/').at(-1), 'page-0134.md');
-  assert.equal(adventurePageUrl('133').split('/').at(-1), 'page-0135.md');
+  assert.equal(adventurePageUrl('45', '/books/adventure/'), '/books/adventure/page-0047.webp');
+  assert.equal(adventurePageUrl('49', '/books/adventure/'), '/books/adventure/page-0051.webp');
+  assert.equal(adventurePageUrl('132', '/books/adventure/'), '/books/adventure/page-0134.webp');
+  assert.equal(adventurePageUrl('133', '/books/adventure/'), '/books/adventure/page-0135.webp');
 });
 
 test('any role or trope can select and clear any item in any slot without altering other data', () => {

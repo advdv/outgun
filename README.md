@@ -10,6 +10,8 @@ React, bundled locally with Hugo's `js.Build`. No third-party font/CDN requests
 are needed.
 
 ```sh
+git lfs install
+git lfs pull --include="site/static/books/adventure/*.webp" --exclude=""
 mise install hugo node
 npm ci
 mise exec -- npm run dev
@@ -67,6 +69,30 @@ confirm redistribution permission before a public release. In an Amp orb,
 links for the builder and homepage. The builder sends `X-Amp-Review-Widget: off`
 to prevent the portal's feedback button from appearing in printed output.
 Portal reviews remain enabled on the homepage.
+
+### Rulebook page viewer
+
+Page references in the selection panels open a full-screen image viewer.
+Role references show their two-page spread; other references show one page.
+Use **Zoom in** to read at full image resolution and **Fit pages** to see the
+whole page/spread. Close or Escape returns to the same picker without selecting
+an option. The viewer is excluded from character-sheet printing.
+
+All 262 pages of the Adventure standalone rulebook, including front matter,
+are rendered to `site/static/books/adventure/` as WebP images tracked by Git LFS.
+Filenames use 1-based PDF positions: printed page 22 is `page-0024.webp`.
+The adjacent manifest records the source checksum, page count, and resolution.
+Regenerate locally with pinned Python dependencies:
+
+```sh
+git lfs pull --include="outgunned-adventure-standalone-genre-book-v1.1-en.pdf" --exclude=""
+uv run scripts/render_adventure_pages.py
+```
+
+The site now publishes these rendered rulebook images, but still excludes the
+source PDFs and extracted text. Confirm permission before a public release.
+The Pages workflow fetches only the LFS page images before building; production
+checks reject missing images or unexpanded LFS pointers.
 
 ### GitHub Pages
 
