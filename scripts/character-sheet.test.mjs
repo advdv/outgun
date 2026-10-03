@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { IDENTITY_CHOICES, ITEM_CHOICES, ROLE_ITEMS, TROPE_FEATS, adventurePageUrl, chooseIdentity, chooseItem, itemChoices, newCharacter, parseCharacter, markValue, referencePages } from '../site/assets/character-sheet/model.ts';
+import { IDENTITY_CHOICES, ITEM_CHOICES, ROLE_ITEMS, TROPE_FEATS, WEAPONS, adventurePageUrl, chooseIdentity, chooseItem, itemChoices, newCharacter, parseCharacter, markValue, referencePages } from '../site/assets/character-sheet/model.ts';
 
 const pageText = page => readFileSync(new URL(
   `../html/outgunned-adventure-standalone-genre-book-v1.1-en/page-${String(page + 2).padStart(4, '0')}.md`,
@@ -185,8 +185,8 @@ test('legacy manual values remain intact until that field receives a book select
   assert.equal(chosen.identity.catchphrase, 'Keep moving!');
 });
 
-test('feat and gear catalogs cite only the requested pages, with distinct source-backed entries', () => {
-  for (const [field, count, pages] of [['feats', 37, [45, 46, 47, 48, 49]], ['gear', 32, [132, 133]]]) {
+test('feat and gear catalogs cite their descriptions, with distinct source-backed entries', () => {
+  for (const [field, count, pages] of [['feats', 37, [53, 54, 55, 56, 57, 58, 59]], ['gear', 32, [132, 133]]]) {
     const options = ITEM_CHOICES[field];
     assert.equal(options.length, count);
     assert.equal(new Set(options.map(([name]) => name)).size, count);
@@ -194,15 +194,32 @@ test('feat and gear catalogs cite only the requested pages, with distinct source
     for (const [name, page] of options) {
       // The extraction splits the ligature in "Rifle" into "Rif l e".
       const source = pageText(Number(page)).replaceAll('rif l e', 'rifle');
-      assert(source.includes(name.toLowerCase()), `Incorrect text or page for ${field}: ${name}`);
+      // A mention in another feat's example is not the feat's description.
+      const entries = field === 'feats' ? [...source.matchAll(/^#+ \*\*(.+)\*\*\s*$/gm)].map(match => match[1]) : [source];
+      assert(entries.some(entry => field === 'feats' ? entry === name.toLowerCase() : entry.includes(name.toLowerCase())),
+        `Incorrect text or page for ${field}: ${name}`);
     }
   }
+  // Changing citations must not add role-only or age-only feats to the catalog.
+  assert.deepEqual(ITEM_CHOICES.feats.map(([name]) => name).sort(), [...new Set(Object.values(TROPE_FEATS).flat())].sort());
   assert.equal(ITEM_CHOICES.gear.filter(([, page]) => page === '132').length, 16);
   assert.equal(ITEM_CHOICES.gear.filter(([, page]) => page === '133').length, 16);
-  assert.equal(adventurePageUrl('45', '/books/adventure/'), '/books/adventure/page-0047.webp');
-  assert.equal(adventurePageUrl('49', '/books/adventure/'), '/books/adventure/page-0051.webp');
+  assert.equal(adventurePageUrl('53', '/books/adventure/'), '/books/adventure/page-0055.webp');
+  assert.equal(adventurePageUrl('59', '/books/adventure/'), '/books/adventure/page-0061.webp');
   assert.equal(adventurePageUrl('132', '/books/adventure/'), '/books/adventure/page-0134.webp');
   assert.equal(adventurePageUrl('133', '/books/adventure/'), '/books/adventure/page-0135.webp');
+});
+
+test('weapon grouping includes knives and uncommon weapons but excludes ammunition and tools', () => {
+  const weapons = ITEM_CHOICES.gear.filter(([name]) => WEAPONS.includes(name)).map(([name]) => name);
+  assert.equal(weapons.length, 15);
+  assert.equal(new Set(WEAPONS).size, 15);
+  for (const name of ['Knife', 'Gatling Gun', 'Rocket Launcher', 'Dynamite', 'Machete/Axe', 'Club/Hammer', 'Whip']) {
+    assert(weapons.includes(name), `${name} should be a weapon regardless of its page or rarity`);
+  }
+  for (const name of ['Projectiles', 'Mags (2)', 'Tool-bag', 'Grappling Hook', 'Rope', 'Lighter']) {
+    assert(!WEAPONS.includes(name), `${name} is not a weapon`);
+  }
 });
 
 test('any role or trope can select and clear any item in any slot without altering other data', () => {

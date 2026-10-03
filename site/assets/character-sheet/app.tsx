@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { CSSProperties, ChangeEvent } from 'react';
 import { createRoot } from 'react-dom/client';
-import { GROUPS, IDENTITY, IDENTITY_CHOICES, MAX_BACKUP_BYTES, STORAGE_KEY, adventurePageUrl, chooseIdentity, chooseItem, itemChoices, markValue, newCharacter, parseCharacter, referencePages } from './model';
+import { GROUPS, IDENTITY, IDENTITY_CHOICES, MAX_BACKUP_BYTES, STORAGE_KEY, WEAPONS, adventurePageUrl, chooseIdentity, chooseItem, itemChoices, markValue, newCharacter, parseCharacter, referencePages } from './model';
 import type { Character, ChoiceField, IdentityKey, ItemField } from './model';
 
 const root = document.getElementById('character-builder')!;
@@ -90,7 +90,12 @@ function ChoicePicker({ field, heading, choices, value, canClear = false, filter
     element.scrollTop = row.offsetTop - (element.clientHeight - row.clientHeight) / 2;
   }, []);
 
-  const options = canClear ? [['', ''], ...choices] : choices;
+  const empty = canClear ? [['', '']] : [];
+  const groups = field === 'gear' ? [
+    { label: '', options: empty },
+    { label: 'Weapons', options: choices.filter(([name]) => WEAPONS.includes(name)) },
+    { label: 'Non-weapons', options: choices.filter(([name]) => !WEAPONS.includes(name)) },
+  ] : [{ label: '', options: [...empty, ...choices] }];
   return <div id="choice-picker" className="choice-picker" role="dialog" aria-labelledby="picker-heading">
     <div className="picker-header">
       <div><h2 id="picker-heading">{heading}</h2><p>Outgunned Adventure</p></div>
@@ -105,18 +110,21 @@ function ChoicePicker({ field, heading, choices, value, canClear = false, filter
       {!choices.length && <p className="picker-notice" role="status">No matching choices in this catalog. Check your role/trope or turn off the filter.</p>}
       {filter && value && !choices.some(([name]) => name === value) && <p className="picker-notice" role="status">Your current selection is outside this list and remains on the sheet.</p>}
       <fieldset aria-labelledby="picker-heading">
-        {options.map(([name, page]) => <div className="picker-option" key={name}>
-          <label className="picker-select">
-            <input type="radio" name="sheet-choice" value={name} aria-label={name || 'Empty slot'}
-              checked={value === name} onChange={() => select(name)} />
-            <span className="picker-name">{name || 'Empty slot'}</span>
-            <span className="picker-check" aria-hidden="true">{value === name ? '✓' : ''}</span>
-          </label>
-          {page && <button type="button" className="picker-page" aria-haspopup="dialog"
-            onClick={event => readPage(name, referencePages(field, page), event.currentTarget)}
-            aria-label={`${name}: Outgunned Adventure, ${field === 'role' ? 'pages' : 'page'} ${referencePages(field, page).join('–')} (opens page viewer)`}>
-            {field === 'role' ? 'pp.' : 'p.'} {referencePages(field, page).join('–')}
-          </button>}
+        {groups.filter(group => group.options.length).map(({ label, options }) => <div className="picker-group" key={label}>
+          {label && <h3 className="picker-group-heading">{label}</h3>}
+          {options.map(([name, page]) => <div className="picker-option" key={name}>
+            <label className="picker-select">
+              <input type="radio" name="sheet-choice" value={name} aria-label={name || 'Empty slot'}
+                checked={value === name} onChange={() => select(name)} />
+              <span className="picker-name">{name || 'Empty slot'}</span>
+              <span className="picker-check" aria-hidden="true">{value === name ? '✓' : ''}</span>
+            </label>
+            {page && field !== 'background' && <button type="button" className="picker-page" aria-haspopup="dialog"
+              onClick={event => readPage(name, referencePages(field, page), event.currentTarget)}
+              aria-label={`${name}: Outgunned Adventure, ${field === 'role' ? 'pages' : 'page'} ${referencePages(field, page).join('–')} (opens page viewer)`}>
+              {field === 'role' ? 'pp.' : 'p.'} {referencePages(field, page).join('–')}
+            </button>}
+          </div>)}
         </div>)}
       </fieldset>
     </div>

@@ -70,20 +70,20 @@ export const IDENTITY_CHOICES = {
 } as const;
 export type ChoiceField = keyof typeof IDENTITY_CHOICES;
 
-// All distinct feats offered by the tropes on pp. 45–49, cited at first occurrence.
+// All distinct feats offered by the tropes on pp. 45–49, cited at their full descriptions.
 // Gear follows the equipment tables on pp. 132–133; neither list is role/trope-limited.
 export const ITEM_CHOICES = {
   feats: [
-    ['Archeology', '45'], ['Artist', '45'], ['Big and Strong', '47'], ['Bodyguard', '47'],
-    ['Chin Up', '47'], ['Disguise', '46'], ['Estimate', '49'], ['Explorer', '47'],
-    ['Eye for Details', '45'], ['Fast Reflexes', '45'], ['Favored Weapon', '48'], ['Fighter', '47'],
-    ['Fix-it', '45'], ['Get Down!', '46'], ['Guide', '46'], ['Gunslinger', '45'],
-    ['Hardened', '47'], ['Heartbreaker', '47'], ['I Meant to Do That!', '46'], ['Linguist', '45'],
-    ['Lockpicker', '48'], ['Maverick', '45'], ['Moneybags', '48'], ['Pilot', '47'],
-    ['Quick and Nimble', '46'], ['Quick Fingers', '46'], ['Reassure', '47'], ['Saddle Up', '46'],
-    ['Sailor', '49'], ['Silver Tongue', '45'], ['Skulker', '49'], ['Subterfuge', '46'],
-    ['Teamwork', '45'], ['That Was Close!', '49'], ['Thrill Seeker', '45'], ['Trailblazer', '48'],
-    ['Watch and Learn', '47'],
+    ['Archeology', '53'], ['Artist', '53'], ['Big and Strong', '53'], ['Bodyguard', '53'],
+    ['Chin Up', '53'], ['Disguise', '53'], ['Estimate', '54'], ['Explorer', '55'],
+    ['Eye for Details', '54'], ['Fast Reflexes', '55'], ['Favored Weapon', '55'], ['Fighter', '55'],
+    ['Fix-it', '55'], ['Get Down!', '55'], ['Guide', '55'], ['Gunslinger', '55'],
+    ['Hardened', '56'], ['Heartbreaker', '56'], ['I Meant to Do That!', '56'], ['Linguist', '56'],
+    ['Lockpicker', '56'], ['Maverick', '56'], ['Moneybags', '57'], ['Pilot', '57'],
+    ['Quick and Nimble', '57'], ['Quick Fingers', '57'], ['Reassure', '58'], ['Saddle Up', '58'],
+    ['Sailor', '58'], ['Silver Tongue', '58'], ['Skulker', '58'], ['Subterfuge', '59'],
+    ['Teamwork', '59'], ['That Was Close!', '59'], ['Thrill Seeker', '59'], ['Trailblazer', '59'],
+    ['Watch and Learn', '59'],
   ],
   gear: [
     ['Elegant Clothes', '132'], ['Lockpicking Set', '132'], ['Tool-bag', '132'], ['Knife', '132'],
@@ -106,6 +106,8 @@ const TWO_CASH_GEAR = ['Lockpicking Set', 'First-aid Kit', 'Climbing Gear', 'Mus
   'Hunting Rifle', 'Shotgun', 'Bow', 'Dynamite', 'Boomerang'];
 const COMMON_WEAPONS = ['Knife', 'Pistol/Revolver', 'Old Rifle', 'Hunting Rifle', 'Shotgun', 'Machine Gun',
   'Bow', 'Hunting Bow', 'Dynamite', 'Machete/Axe', 'Club/Hammer', 'Boomerang', 'Whip'];
+// Include uncommon weapons for browsing, but not ammunition from the same table.
+export const WEAPONS = [...COMMON_WEAPONS, 'Gatling Gun', 'Rocket Launcher'];
 
 // Role starting choices, pp. 22–40. Lists are intersected with ITEM_CHOICES:
 // this filter does not expand the catalogs or enforce quantities/either-or picks.
