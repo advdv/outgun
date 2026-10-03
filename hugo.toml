@@ -29,3 +29,10 @@ unsafe = false
 [markup.tableOfContents]
 startLevel = 2
 endLevel = 2
+
+# Keep the portal's injected review button out of the printable sheet.
+# Other pages retain portal reviews; these headers only affect hugo server.
+[[server.headers]]
+for = '/character-builder/**'
+[server.headers.values]
+X-Amp-Review-Widget = 'off'

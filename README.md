@@ -64,7 +64,9 @@ uv run scripts/create_simplified_sheet.py --web-backdrop site/static/sheet/sheet
 This prototype contains adapted Two Little Mice character-sheet artwork;
 confirm redistribution permission before a public release. In an Amp orb,
 `amp orb services ensure` starts the supervised Hugo server and prints portal
-links for the builder and homepage.
+links for the builder and homepage. The builder sends `X-Amp-Review-Widget: off`
+to prevent the portal's feedback button from appearing in printed output.
+Portal reviews remain enabled on the homepage.
 
 ### GitHub Pages
 
