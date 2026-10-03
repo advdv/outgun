@@ -98,6 +98,86 @@ export const ITEM_CHOICES = {
 } as const;
 export type ItemField = keyof typeof ITEM_CHOICES;
 
+// Item-of-choice allowances use the prices on pp. 132–133. Uncommon weapons
+// need the Director's approval (p. 134), so are not ordinary starting choices.
+const ONE_CASH_GEAR = ['Tool-bag', 'Knife', 'Grappling Hook', 'Rope', 'Compass', 'Winter Clothes',
+  'Lantern', 'Camping Cookware', 'Lighter', 'Pistol/Revolver', 'Old Rifle', 'Machete/Axe', 'Club/Hammer', 'Whip', 'Mags (2)'];
+const TWO_CASH_GEAR = ['Lockpicking Set', 'First-aid Kit', 'Climbing Gear', 'Musical Instrument',
+  'Hunting Rifle', 'Shotgun', 'Bow', 'Dynamite', 'Boomerang'];
+const COMMON_WEAPONS = ['Knife', 'Pistol/Revolver', 'Old Rifle', 'Hunting Rifle', 'Shotgun', 'Machine Gun',
+  'Bow', 'Hunting Bow', 'Dynamite', 'Machete/Axe', 'Club/Hammer', 'Boomerang', 'Whip'];
+
+// Role starting choices, pp. 22–40. Lists are intersected with ITEM_CHOICES:
+// this filter does not expand the catalogs or enforce quantities/either-or picks.
+export const ROLE_ITEMS = {
+  'The Daredevil': {
+    feats: ['Fighter', 'Get Down!', 'Gunslinger', 'Hardened', 'That Was Close!', 'Thrill Seeker'],
+    gear: ['Pistol/Revolver', 'Knife', 'Rope'],
+  },
+  'The Guardian': {
+    feats: ['Big and Strong', 'Bodyguard', 'Explorer', 'Favored Weapon', 'Hardened', 'Physician'],
+    gear: [...COMMON_WEAPONS, ...ONE_CASH_GEAR],
+  },
+  'The Captain': {
+    feats: ['Fix-it', 'Guide', 'Pilot', 'Reassure', 'Saddle Up', 'Sailor'],
+    gear: ['Pistol/Revolver', 'Old Ride', 'Compass'],
+  },
+  'The Hunter': {
+    feats: ['Explorer', 'Favored Weapon', 'Guide', 'Hardened', 'Hawkeye', 'Skulker'],
+    gear: ['Hunting Rifle', 'Hunting Bow', 'Knife', ...ONE_CASH_GEAR],
+  },
+  'The Heart': {
+    feats: ['Artist', 'Chin Up', 'Physician', 'Reassure', 'Silver Tongue', 'That Was Close!'],
+    gear: [...ONE_CASH_GEAR, ...TWO_CASH_GEAR],
+  },
+  'The Star': {
+    feats: ['Artist', 'Heartbreaker', 'I Meant to Do That!', 'Maverick', 'Moneybags', 'That Was Close!'],
+    gear: ['Elegant Clothes'], // The precious item is not in the equipment catalog.
+  },
+  'The Professor': {
+    feats: ['Archeology', 'Eye for Details', 'I Meant to Do That!', 'Linguist', 'Specialist', 'Watch and Learn'],
+    gear: [], // Diary and pencil are not in the equipment catalog.
+  },
+  'The Technician': {
+    feats: ['Big and Strong', 'Fix-it', 'Pilot', 'Sensible Packer', 'Specialist', 'Trailblazer'],
+    gear: ['Old Rifle', 'Dynamite', 'Tool-bag', 'Knife', 'Lighter'],
+  },
+  'The Scoundrel': {
+    feats: ['Disguise', 'Quick and Nimble', 'Quick Fingers', 'Sensible Packer', 'Subterfuge', 'That Was Close!'],
+    gear: ['Knife', 'Lighter', ...ONE_CASH_GEAR],
+  },
+  'The Smuggler': {
+    feats: ['Archeology', 'Estimate', 'Lockpicker', 'Maverick', 'Quick Fingers', 'Subterfuge'],
+    gear: ['Pistol/Revolver', 'Rope', 'Lockpicking Set'],
+  },
+} satisfies Record<typeof IDENTITY_CHOICES.role[number][0], { feats: string[]; gear: string[] }>;
+
+export const TROPE_FEATS = {
+  'Action Archeologist': ['Archeology', 'Eye for Details', 'Fast Reflexes', 'Thrill Seeker'],
+  'Adventuring Author': ['Artist', 'Eye for Details', 'Linguist', 'Silver Tongue'],
+  'Born Rebel': ['Fix-it', 'Gunslinger', 'Maverick', 'Teamwork'],
+  'Cold and Distant': ['Get Down!', 'Guide', 'Gunslinger', 'Quick and Nimble'],
+  'Cowardly Lion': ['I Meant to Do That!', 'Quick and Nimble', 'Saddle Up', 'Silver Tongue'],
+  'Detestable Bastard': ['Disguise', 'Linguist', 'Quick Fingers', 'Subterfuge'],
+  'Dreamer': ['Explorer', 'I Meant to Do That!', 'Reassure', 'Watch and Learn'],
+  'Flying Steamroller': ['Fix-it', 'Hardened', 'Heartbreaker', 'Pilot'],
+  'Gentle Giant': ['Big and Strong', 'Bodyguard', 'Chin Up', 'Fighter'],
+  'Indispensable Rogue': ['Fix-it', 'Lockpicker', 'Quick Fingers', 'Trailblazer'],
+  'Parental Figure': ['Archeology', 'Chin Up', 'Reassure', 'Silver Tongue'],
+  'Proper Gentleman/Lady': ['Archeology', 'Favored Weapon', 'Heartbreaker', 'Moneybags'],
+  'Reluctant Hero': ['Gunslinger', 'Reassure', 'That Was Close!', 'Thrill Seeker'],
+  'Salty Dog': ['Estimate', 'Fix-it', 'Hardened', 'Sailor'],
+  'Wild at Heart': ['Explorer', 'Favored Weapon', 'Guide', 'Skulker'],
+} satisfies Record<typeof IDENTITY_CHOICES.trope[number][0], string[]>;
+
+export function itemChoices(field: ItemField, identity: Character['identity'], limited: boolean) {
+  if (!limited) return ITEM_CHOICES[field];
+  const role = Object.entries(ROLE_ITEMS).find(([name]) => name === identity.role)?.[1];
+  const trope = Object.entries(TROPE_FEATS).find(([name]) => name === identity.trope)?.[1] ?? [];
+  return ITEM_CHOICES[field].filter(([name]) =>
+    role?.[field].some(item => item === name) || (field === 'feats' && trope.includes(name)));
+}
+
 export function adventurePageUrl(page: string) {
   const extractedPage = String(Number(page) + 2).padStart(4, '0');
   return `https://github.com/advdv/outgun/blob/main/html/outgunned-adventure-standalone-genre-book-v1.1-en/page-${extractedPage}.md`;

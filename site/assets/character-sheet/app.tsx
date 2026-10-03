@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { CSSProperties, ChangeEvent } from 'react';
 import { createRoot } from 'react-dom/client';
-import { GROUPS, IDENTITY, IDENTITY_CHOICES, ITEM_CHOICES, MAX_BACKUP_BYTES, STORAGE_KEY, adventurePageUrl, chooseIdentity, chooseItem, markValue, newCharacter, parseCharacter } from './model';
+import { GROUPS, IDENTITY, IDENTITY_CHOICES, MAX_BACKUP_BYTES, STORAGE_KEY, adventurePageUrl, chooseIdentity, chooseItem, itemChoices, markValue, newCharacter, parseCharacter } from './model';
 import type { Character, ChoiceField, IdentityKey, ItemField } from './model';
 
 const root = document.getElementById('character-builder')!;
@@ -73,8 +73,9 @@ function Field({ label, value, x, y, w, h, line = 14, multiline = false, max = 3
   </div>;
 }
 
-function ChoicePicker({ heading, choices, value, canClear = false, select, close }: {
+function ChoicePicker({ heading, choices, value, canClear = false, filter, select, close }: {
   heading: string; choices: readonly (readonly [string, string])[]; value: string; canClear?: boolean;
+  filter?: { enabled: boolean; label: string; change: (enabled: boolean) => void };
   select: (value: string) => void; close: () => void;
 }) {
   const list = useRef<HTMLDivElement>(null);
@@ -92,7 +93,14 @@ function ChoicePicker({ heading, choices, value, canClear = false, select, close
       <div><h2 id="picker-heading">{heading}</h2><p>Outgunned Adventure</p></div>
       <button type="button" className="picker-close" aria-label="Close picker" onClick={close}>×</button>
     </div>
+    {filter && <div className="picker-filter">
+      <label><input type="checkbox" checked={filter.enabled} aria-describedby="picker-filter-help"
+        onChange={event => { list.current!.scrollTop = 0; filter.change(event.target.checked); }} />{filter.label}</label>
+      <p id="picker-filter-help">Filters this catalog only; quantities aren’t checked.</p>
+    </div>}
     <div className="picker-list" ref={list}>
+      {!choices.length && <p className="picker-notice" role="status">No matching choices in this catalog. Check your role/trope or turn off the filter.</p>}
+      {filter && value && !choices.some(([name]) => name === value) && <p className="picker-notice" role="status">Your current selection is outside this list and remains on the sheet.</p>}
       <fieldset aria-labelledby="picker-heading">
         {options.map(([name, page]) => <div className="picker-option" key={name}>
           <label className="picker-select">
@@ -146,6 +154,7 @@ function App() {
   const [availableWidth, setAvailableWidth] = useState(1123);
   const [artReady, setArtReady] = useState(false);
   const [picker, setPicker] = useState<ChoiceField | { field: ItemField; index: number } | null>(null);
+  const [itemLimits, setItemLimits] = useState({ feats: true, gear: true });
   const pickerTrigger = useRef<HTMLButtonElement | null>(null);
   const viewport = useRef<HTMLDivElement>(null);
   const backupInput = useRef<HTMLInputElement>(null);
@@ -334,14 +343,19 @@ function App() {
     </div>
     <div className="builder-notes">
       <p><strong>A4 landscape · 297 × 210 mm.</strong> The screen and print use this same sheet. Click a chevron to choose from the book; click other writing lines to type. Click a tracker to fill through it, or its last filled mark to erase it. On a small screen, use 100% and scroll to edit comfortably.</p>
-      <p>Selections update immediately. Click outside a panel or press Escape to close it. Flavor choices, feats and gear are available regardless of role or trope; this variant uses Adult only. Choose Empty slot to remove a feat or gear entry. Ratings, Hot and other resources remain manual. Drafts stay in this browser; export a backup to move devices or keep another character. When printing, use A4 landscape, 100% scale, no margins and no browser headers/footers.</p>
+      <p>Selections update immediately. Click outside a panel or press Escape to close it. Feats default to role/trope choices and gear to role starting choices; turn off each panel’s filter to browse its full catalog. Filters don’t remove existing picks or enforce quantities. Flavor choices remain unrestricted; this variant uses Adult only. Choose Empty slot to remove a feat or gear entry. Ratings, Hot and other resources remain manual. Drafts stay in this browser; export a backup to move devices or keep another character. When printing, use A4 landscape, 100% scale, no margins and no browser headers/footers.</p>
       {character.portrait && <button type="button" onClick={() => update('portrait', null)}>Remove portrait</button>}
     </div>
     {picker && <ChoicePicker key={typeof picker === 'string' ? picker : `${picker.field}-${picker.index}`}
       heading={typeof picker === 'string' ? `Choose ${picker === 'age' ? 'an' : 'a'} ${picker}` : picker.field === 'feats' ? 'Choose a feat' : 'Choose guns & gear'}
-      choices={typeof picker === 'string' ? IDENTITY_CHOICES[picker] : ITEM_CHOICES[picker.field]}
+      choices={typeof picker === 'string' ? IDENTITY_CHOICES[picker] : itemChoices(picker.field, character.identity, itemLimits[picker.field])}
       value={typeof picker === 'string' ? character.identity[picker] : character[picker.field][picker.index]}
       canClear={typeof picker !== 'string'}
+      filter={typeof picker === 'string' ? undefined : {
+        enabled: itemLimits[picker.field],
+        label: picker.field === 'feats' ? 'Only role & trope feats' : 'Only role starting gear',
+        change: enabled => setItemLimits(previous => ({ ...previous, [picker.field]: enabled })),
+      }}
       select={value => typeof picker === 'string'
         ? setCharacter(previous => chooseIdentity(previous, picker, value)) : updateList(picker.field, picker.index, value)}
       close={closePicker} />}

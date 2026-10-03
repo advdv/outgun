@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { IDENTITY_CHOICES, ITEM_CHOICES, adventurePageUrl, chooseIdentity, chooseItem, newCharacter, parseCharacter, markValue } from '../site/assets/character-sheet/model.ts';
+import { IDENTITY_CHOICES, ITEM_CHOICES, ROLE_ITEMS, TROPE_FEATS, adventurePageUrl, chooseIdentity, chooseItem, itemChoices, newCharacter, parseCharacter, markValue } from '../site/assets/character-sheet/model.ts';
 
 const pageText = page => readFileSync(new URL(
   `../html/outgunned-adventure-standalone-genre-book-v1.1-en/page-${String(page + 2).padStart(4, '0')}.md`,
@@ -225,4 +225,83 @@ test('item selections reject custom entries and entries from the wrong catalog',
   for (const [field, value] of [['feats', 'Custom feat'], ['feats', 'Pistol/Revolver'], ['gear', 'Custom gear'], ['gear', 'Gunslinger']]) {
     assert.strictEqual(chooseItem(original, field, 3, value), original);
   }
+});
+
+test('starting feat mappings cover every role and trope and match their source sections', () => {
+  for (const [field, data, count] of [['role', ROLE_ITEMS, 6], ['trope', TROPE_FEATS, 4]]) {
+    assert.deepEqual(Object.keys(data).sort(), IDENTITY_CHOICES[field].map(([name]) => name).sort());
+    for (const [name, page] of IDENTITY_CHOICES[field]) {
+      const names = field === 'role' ? data[name].feats : data[name];
+      assert.equal(new Set(names).size, count);
+      const source = field === 'role' ? pageText(Number(page))
+        : pageText(Number(page)).split(`<mark>${name.toLowerCase()}</mark>`)[1].split('# <mark>')[0];
+      for (const feat of names) assert(source.includes(feat.toLowerCase()), `${feat} is not offered by ${name}`);
+    }
+  }
+});
+
+test('limited feats are the deduplicated role-or-trope union within the existing catalog', () => {
+  const identity = newCharacter().identity;
+  const names = () => itemChoices('feats', identity, true).map(([name]) => name);
+  Object.assign(identity, { role: 'The Daredevil', trope: 'Action Archeologist' });
+  assert.deepEqual(names(), ['Archeology', 'Eye for Details', 'Fast Reflexes', 'Fighter', 'Get Down!',
+    'Gunslinger', 'Hardened', 'That Was Close!', 'Thrill Seeker']);
+  identity.role = 'The Professor';
+  identity.trope = 'Born Rebel';
+  assert.deepEqual(names(), ['Archeology', 'Eye for Details', 'Fix-it', 'Gunslinger', 'I Meant to Do That!',
+    'Linguist', 'Maverick', 'Teamwork', 'Watch and Learn']);
+  identity.role = '';
+  assert.deepEqual(names(), ['Fix-it', 'Gunslinger', 'Maverick', 'Teamwork']);
+  identity.role = 'The Captain';
+  identity.trope = '';
+  assert.deepEqual(names(), ['Fix-it', 'Guide', 'Pilot', 'Reassure', 'Saddle Up', 'Sailor']);
+  for (const field of ['feats', 'gear']) {
+    for (const role of ['', 'Custom role', 'toString', 'The Fortune Seeker']) {
+      Object.assign(identity, { role, trope: 'constructor' });
+      assert.deepEqual(itemChoices(field, identity, true), []);
+      assert.strictEqual(itemChoices(field, identity, false), ITEM_CHOICES[field]);
+    }
+  }
+});
+
+test('gear filtering respects fixed kits, price allowances and ordinary weapon choices, never tropes', () => {
+  const identity = newCharacter().identity;
+  const names = role => itemChoices('gear', { ...identity, role, trope: 'Wild at Heart' }, true).map(([name]) => name).sort();
+  for (const [role, expected] of [
+    ['The Daredevil', ['Pistol/Revolver', 'Knife', 'Rope']],
+    ['The Captain', ['Pistol/Revolver', 'Old Ride', 'Compass']],
+    ['The Smuggler', ['Pistol/Revolver', 'Rope', 'Lockpicking Set']],
+    ['The Technician', ['Old Rifle', 'Dynamite', 'Tool-bag', 'Knife', 'Lighter']],
+    ['The Star', ['Elegant Clothes']], ['The Professor', []], ['', []],
+  ]) assert.deepEqual(names(role), expected.sort());
+
+  // Derive price groups independently from the book tables, including OCR spacing.
+  const atPrice = price => ITEM_CHOICES.gear.filter(([name, page]) =>
+    pageText(Number(page)).replace(/<!--[\s\S]*?-->/g, '').replaceAll('rif l e', 'rifle').split('<br>').some(line =>
+      line.trim().startsWith(`${price}$`) && line.includes(name.toLowerCase()))).map(([name]) => name);
+  const one = atPrice(1), two = atPrice(2);
+  assert.equal(one.length, 15);
+  assert.equal(two.length, 9);
+  assert.deepEqual(names('The Heart'), [...one, ...two].sort());
+  assert.deepEqual(names('The Scoundrel'), one.sort());
+  assert.deepEqual(names('The Hunter'), [...one, 'Hunting Rifle', 'Hunting Bow'].sort());
+  assert.deepEqual(names('The Guardian'), [...new Set([...one, 'Hunting Rifle', 'Shotgun', 'Machine Gun',
+    'Bow', 'Hunting Bow', 'Dynamite', 'Boomerang'])].sort());
+});
+
+test('filtering preserves existing out-of-list selections, citations and the unrestricted catalogs', () => {
+  const character = newCharacter();
+  Object.assign(character.identity, { role: 'The Captain', trope: 'Salty Dog' });
+  character.feats[4] = 'Custom feat\nLegacy notes';
+  character.gear[1] = 'Rocket Launcher';
+  const before = structuredClone(character);
+  for (const field of ['feats', 'gear']) {
+    for (const limited of [true, false, true]) {
+      for (const choice of itemChoices(field, character.identity, limited)) {
+        assert(ITEM_CHOICES[field].includes(choice));
+      }
+    }
+    assert.strictEqual(itemChoices(field, character.identity, false), ITEM_CHOICES[field]);
+  }
+  assert.deepEqual(character, before);
 });

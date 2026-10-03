@@ -60,6 +60,13 @@
 .picker-close { display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; margin: -4px -10px 0 0; font-size: 30px; line-height: 1; cursor: pointer; }
 .picker-close:hover { background: #eee4d2; }
 .picker-close:focus-visible { outline: 2px solid #8c4928; outline-offset: 2px; }
+.picker-filter { margin: 0 28px 20px; }
+.picker-filter label { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.picker-filter input { width: 18px; height: 18px; flex-shrink: 0; accent-color: #634123; }
+.picker-filter input:focus-visible { outline: 2px solid #8c4928; outline-offset: 3px; }
+.picker-filter p, .picker-notice { font-size: 14px; line-height: 1.5; color: #645848; }
+.picker-filter p { margin-top: 8px; }
+.picker-notice { margin-bottom: 16px; }
 .picker-list { position: relative; min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; padding: 0 28px 24px; }
 .picker-list fieldset { min-width: 0; margin: 0; padding: 0; border: 0; border-top: 1px solid #d8cdbb; }
 .picker-option { position: relative; display: flex; align-items: stretch; min-height: 68px; border-bottom: 1px solid #d8cdbb; }
