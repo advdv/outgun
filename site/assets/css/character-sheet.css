@@ -21,11 +21,15 @@
 .character-sheet { position: relative; width: 297mm; height: 210mm; transform-origin: top left; margin: 0; padding: 0; border: 0; background: #f7eed7; box-shadow: 0 3px 10px #37281630; color: #33261c; font-family: 'Source Sans 3', sans-serif; font-size: 10pt; line-height: normal; }
 .sheet-artwork { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; user-select: none; }
 .sheet-field, .sheet-mark, .sheet-portrait { position: absolute; box-sizing: border-box; margin: 0; padding: 0; }
-.sheet-field input, .sheet-field textarea, .sheet-field .print-value { width: 100%; height: 100%; padding: 0; margin: 0; border: 0; border-radius: 0; font: inherit; line-height: inherit; letter-spacing: 0; color: inherit; background: transparent; box-sizing: border-box; }
+.sheet-field input, .sheet-field textarea, .sheet-field .sheet-choice, .sheet-field .print-value { width: 100%; height: 100%; padding: 0; margin: 0; border: 0; border-radius: 0; font: inherit; line-height: inherit; letter-spacing: 0; color: inherit; background: transparent; box-sizing: border-box; }
 .sheet-field textarea { resize: none; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
 .sheet-field input { text-overflow: clip; }
-.sheet-field input:hover, .sheet-field textarea:hover { background: #fff9eb66; }
-.sheet-field input:focus, .sheet-field textarea:focus { outline: 1pt solid #8c4928; outline-offset: 1pt; background: #fff9ebb3; }
+.sheet-field input:hover, .sheet-field textarea:hover, .sheet-choice:hover { background: #fff9eb66; }
+.sheet-field input:focus, .sheet-field textarea:focus, .sheet-choice:focus-visible { outline: 1pt solid #8c4928; outline-offset: 1pt; background: #fff9ebb3; }
+.sheet-choice { display: flex; align-items: center; justify-content: space-between; gap: 8pt; text-align: left; cursor: pointer; }
+.sheet-choice span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.sheet-choice svg { width: 9pt; height: 9pt; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.3; }
+.sheet-field .sheet-choice[aria-expanded="true"] { background: #fff9ebb3; }
 .sheet-field .print-value { position: absolute; inset: 0; visibility: hidden; pointer-events: none; white-space: pre; overflow: hidden; }
 .sheet-field.multiline .print-value { white-space: pre-wrap; overflow-wrap: anywhere; }
 .sheet-field.overfull { outline: 1pt solid #a52c18; }
@@ -45,11 +49,30 @@
 .builder-notes button { margin-top: 12px; }
 @media (max-width: 640px) { .builder-main { padding: 24px 12px; } .builder-intro h1 { font-size: 30px; } }
 
+/* A non-modal overlay: never resize the sheet, lock body scrolling, or dim the page. */
+.identity-picker { position: fixed; inset: 0 0 0 auto; z-index: 20; width: min(100vw, max(30vw, 320px)); height: 100dvh; display: flex; flex-direction: column; background: #fbf8f0; border-left: 1px solid #c4b69c; box-shadow: -4px 0 18px #37281620; }
+.picker-header { display: flex; align-items: start; justify-content: space-between; gap: 16px; padding: 24px 28px; }
+.picker-header h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 34px; line-height: 1.15; }
+.picker-header p { margin-top: 6px; color: #645848; }
+.picker-close { display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; margin: -4px -10px 0 0; font-size: 30px; line-height: 1; cursor: pointer; }
+.picker-close:hover { background: #eee4d2; }
+.picker-close:focus-visible { outline: 2px solid #8c4928; outline-offset: 2px; }
+.picker-list { position: relative; min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; padding: 0 28px 24px; }
+.picker-list fieldset { min-width: 0; margin: 0; padding: 0; border: 0; border-top: 1px solid #d8cdbb; }
+.picker-option { position: relative; display: flex; align-items: center; gap: 12px; min-height: 68px; padding: 18px 10px; border-bottom: 1px solid #d8cdbb; cursor: pointer; }
+.picker-option input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.picker-option:hover, .picker-option:has(input:checked) { background: #eee4d2; }
+.picker-option:has(input:focus-visible) { outline: 2px solid #8c4928; outline-offset: -2px; }
+.picker-option:has(input:checked) .picker-name { font-weight: bold; }
+.picker-name { flex: 1; min-width: 0; font-size: 18px; }
+.picker-check { width: 18px; flex-shrink: 0; font-size: 22px; }
+.picker-page { color: #645848; font-size: 14px; white-space: nowrap; }
+
 /* No alternative print composition: same sheet, coordinates, type and artwork. */
 @page { size: A4 landscape; margin: 0; }
 @media print {
   html, body { width: 297mm; height: auto; margin: 0 !important; padding: 0 !important; background: white !important; }
-  body > :not(main), .builder-intro, .builder-toolbar, .builder-message, .builder-warning, .builder-notes { display: none !important; }
+  body > :not(main), .builder-intro, .builder-toolbar, .builder-message, .builder-warning, .builder-notes, .identity-picker { display: none !important; }
   .builder-main { width: 297mm; max-width: none; margin: 0; padding: 0; }
   .sheet-viewport { width: 297mm; margin: 0; padding: 0; overflow: visible; }
   /* Anchor the sheet in normal document flow, not the screen viewport.
@@ -57,7 +80,7 @@
      it clips only the outer paper texture, below all fields and footer text. */
   .sheet-stage { width: 297mm !important; height: calc(210mm - 1px) !important; margin: 0; overflow: hidden; }
   .character-sheet { transform: none !important; box-shadow: none; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-  .sheet-field input, .sheet-field textarea { display: none; }
+  .sheet-field input, .sheet-field textarea, .sheet-field .sheet-choice { display: none; }
   .sheet-field .print-value { visibility: visible; }
   .sheet-mark { outline: none !important; }
   .sheet-portrait span { display: none; }

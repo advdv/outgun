@@ -8,6 +8,26 @@ export const GROUPS = [
 
 export const IDENTITY = ['name', 'role', 'trope', 'background', 'age', 'flaw', 'catchphrase'] as const;
 export type IdentityKey = typeof IDENTITY[number];
+
+// Outgunned Adventure, printed pages (the extracted files are numbered two higher).
+// Standard roles: pp. 20–41. Tropes: pp. 44–49. Fortune Seeker is intentionally omitted.
+export const IDENTITY_CHOICES = {
+  role: [
+    ['The Daredevil', '22'], ['The Guardian', '24'], ['The Captain', '26'],
+    ['The Hunter', '28'], ['The Heart', '30'], ['The Star', '32'],
+    ['The Professor', '34'], ['The Technician', '36'], ['The Scoundrel', '38'],
+    ['The Smuggler', '40'],
+  ],
+  trope: [
+    ['Action Archeologist', '45'], ['Adventuring Author', '45'], ['Born Rebel', '45'],
+    ['Cold and Distant', '46'], ['Cowardly Lion', '46'], ['Detestable Bastard', '46'],
+    ['Dreamer', '47'], ['Flying Steamroller', '47'], ['Gentle Giant', '47'],
+    ['Indispensable Rogue', '48'], ['Parental Figure', '48'], ['Proper Gentleman/Lady', '48'],
+    ['Reluctant Hero', '49'], ['Salty Dog', '49'], ['Wild at Heart', '49'],
+  ],
+} as const;
+export type ChoiceField = keyof typeof IDENTITY_CHOICES;
+
 export type Character = {
   version: 1;
   identity: Record<IdentityKey, string>;
@@ -37,6 +57,11 @@ export function newCharacter(): Character {
     feats: Array(6).fill(''), gear: Array(6).fill(''), ammo: [0, 0, 0],
     backpack: '', bag: '', portrait: null,
   };
+}
+
+export function chooseIdentity(character: Character, field: ChoiceField, value: string): Character {
+  if (!IDENTITY_CHOICES[field].some(([name]) => name === value)) return character;
+  return { ...character, identity: { ...character.identity, [field]: value } };
 }
 
 // Click a mark to fill through it; click the final filled mark to erase it.

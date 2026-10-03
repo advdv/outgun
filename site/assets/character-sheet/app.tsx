@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { CSSProperties, ChangeEvent } from 'react';
 import { createRoot } from 'react-dom/client';
-import { GROUPS, IDENTITY, MAX_BACKUP_BYTES, STORAGE_KEY, markValue, newCharacter, parseCharacter } from './model';
-import type { Character, IdentityKey } from './model';
+import { GROUPS, IDENTITY, IDENTITY_CHOICES, MAX_BACKUP_BYTES, STORAGE_KEY, chooseIdentity, markValue, newCharacter, parseCharacter } from './model';
+import type { Character, ChoiceField, IdentityKey } from './model';
 
 const root = document.getElementById('character-builder')!;
 const artwork = root.dataset.artwork!;
@@ -35,11 +35,12 @@ function download(data: string, name: string) {
 type FieldProps = {
   label: string; value: string; x: number; y: number; w: number; h: number;
   line?: number; multiline?: boolean; max?: number;
+  picker?: { expanded: boolean; open: (trigger: HTMLButtonElement) => void };
   change: (value: string) => void;
   overflow: (label: string, invalid: boolean) => void;
 };
 
-function Field({ label, value, x, y, w, h, line = 14, multiline = false, max = 300, change, overflow }: FieldProps) {
+function Field({ label, value, x, y, w, h, line = 14, multiline = false, max = 300, picker, change, overflow }: FieldProps) {
   const mirror = useRef<HTMLSpanElement>(null);
   const [tooLong, setTooLong] = useState(false);
   useLayoutEffect(() => {
@@ -62,8 +63,44 @@ function Field({ label, value, x, y, w, h, line = 14, multiline = false, max = 3
   };
   return <div className={`sheet-field ${multiline ? 'multiline' : ''} ${tooLong ? 'overfull' : ''}`}
     style={{ ...place(x, y, w, h), lineHeight: `${line}pt` }}>
-    {multiline ? <textarea {...props} rows={3} /> : <input {...props} type="text" />}
+    {picker ? <button type="button" className="sheet-choice" aria-label={`${label}: ${value || 'Not selected'}`}
+      aria-haspopup="dialog" aria-expanded={picker.expanded} aria-controls={picker.expanded ? 'identity-picker' : undefined}
+      onClick={event => picker.open(event.currentTarget)}>
+      <span>{value}</span>
+      <svg viewBox="0 0 12 12" aria-hidden="true"><path d="m3 4.5 3 3 3-3" /></svg>
+    </button> : multiline ? <textarea {...props} rows={3} /> : <input {...props} type="text" />}
     <span className="print-value" ref={mirror} aria-hidden="true">{value}</span>
+  </div>;
+}
+
+function IdentityPicker({ field, value, select, close }: {
+  field: ChoiceField; value: string; select: (value: string) => void; close: () => void;
+}) {
+  const list = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const element = list.current!;
+    const selected = element.querySelector<HTMLInputElement>('input:checked') || element.querySelector<HTMLInputElement>('input')!;
+    selected.focus({ preventScroll: true });
+    const row = selected.closest('label')!;
+    element.scrollTop = row.offsetTop - (element.clientHeight - row.clientHeight) / 2;
+  }, []);
+
+  return <div id="identity-picker" className="identity-picker" role="dialog" aria-labelledby="picker-heading">
+    <div className="picker-header">
+      <div><h2 id="picker-heading">Choose a {field}</h2><p>Outgunned Adventure</p></div>
+      <button type="button" className="picker-close" aria-label="Close picker" onClick={close}>×</button>
+    </div>
+    <div className="picker-list" ref={list}>
+      <fieldset aria-label={title(field)}>
+        {IDENTITY_CHOICES[field].map(([name, page]) => <label className="picker-option" key={name}>
+          <input type="radio" name={`choose-${field}`} value={name} aria-label={name}
+            checked={value === name} onChange={() => select(name)} />
+          <span className="picker-name">{name}</span>
+          <span className="picker-check" aria-hidden="true">{value === name ? '✓' : ''}</span>
+          <span className="picker-page">p. {page}</span>
+        </label>)}
+      </fieldset>
+    </div>
   </div>;
 }
 
@@ -103,11 +140,27 @@ function App() {
   const [zoom, setZoom] = useState('fit');
   const [availableWidth, setAvailableWidth] = useState(1123);
   const [artReady, setArtReady] = useState(false);
+  const [picker, setPicker] = useState<ChoiceField | null>(null);
+  const pickerTrigger = useRef<HTMLButtonElement | null>(null);
   const viewport = useRef<HTMLDivElement>(null);
   const backupInput = useRef<HTMLInputElement>(null);
   const portraitInput = useRef<HTMLInputElement>(null);
   const invalidFields = Object.keys(overflows).filter(key => overflows[key]);
   const scale = zoom === 'fit' ? Math.min(1, availableWidth / (297 * 96 / 25.4)) : 1;
+
+  const closePicker = useCallback(() => {
+    setPicker(null);
+    pickerTrigger.current?.focus({ preventScroll: true });
+  }, []);
+
+  useEffect(() => {
+    if (!picker) return;
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { event.preventDefault(); closePicker(); }
+    };
+    window.addEventListener('keydown', escape);
+    return () => window.removeEventListener('keydown', escape);
+  }, [picker, closePicker]);
 
   useEffect(() => {
     const observer = new ResizeObserver(entries => setAvailableWidth(entries[0].contentRect.width));
@@ -229,6 +282,10 @@ function App() {
           {IDENTITY.map(key => {
             const [x, y, w] = identityPositions[key];
             return <Field key={key} label={title(key)} value={character.identity[key]} x={x} y={y + 1} w={w} h={14}
+              picker={key === 'role' || key === 'trope' ? {
+                expanded: picker === key,
+                open: trigger => { pickerTrigger.current = trigger; setPicker(key); },
+              } : undefined}
               change={value => setCharacter(previous => ({ ...previous, identity: { ...previous.identity, [key]: value } }))} overflow={overflow} />;
           })}
           <Marks label="Luck" kind="luck" value={character.luck} count={6} x={548} y={62} step={42} change={value => update('luck', value)} />
@@ -253,10 +310,12 @@ function App() {
       </div>
     </div>
     <div className="builder-notes">
-      <p><strong>A4 landscape · 297 × 210 mm.</strong> The screen and print use this same sheet. Click a line to write; click a tracker to fill through it, or its last filled mark to erase it. On a small screen, use 100% and scroll to edit comfortably.</p>
-      <p>Manual editing only: Hot and other resource changes are not automatic. Drafts stay in this browser; export a backup to move devices or keep another character. When printing, use A4 landscape, 100% scale, no margins and no browser headers/footers.</p>
+      <p><strong>A4 landscape · 297 × 210 mm.</strong> The screen and print use this same sheet. Click Role or Trope to choose from the book; click another line to write. Click a tracker to fill through it, or its last filled mark to erase it. On a small screen, use 100% and scroll to edit comfortably.</p>
+      <p>Role and trope selections update immediately. Ratings, feats, gear, Hot and other resources remain manual. Drafts stay in this browser; export a backup to move devices or keep another character. When printing, use A4 landscape, 100% scale, no margins and no browser headers/footers.</p>
       {character.portrait && <button type="button" onClick={() => update('portrait', null)}>Remove portrait</button>}
     </div>
+    {picker && <IdentityPicker key={picker} field={picker} value={character.identity[picker]}
+      select={value => setCharacter(previous => chooseIdentity(previous, picker, value))} close={closePicker} />}
   </>;
 }
 
