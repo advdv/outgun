@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { IDENTITY_CHOICES, adventurePageUrl, chooseIdentity, newCharacter, parseCharacter, markValue } from '../site/assets/character-sheet/model.ts';
+import { IDENTITY_CHOICES, ITEM_CHOICES, adventurePageUrl, chooseIdentity, chooseItem, newCharacter, parseCharacter, markValue } from '../site/assets/character-sheet/model.ts';
 
 const pageText = page => readFileSync(new URL(
   `../html/outgunned-adventure-standalone-genre-book-v1.1-en/page-${String(page + 2).padStart(4, '0')}.md`,
@@ -172,4 +172,57 @@ test('legacy manual values remain intact until that field receives a book select
   assert.equal(chosen.identity.background, 'A custom background');
   assert.equal(chosen.identity.flaw, 'A custom flaw');
   assert.equal(chosen.identity.catchphrase, 'Keep moving!');
+});
+
+test('feat and gear catalogs cite only the requested pages, with distinct source-backed entries', () => {
+  for (const [field, count, pages] of [['feats', 37, [45, 46, 47, 48, 49]], ['gear', 32, [132, 133]]]) {
+    const options = ITEM_CHOICES[field];
+    assert.equal(options.length, count);
+    assert.equal(new Set(options.map(([name]) => name)).size, count);
+    assert.deepEqual([...new Set(options.map(([, page]) => Number(page)))].sort((a, b) => a - b), pages);
+    for (const [name, page] of options) {
+      // The extraction splits the ligature in "Rifle" into "Rif l e".
+      const source = pageText(Number(page)).replaceAll('rif l e', 'rifle');
+      assert(source.includes(name.toLowerCase()), `Incorrect text or page for ${field}: ${name}`);
+    }
+  }
+  assert.equal(ITEM_CHOICES.gear.filter(([, page]) => page === '132').length, 16);
+  assert.equal(ITEM_CHOICES.gear.filter(([, page]) => page === '133').length, 16);
+  assert.equal(adventurePageUrl('45').split('/').at(-1), 'page-0047.md');
+  assert.equal(adventurePageUrl('49').split('/').at(-1), 'page-0051.md');
+  assert.equal(adventurePageUrl('132').split('/').at(-1), 'page-0134.md');
+  assert.equal(adventurePageUrl('133').split('/').at(-1), 'page-0135.md');
+});
+
+test('any role or trope can select and clear any item in any slot without altering other data', () => {
+  for (const [role, trope] of [['', ''], ['The Professor', 'Born Rebel'], ['The Guardian', 'Salty Dog']]) {
+    const original = newCharacter();
+    Object.assign(original.identity, { role, trope });
+    original.feats = ['Custom feat\nWith notes', 'Artist', '', 'Guide', 'Sailor', 'Linguist'];
+    original.gear = ['Old map', '', 'Compass', 'Radio', 'Knife', 'Rope'];
+    original.ratings.FOCUS = 3;
+    original.cash = 4;
+    original.ammo = [2, 0, 3];
+    const untouched = structuredClone(original);
+    for (const field of ['feats', 'gear']) {
+      for (const index of [0, 2, 5]) {
+        for (const name of ['', ...ITEM_CHOICES[field].map(([name]) => name)]) {
+          const expected = structuredClone(original);
+          expected[field][index] = name;
+          const chosen = chooseItem(original, field, index, name);
+          assert.deepEqual(chosen, expected);
+          assert.deepEqual(parseCharacter(JSON.stringify(chosen)), expected);
+        }
+      }
+    }
+    assert.deepEqual(original, untouched);
+    assert.deepEqual(parseCharacter(JSON.stringify(original)), original);
+  }
+});
+
+test('item selections reject custom entries and entries from the wrong catalog', () => {
+  const original = newCharacter();
+  for (const [field, value] of [['feats', 'Custom feat'], ['feats', 'Pistol/Revolver'], ['gear', 'Custom gear'], ['gear', 'Gunslinger']]) {
+    assert.strictEqual(chooseItem(original, field, 3, value), original);
+  }
 });

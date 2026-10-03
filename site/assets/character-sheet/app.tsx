@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { CSSProperties, ChangeEvent } from 'react';
 import { createRoot } from 'react-dom/client';
-import { GROUPS, IDENTITY, IDENTITY_CHOICES, MAX_BACKUP_BYTES, STORAGE_KEY, adventurePageUrl, chooseIdentity, markValue, newCharacter, parseCharacter } from './model';
-import type { Character, ChoiceField, IdentityKey } from './model';
+import { GROUPS, IDENTITY, IDENTITY_CHOICES, ITEM_CHOICES, MAX_BACKUP_BYTES, STORAGE_KEY, adventurePageUrl, chooseIdentity, chooseItem, markValue, newCharacter, parseCharacter } from './model';
+import type { Character, ChoiceField, IdentityKey, ItemField } from './model';
 
 const root = document.getElementById('character-builder')!;
 const artwork = root.dataset.artwork!;
@@ -64,7 +64,7 @@ function Field({ label, value, x, y, w, h, line = 14, multiline = false, max = 3
   return <div className={`sheet-field ${multiline ? 'multiline' : ''} ${tooLong ? 'overfull' : ''}`}
     style={{ ...place(x, y, w, h), lineHeight: `${line}pt` }}>
     {picker ? <button type="button" className="sheet-choice" aria-label={`${label}: ${value || 'Not selected'}`}
-      aria-haspopup="dialog" aria-expanded={picker.expanded} aria-controls={picker.expanded ? 'identity-picker' : undefined}
+      aria-haspopup="dialog" aria-expanded={picker.expanded} aria-controls={picker.expanded ? 'choice-picker' : undefined}
       onClick={event => picker.open(event.currentTarget)}>
       <span>{value}</span>
       <svg viewBox="0 0 12 12" aria-hidden="true"><path d="m3 4.5 3 3 3-3" /></svg>
@@ -73,8 +73,9 @@ function Field({ label, value, x, y, w, h, line = 14, multiline = false, max = 3
   </div>;
 }
 
-function IdentityPicker({ field, value, select, close }: {
-  field: ChoiceField; value: string; select: (value: string) => void; close: () => void;
+function ChoicePicker({ heading, choices, value, canClear = false, select, close }: {
+  heading: string; choices: readonly (readonly [string, string])[]; value: string; canClear?: boolean;
+  select: (value: string) => void; close: () => void;
 }) {
   const list = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -85,22 +86,23 @@ function IdentityPicker({ field, value, select, close }: {
     element.scrollTop = row.offsetTop - (element.clientHeight - row.clientHeight) / 2;
   }, []);
 
-  return <div id="identity-picker" className="identity-picker" role="dialog" aria-labelledby="picker-heading">
+  const options = canClear ? [['', ''], ...choices] : choices;
+  return <div id="choice-picker" className="choice-picker" role="dialog" aria-labelledby="picker-heading">
     <div className="picker-header">
-      <div><h2 id="picker-heading">Choose {field === 'age' ? 'an' : 'a'} {field}</h2><p>Outgunned Adventure</p></div>
+      <div><h2 id="picker-heading">{heading}</h2><p>Outgunned Adventure</p></div>
       <button type="button" className="picker-close" aria-label="Close picker" onClick={close}>×</button>
     </div>
     <div className="picker-list" ref={list}>
-      <fieldset aria-label={title(field)}>
-        {IDENTITY_CHOICES[field].map(([name, page]) => <div className="picker-option" key={name}>
+      <fieldset aria-labelledby="picker-heading">
+        {options.map(([name, page]) => <div className="picker-option" key={name}>
           <label className="picker-select">
-            <input type="radio" name={`choose-${field}`} value={name} aria-label={name}
+            <input type="radio" name="sheet-choice" value={name} aria-label={name || 'Empty slot'}
               checked={value === name} onChange={() => select(name)} />
-            <span className="picker-name">{name}</span>
+            <span className="picker-name">{name || 'Empty slot'}</span>
             <span className="picker-check" aria-hidden="true">{value === name ? '✓' : ''}</span>
           </label>
-          <a className="picker-page" href={adventurePageUrl(page)} target="_blank" rel="noreferrer"
-            aria-label={`${name}: Outgunned Adventure, page ${page} (opens in a new tab)`}>p. {page}</a>
+          {page && <a className="picker-page" href={adventurePageUrl(page)} target="_blank" rel="noreferrer"
+            aria-label={`${name}: Outgunned Adventure, page ${page} (opens in a new tab)`}>p. {page}</a>}
         </div>)}
       </fieldset>
     </div>
@@ -143,7 +145,7 @@ function App() {
   const [zoom, setZoom] = useState('fit');
   const [availableWidth, setAvailableWidth] = useState(1123);
   const [artReady, setArtReady] = useState(false);
-  const [picker, setPicker] = useState<ChoiceField | null>(null);
+  const [picker, setPicker] = useState<ChoiceField | { field: ItemField; index: number } | null>(null);
   const pickerTrigger = useRef<HTMLButtonElement | null>(null);
   const viewport = useRef<HTMLDivElement>(null);
   const backupInput = useRef<HTMLInputElement>(null);
@@ -161,8 +163,15 @@ function App() {
     const escape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') { event.preventDefault(); closePicker(); }
     };
+    const outside = (event: PointerEvent) => {
+      if (event.target instanceof Element && !event.target.closest('#choice-picker, .sheet-choice')) closePicker();
+    };
     window.addEventListener('keydown', escape);
-    return () => window.removeEventListener('keydown', escape);
+    document.addEventListener('pointerdown', outside);
+    return () => {
+      window.removeEventListener('keydown', escape);
+      document.removeEventListener('pointerdown', outside);
+    };
   }, [picker, closePicker]);
 
   useEffect(() => {
@@ -187,8 +196,8 @@ function App() {
   }, []);
   const update = <K extends keyof Character>(key: K, value: Character[K]) =>
     setCharacter(previous => ({ ...previous, [key]: value }));
-  const updateList = (key: 'feats' | 'gear', index: number, value: string) =>
-    setCharacter(previous => ({ ...previous, [key]: previous[key].map((item, i) => i === index ? value : item) }));
+  const updateList = (key: ItemField, index: number, value: string) =>
+    setCharacter(previous => chooseItem(previous, key, index, value));
   const rating = (name: string, value: number) =>
     setCharacter(previous => ({ ...previous, ratings: { ...previous.ratings, [name]: value } }));
 
@@ -301,9 +310,19 @@ function App() {
               x={182} y={237 + group * 72 + index * 12.5} step={15} change={value => rating(skill, value)} />)}
           </div>)}
           {character.feats.map((value, index) => <Field key={`feat-${index}`} label={`Feat ${index + 1}`} value={value}
-            x={264} y={247 + index * 53} w={231} h={42} multiline max={4000} line={14} change={value => updateList('feats', index, value)} overflow={overflow} />)}
+            x={264} y={247 + index * 53} w={231} h={42} multiline max={4000} line={14}
+            picker={{
+              expanded: typeof picker === 'object' && picker?.field === 'feats' && picker.index === index,
+              open: trigger => { pickerTrigger.current = trigger; setPicker({ field: 'feats', index }); },
+            }}
+            change={value => updateList('feats', index, value)} overflow={overflow} />)}
           {character.gear.map((value, index) => <Field key={`gear-${index}`} label={`Gear ${index + 1}`} value={value}
-            x={527} y={254 + index * 23} w={index < 3 ? 233 : 280} h={17} line={17} change={value => updateList('gear', index, value)} overflow={overflow} />)}
+            x={527} y={254 + index * 23} w={index < 3 ? 233 : 280} h={17} line={17}
+            picker={{
+              expanded: typeof picker === 'object' && picker?.field === 'gear' && picker.index === index,
+              open: trigger => { pickerTrigger.current = trigger; setPicker({ field: 'gear', index }); },
+            }}
+            change={value => updateList('gear', index, value)} overflow={overflow} />)}
           {character.ammo.map((value, index) => <Marks key={`ammo-${index}`} label={`Weapon ${index + 1} ammunition`} kind="ammo" value={value}
             count={3} x={768.5} y={251.5 + index * 23} step={15} change={value => setCharacter(previous => ({ ...previous, ammo: previous.ammo.map((v, i) => i === index ? value : v) }))} />)}
           <Marks label="Cash" kind="cash" value={character.cash} count={5} x={694} y={405} step={26} change={value => update('cash', value)} />
@@ -315,11 +334,17 @@ function App() {
     </div>
     <div className="builder-notes">
       <p><strong>A4 landscape · 297 × 210 mm.</strong> The screen and print use this same sheet. Click a chevron to choose from the book; click other writing lines to type. Click a tracker to fill through it, or its last filled mark to erase it. On a small screen, use 100% and scroll to edit comfortably.</p>
-      <p>Selections update immediately. Flavor choices help the Director and are available regardless of role or trope; this variant uses Adult only. Ratings, feats, gear, Hot and other resources remain manual. Drafts stay in this browser; export a backup to move devices or keep another character. When printing, use A4 landscape, 100% scale, no margins and no browser headers/footers.</p>
+      <p>Selections update immediately. Click outside a panel or press Escape to close it. Flavor choices, feats and gear are available regardless of role or trope; this variant uses Adult only. Choose Empty slot to remove a feat or gear entry. Ratings, Hot and other resources remain manual. Drafts stay in this browser; export a backup to move devices or keep another character. When printing, use A4 landscape, 100% scale, no margins and no browser headers/footers.</p>
       {character.portrait && <button type="button" onClick={() => update('portrait', null)}>Remove portrait</button>}
     </div>
-    {picker && <IdentityPicker key={picker} field={picker} value={character.identity[picker]}
-      select={value => setCharacter(previous => chooseIdentity(previous, picker, value))} close={closePicker} />}
+    {picker && <ChoicePicker key={typeof picker === 'string' ? picker : `${picker.field}-${picker.index}`}
+      heading={typeof picker === 'string' ? `Choose ${picker === 'age' ? 'an' : 'a'} ${picker}` : picker.field === 'feats' ? 'Choose a feat' : 'Choose guns & gear'}
+      choices={typeof picker === 'string' ? IDENTITY_CHOICES[picker] : ITEM_CHOICES[picker.field]}
+      value={typeof picker === 'string' ? character.identity[picker] : character[picker.field][picker.index]}
+      canClear={typeof picker !== 'string'}
+      select={value => typeof picker === 'string'
+        ? setCharacter(previous => chooseIdentity(previous, picker, value)) : updateList(picker.field, picker.index, value)}
+      close={closePicker} />}
   </>;
 }
 

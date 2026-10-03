@@ -70,6 +70,34 @@ export const IDENTITY_CHOICES = {
 } as const;
 export type ChoiceField = keyof typeof IDENTITY_CHOICES;
 
+// All distinct feats offered by the tropes on pp. 45–49, cited at first occurrence.
+// Gear follows the equipment tables on pp. 132–133; neither list is role/trope-limited.
+export const ITEM_CHOICES = {
+  feats: [
+    ['Archeology', '45'], ['Artist', '45'], ['Big and Strong', '47'], ['Bodyguard', '47'],
+    ['Chin Up', '47'], ['Disguise', '46'], ['Estimate', '49'], ['Explorer', '47'],
+    ['Eye for Details', '45'], ['Fast Reflexes', '45'], ['Favored Weapon', '48'], ['Fighter', '47'],
+    ['Fix-it', '45'], ['Get Down!', '46'], ['Guide', '46'], ['Gunslinger', '45'],
+    ['Hardened', '47'], ['Heartbreaker', '47'], ['I Meant to Do That!', '46'], ['Linguist', '45'],
+    ['Lockpicker', '48'], ['Maverick', '45'], ['Moneybags', '48'], ['Pilot', '47'],
+    ['Quick and Nimble', '46'], ['Quick Fingers', '46'], ['Reassure', '47'], ['Saddle Up', '46'],
+    ['Sailor', '49'], ['Silver Tongue', '45'], ['Skulker', '49'], ['Subterfuge', '46'],
+    ['Teamwork', '45'], ['That Was Close!', '49'], ['Thrill Seeker', '45'], ['Trailblazer', '48'],
+    ['Watch and Learn', '47'],
+  ],
+  gear: [
+    ['Elegant Clothes', '132'], ['Lockpicking Set', '132'], ['Tool-bag', '132'], ['Knife', '132'],
+    ['First-aid Kit', '132'], ['Grappling Hook', '132'], ['Rope', '132'], ['Compass', '132'],
+    ['Winter Clothes', '132'], ['Lantern', '132'], ['Climbing Gear', '132'], ['Camping Cookware', '132'],
+    ['Musical Instrument', '132'], ['Old Ride', '132'], ['Lighter', '132'], ['Radio', '132'],
+    ['Pistol/Revolver', '133'], ['Old Rifle', '133'], ['Hunting Rifle', '133'], ['Shotgun', '133'],
+    ['Machine Gun', '133'], ['Gatling Gun', '133'], ['Bow', '133'], ['Hunting Bow', '133'],
+    ['Dynamite', '133'], ['Machete/Axe', '133'], ['Club/Hammer', '133'], ['Boomerang', '133'],
+    ['Whip', '133'], ['Rocket Launcher', '133'], ['Projectiles', '133'], ['Mags (2)', '133'],
+  ],
+} as const;
+export type ItemField = keyof typeof ITEM_CHOICES;
+
 export function adventurePageUrl(page: string) {
   const extractedPage = String(Number(page) + 2).padStart(4, '0');
   return `https://github.com/advdv/outgun/blob/main/html/outgunned-adventure-standalone-genre-book-v1.1-en/page-${extractedPage}.md`;
@@ -109,6 +137,11 @@ export function newCharacter(): Character {
 export function chooseIdentity(character: Character, field: ChoiceField, value: string): Character {
   if (!IDENTITY_CHOICES[field].some(([name]) => name === value)) return character;
   return { ...character, identity: { ...character.identity, [field]: value } };
+}
+
+export function chooseItem(character: Character, field: ItemField, index: number, value: string): Character {
+  if (value !== '' && !ITEM_CHOICES[field].some(([name]) => name === value)) return character;
+  return { ...character, [field]: character[field].map((item, i) => i === index ? value : item) };
 }
 
 // Click a mark to fill through it; click the final filled mark to erase it.
