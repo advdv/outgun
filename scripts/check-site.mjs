@@ -62,7 +62,7 @@ assert(timeline.includes('International Union of Prehistoric and Protohistoric S
 assert(html.indexOf('Creating your Adventurer') < html.indexOf('/images/adventure/expedition-chest.webp'), 'Chest must be in the creation section');
 const creation = html.slice(html.indexOf('Creating your Adventurer'), html.indexOf('Illustrations by Daniela Giubellini'));
 assert(creation.includes('on-screen guide') && !creation.includes('<ol>'), 'Landing instructions must defer to the sheet guide, not repeat its steps');
-assert(creation.includes('saves in this browser') && creation.includes('Export backup') && creation.includes('Print / save PDF'), 'Keep the short save, backup, and print guidance');
+assert(creation.includes('saves in this browser') && creation.includes('Export backup') && creation.includes('Print both pages / save PDF'), 'Keep the short save, backup, and print guidance');
 assert(!creation.includes('does not store your sheet'), 'Outdated saving warning must not return');
 for (const image of ['dart-trap', 'explorer', 'expedition-chest']) {
   assert(attributes.some(value => value.endsWith(`/images/adventure/${image}.webp`)), `Missing landing illustration: ${image}`);
@@ -92,6 +92,13 @@ assert(!/\bpp?\.\s*\d/.test(cheatSheet), 'Do not restore removed page references
 const builder = readFileSync('public/character-builder/index.html', 'utf8');
 assert(builder.includes('data-artwork=') && /<script[^>]+type=.?module/.test(builder), 'Builder app not mounted');
 assert(!html.includes('<script'), 'React should only load on the builder page');
+const referenceScript = builder.match(/<script\b[^>]*\bid="?character-reference-data"?[^>]*>([\s\S]*?)<\/script>/);
+assert(referenceScript, 'Missing selected-reference catalog');
+const builderCatalog = JSON.parse(referenceScript[1]);
+assert.deepEqual(builderCatalog.feats.map(f => f.name), referenceData().feats.map(f => f.name));
+assert(builderCatalog.feats.every(f => typeof f.html === 'string' && f.html.length && typeof f.luck === 'boolean'));
+assert.deepEqual(builderCatalog.gear, referenceData().gear);
+assert.equal(Object.keys(builderCatalog.traits).length, 12);
 const bookAttribute = builder.match(/\bdata-book-pages=(?:"([^"]+)"|'([^']+)'|([^\s>]+))/);
 assert(bookAttribute, 'Missing rulebook image base URL');
 const bookUrl = new URL(bookAttribute[1] || bookAttribute[2] || bookAttribute[3], base);

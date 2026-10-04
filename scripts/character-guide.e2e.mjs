@@ -393,7 +393,7 @@ folder = pathlib.Path(sys.argv[1])
 pixels = []
 for name in ['character-guide-on', 'character-picker-open', 'character-role-picker-open', 'character-trope-picker-open', 'character-guide-off', 'character-narrow']:
     doc = pymupdf.open(folder / (name + '.pdf'))
-    assert len(doc) == 1, (name, len(doc))
+    assert len(doc) == 2, (name, len(doc))
     page = doc[0]
     assert abs(page.rect.width - 841.89) < 1 and abs(page.rect.height - 595.28) < 1, page.rect
     text = page.get_text()
@@ -402,10 +402,13 @@ for name in ['character-guide-on', 'character-picker-open', 'character-role-pick
     for excluded in ['Pick gear', 'extra Skill points', 'For example', 'Your fists', 'whispers to you its price', 'An adventurer always ready', 'perfect blend of body and mind', 'CREATE YOUR ADVENTURER', 'Finish guide', 'Restart guide', 'Saved on this device']:
         assert excluded not in text, (name, excluded)
     pix = page.get_pixmap(matrix=pymupdf.Matrix(1.5, 1.5))
-    pixels.append(pix.samples)
+    reference = doc[1]
+    assert abs(reference.rect.width - 841.89) < 1 and abs(reference.rect.height - 595.28) < 1, reference.rect
+    assert 'SELECTED FEATS, GUNS & GEAR' in reference.get_text() and '2 / 2' in reference.get_text()
+    pixels.append((pix.samples, reference.get_pixmap(matrix=pymupdf.Matrix(1.5, 1.5)).samples))
     if name == 'character-guide-on': pix.save(folder / 'character-print.png')
 assert all(p == pixels[0] for p in pixels), 'Guide/picker/viewport state changed printed pixels'
-print('PASS: six populated PDFs, one A4 landscape page each; expected bottom/multiline text; guide on/off, open feat/role/trope pickers and narrow scrolled output pixel-identical')
+print('PASS: six populated PDFs, two A4 landscape pages each; expected bottom/multiline text; guide on/off, open feat/role/trope pickers and narrow scrolled output pixel-identical')
 `, artifacts], { stdio: 'inherit' });
   console.log('PASS: narrow-screen target visibility, autosave/import, populated portrait/trackers/multiline/bottom fields, and Print button');
 

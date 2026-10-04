@@ -68,7 +68,7 @@ However, if you want a general idea of what was going on in the world in the 20s
 
 Open the [character sheet]({{< relref "/character-builder" >}}) and follow the on-screen guide—it walks you through every choice.
 
-Your progress saves in this browser. Use **Export backup** to keep a copy, or **Print / save PDF** when you’re ready to play.
+Your progress saves in this browser. Use **Export backup** to keep a copy, or **Print both pages / save PDF** for your character sheet and a reference page containing only your selected feats, guns, and gear.
 
 Keep the [player cheat sheet]({{< relref "/player-cheat-sheet" >}}) beside you for dice rolls, re-rolls, and combat. Read it online or print it on one A4 landscape page.
 

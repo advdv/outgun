@@ -62,11 +62,29 @@ Text, ratings, trackers, and a portrait save in this browser only.
 Export/import a JSON backup to transfer a character
 or protect against cleared browser storage. No account or server storage is used.
 
-The sheet stays **297 × 210 mm (A4 landscape)** in both screen and print styles.
-Fit width scales the whole page; 100% allows horizontal scrolling on small
-screens. Print / Save PDF prints only the sheet. Choose A4 landscape, no margins,
-100% scale, and no browser headers/footers. Text that exceeds its writing area
-is flagged before printing rather than silently changing the layout.
+Both sheets stay **297 × 210 mm (A4 landscape)** on screen and in print.
+The second page updates with the selected feats, guns, and gear, using the full
+book text from the reference catalog below. Duplicate selections and shared
+equipment traits appear once. Role-only items or custom legacy entries without
+catalog rules retain their names without inventing rules. The six feat and six
+gear slots fit on one reference page, including the longest descriptions and
+all twelve equipment traits, at fixed 9.5pt body type.
+
+Both pages scale together and scroll horizontally on narrow screens; their
+fields never rearrange. **Print both pages / save PDF** prints the main sheet
+followed by the selected reference. Choose A4 landscape, all pages, no margins,
+100% scale, and no browser headers/footers. Text that exceeds the available
+space is flagged before printing rather than silently clipped or shrunk.
+
+```sh
+node scripts/character-reference.e2e.mjs <builder-url> [review-artifact-directory]
+node scripts/character-guide.e2e.mjs <builder-url> [review-artifact-directory]
+```
+
+These check live picker updates, catalog text, card bounds, backups, and actual
+two-page PDFs with a portrait, filled trackers, multiline text, and bottom fields.
+Desktop, open-panel, and narrow scrolled PDFs must be pixel-identical. Native
+Safari and physical printers still require device-specific testing.
 
 React and TypeScript live in `site/assets/character-sheet/`; Hugo builds the
 bundle only for this page, without a separate Vite server. The backdrop is one

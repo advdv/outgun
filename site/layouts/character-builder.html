@@ -1,4 +1,7 @@
 {{ define "head" }}
+{{ with resources.Get "css/reference-sheets.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+{{ end }}
 {{ with resources.Get "css/character-sheet.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
 {{ end }}
@@ -7,10 +10,22 @@
 {{ define "main" }}
 <main id="main" class="builder-main">
   <div class="builder-intro">
-    <div><p class="eyebrow">Your next adventure</p><h1>Character sheet</h1><p>Write directly on the sheet. What you see is what you print.</p></div>
+    <div><p class="eyebrow">Your next adventure</p><h1>Character sheet</h1><p>Write directly on the sheet. Your selected feats, guns &amp; gear appear on the second page. Both pages print together.</p></div>
     <a href="{{ site.Home.RelPermalink }}">← Back to Field Notes</a>
   </div>
   <div id="character-builder" data-artwork="{{ "sheet/sheet.svg" | relURL }}" data-book-pages="{{ "books/adventure/" | relURL }}" data-role-art="{{ "images/adventure/roles/" | relURL }}"></div>
+  {{/* Render the same trusted book Markdown as the static reference sheets.
+       Character selections remain plain text and never enter this HTML. */}}
+  {{ $data := resources.Get "reference-sheets.json" | transform.Unmarshal }}
+  {{ $feats := slice }}
+  {{ range $data.feats }}
+    {{ $feats = $feats | append (dict "name" .name "html" (replace .body "'" "&#39;" | markdownify | string) "luck" .luck) }}
+  {{ end }}
+  {{ $traits := dict }}
+  {{ range $name, $body := $data.gearFeats }}
+    {{ $traits = merge $traits (dict $name ($body | markdownify | string)) }}
+  {{ end }}
+  <script id="character-reference-data" type="application/json">{{ dict "feats" $feats "gear" $data.gear "traits" $traits | jsonify | safeJS }}</script>
   <noscript><p>Enable JavaScript to edit and save your character. <a href="{{ "sheet/sheet.svg" | relURL }}">Open the blank sheet artwork</a>.</p></noscript>
   {{ $options := dict "JSX" "automatic" "target" "es2022" "minify" (not hugo.IsDevelopment) "defines" (dict "process.env.NODE_ENV" (cond hugo.IsDevelopment `"development"` `"production"`)) }}
   {{ with resources.Get "character-sheet/app.tsx" | js.Build $options | fingerprint }}

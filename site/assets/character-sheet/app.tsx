@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { GROUPS, IDENTITY, IDENTITY_CHOICES, MAX_BACKUP_BYTES, ROLE_ITEMS, STORAGE_KEY, TROPE_FEATS, WEAPONS, adventurePageUrl, changeManualPoint, chooseIdentity, chooseItem, chooseTropeAttribute, itemChoices, markValue, newCharacter, parseCharacter, ratingDetails, referencePages, tropeAttributes } from './model';
 import type { Attribute, Character, ChoiceField, IdentityKey, ItemField, RatingKey } from './model';
 import { useCharacterGuide } from './guide';
+import { CharacterReference } from './reference';
 
 const root = document.getElementById('character-builder')!;
 const artwork = root.dataset.artwork!;
@@ -401,7 +402,7 @@ function App() {
   return <>
     <div className="builder-toolbar" aria-label="Sheet tools">
       <div className="builder-actions">
-        <button type="button" className="builder-primary" onClick={printSheet} disabled={!artReady || invalidFields.length > 0}>Print / save PDF</button>
+        <button type="button" className="builder-primary" onClick={printSheet} disabled={!artReady || invalidFields.length > 0}>Print both pages / save PDF</button>
         <button type="button" onClick={() => download(JSON.stringify(character, null, 2), `${character.identity.name.replace(/[^a-z0-9-]/gi, '-').slice(0, 60) || 'adventurer'}.json`)}>Export backup</button>
         <button type="button" onClick={() => backupInput.current?.click()}>Import backup</button>
         <button type="button" onClick={() => {
@@ -473,6 +474,9 @@ function App() {
           {invalidFields.length > 0 && <span className="sheet-overflow-note">Text does not fit: {invalidFields.join(', ')}. Shorten it before printing.</span>}
           {guide.pins}
         </form>
+      </div>
+      <div className="sheet-stage" style={{ width: `${297 * scale}mm`, height: `${210 * scale}mm` }}>
+        <CharacterReference character={character} scale={scale} overflow={overflow} />
       </div>
     </div>
     <div className="builder-notes">
