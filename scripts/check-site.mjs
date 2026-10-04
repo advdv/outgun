@@ -94,6 +94,16 @@ for (const [field, choices] of Object.entries({ ...IDENTITY_CHOICES, ...ITEM_CHO
     }
   }
 }
+const roleAttribute = builder.match(/\bdata-role-art=(?:"([^"]+)"|'([^']+)'|([^\s>]+))/);
+assert(roleAttribute, 'Missing role illustration base URL');
+const roleUrl = new URL(roleAttribute[1] || roleAttribute[2] || roleAttribute[3], base);
+assert(roleUrl.origin === base.origin && roleUrl.pathname.startsWith(base.pathname), 'Role illustrations escape Pages base path');
+const roleDir = join('public', roleUrl.pathname.slice(base.pathname.length));
+assert.equal(readdirSync(roleDir).filter(file => file.endsWith('.webp')).length, 10);
+for (const [name, page] of IDENTITY_CHOICES.role) {
+  const image = readFileSync(join(roleDir, `role-${page}.webp`));
+  assert(image.toString('ascii', 0, 4) === 'RIFF' && image.toString('ascii', 8, 12) === 'WEBP', `Missing role crop: ${name}`);
+}
 const files = readdirSync('public', { recursive: true });
 assert(!files.some(file => /\.pdf$|page-\d+\.md$|(^|\/)html\//.test(file)), 'Source books leaked into output');
-console.log(`PASS: ${checked} local links/assets, ${manifest.pageCount} rulebook WebPs, all panel citations, Pages base path, and source PDF/text exclusion`);
+console.log(`PASS: ${checked} local links/assets, ${manifest.pageCount} rulebook WebPs, 10 role crops, all panel citations, Pages base path, and source PDF/text exclusion`);

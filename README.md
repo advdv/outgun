@@ -108,6 +108,12 @@ source PDFs and extracted text. Confirm permission before a public release.
 The Pages workflow fetches only the LFS page images before building; production
 checks reject missing images or unexpanded LFS pointers.
 
+The role picker uses head-to-upper-thigh crops of each role's main illustration.
+Regenerate these from the existing page renders with `bash scripts/crop-role-art.sh`;
+the script records the individual crop coordinates. The 320 × 480 WebPs in
+`site/static/images/adventure/roles/` are named for the role's first printed page
+and tracked in ordinary Git. They never replace the uploaded portrait or print.
+
 ### GitHub Pages
 
 In repository **Settings → Pages**, select **GitHub Actions** as the source.

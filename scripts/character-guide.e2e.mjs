@@ -49,6 +49,19 @@ const chooser = name => {
       });
     })()`, 'Every role/trope description labels its own radio; the empty choice has none');
   }
+  if (name === 'Role:') {
+    wait("document.querySelectorAll('.picker-illustration img').length === 10 && [...document.querySelectorAll('.picker-illustration img')].every(i => i.complete && i.naturalWidth === 320 && i.naturalHeight === 480)");
+    check(`(() => {
+      const base = document.querySelector('#character-builder').dataset.roleArt;
+      return [...document.querySelectorAll('.picker-option')].every(option => {
+        const input = option.querySelector('input'), image = option.querySelector('img');
+        if (!input.value) return !image;
+        const page = option.querySelector('.picker-page').textContent.match(/\\d+/)[0];
+        return image.getAttribute('src') === base + 'role-' + page + '.webp' && image.alt === ''
+          && image.parentElement.htmlFor === input.id;
+      });
+    })()`, 'Each role has its own decorative, clickable crop; No role has none');
+  } else check("!document.querySelector('.picker-illustration')", 'Illustrations are exclusive to the role picker');
 };
 const reference = (name, pages) => {
   click(`.picker-page[aria-label^=${JSON.stringify(name + ':')}]`);
@@ -120,8 +133,16 @@ try {
   chooser('Role:');
   assert.equal(evaluate("document.querySelectorAll('.picker-page').length"), 10);
   reference('The Daredevil', [22, 23]);
+  const uploadedPortrait = evaluate("JSON.parse(localStorage.getItem('outgun.character.v1')).portrait");
+  click('.picker-option:has(input[value="The Guardian"]) .picker-illustration');
+  check("JSON.parse(localStorage.getItem('outgun.character.v1')).identity.role === 'The Guardian' && document.activeElement.value === 'The Guardian'", 'Clicking the crop selects and focuses its role');
+  browser('press', 'ArrowDown');
+  check("JSON.parse(localStorage.getItem('outgun.character.v1')).identity.role === 'The Captain'", 'Keyboard selection works after clicking artwork');
+  choose('');
+  check("JSON.parse(localStorage.getItem('outgun.character.v1')).identity.role === ''", 'No role still clears the selection');
   click('.picker-option:has(input[value="The Daredevil"]) .picker-description');
   check("JSON.parse(localStorage.getItem('outgun.character.v1')).identity.role === 'The Daredevil' && document.querySelector('.picker-option input[value=\"The Daredevil\"]').checked", 'Clicking a role description saves only its name');
+  assert.equal(evaluate("JSON.parse(localStorage.getItem('outgun.character.v1')).portrait"), uploadedPortrait, 'Role artwork must not replace the uploaded portrait');
   capture('guide-info-panel');
   closePicker();
   heading('Pick a role');
@@ -278,6 +299,21 @@ try {
           e.scrollWidth === e.clientWidth && e.scrollHeight === e.clientHeight && getComputedStyle(e).overflow === 'visible');
       })()`, 'Role/trope descriptions wrap fully without clipping or horizontal overflow');
       capture(`guide-narrow-${field.toLowerCase()}`);
+      if (field === 'Role') {
+        browser('set', 'viewport', '320', '844', '2');
+        check(`(() => {
+          const list = document.querySelector('.picker-list');
+          return list.scrollWidth === list.clientWidth && [...list.querySelectorAll('.picker-illustration img')].every(image => {
+            const rect = image.getBoundingClientRect(), row = image.closest('.picker-option');
+            const description = row.querySelector('.picker-description'), text = description.getBoundingClientRect();
+            return Math.abs(rect.width / rect.height - 2 / 3) < 0.01 && text.left >= rect.right + 12
+              && description.scrollWidth === description.clientWidth && description.scrollHeight === description.clientHeight
+              && rect.bottom <= row.getBoundingClientRect().bottom;
+          });
+        })()`, 'Even at 320px, role crops retain their framing beside fully wrapped text');
+        capture('guide-320-role');
+        browser('set', 'viewport', '390', '844', '2');
+      }
       browser('scrollintoview', '.picker-option:last-child');
       check("(() => { const last = document.querySelector('.picker-option:last-child').getBoundingClientRect(), list = document.querySelector('.picker-list').getBoundingClientRect(); return last.bottom <= list.bottom + 1 && last.top >= list.top; })()", 'The final role/trope remains fully reachable by scrolling');
       closePicker();

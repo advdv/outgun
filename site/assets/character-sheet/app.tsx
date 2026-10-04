@@ -8,6 +8,7 @@ import { useCharacterGuide } from './guide';
 const root = document.getElementById('character-builder')!;
 const artwork = root.dataset.artwork!;
 const bookPages = root.dataset.bookPages!;
+const roleArt = root.dataset.roleArt!;
 const place = (x: number, y: number, w: number, h: number): CSSProperties => ({
   left: `${x}pt`, top: `${y}pt`, width: `${w}pt`, height: `${h}pt`,
 });
@@ -136,6 +137,9 @@ function ChoicePicker({ field, heading, choices, value, identity, canClear = fal
             const origin = field === 'feats' && name ? [roleFeats.includes(name) && 'Role', tropeFeats.includes(name) && 'Trope']
               .filter(Boolean).join(' · ') || 'Outside role & trope' : '';
             return <div className="picker-option" key={name}>
+              {field === 'role' && name && <label className="picker-illustration" htmlFor={`picker-choice-${index}`} aria-hidden="true">
+                <img src={`${roleArt}role-${page}.webp`} alt="" width="320" height="480" decoding="async" />
+              </label>}
               <label className="picker-select">
                 <input type="radio" name="sheet-choice" value={name} aria-label={name || emptyLabel}
                   id={description ? `picker-choice-${index}` : undefined}
