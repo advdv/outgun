@@ -39,12 +39,19 @@ const fits = () => check(`(() => {
   const sheet = document.querySelector('.character-reference'), page = sheet.getBoundingClientRect();
   const scale = page.width / sheet.offsetWidth, content = sheet.querySelector('.character-reference-content');
   const footer = sheet.querySelector('.reference-legend').getBoundingClientRect();
+  const columns = [...content.children], boxes = columns.map(e => e.getBoundingClientRect());
   return !document.querySelector('.builder-warning') && !document.querySelector('.builder-primary').disabled
     && content.scrollWidth <= content.clientWidth + 1 && content.scrollHeight <= content.clientHeight + 1
-    && [...sheet.querySelectorAll('.reference-card,.character-reference-section,.character-reference-empty')].every(card => {
-      const box = card.getBoundingClientRect(), range = document.createRange(); range.selectNodeContents(card);
+    && columns.length === 3 && columns.slice(0, 2).every(column => column.childElementCount > 0)
+    && boxes.every((box, i) => Math.abs(box.top - boxes[0].top) < .5
+      && Math.abs(box.width - boxes[0].width) < .5 && (!i || box.left > boxes[i-1].right))
+    && columns.every(column => !column.lastElementChild?.classList.contains('character-reference-section'))
+    && columns.flatMap(column => [...column.children]).every(card => {
+      const box = card.getBoundingClientRect(), column = card.parentElement.getBoundingClientRect();
+      const range = document.createRange(); range.selectNodeContents(card);
       return card.getClientRects().length === 1 && box.bottom < footer.top && box.left >= page.left + 25*scale
-        && box.right <= page.right - 25*scale && [...range.getClientRects()].every(r =>
+        && box.right <= page.right - 25*scale && Math.abs(box.width - column.width) < .5
+        && [...range.getClientRects()].every(r =>
           r.left >= box.left-.5 && r.right <= box.right+.5 && r.top >= box.top-.5 && r.bottom <= box.bottom+.5);
     });
 })()`, 'Every selected card and its full text fits in three columns with safe margins, no split cards or disabled print');
@@ -110,8 +117,12 @@ try {
   const print = async (name, folder = scratch) => {
     ready();
     evaluate('Promise.all([...document.querySelectorAll(".character-sheet img")].map(i => i.decode()))');
+    await call('Emulation.setEmulatedMedia', { media: 'print' }, sessionId);
+    ready();
+    fits();
     const { data } = await call('Page.printToPDF', { preferCSSPageSize: true, printBackground: true, displayHeaderFooter: false }, sessionId);
     writeFileSync(join(folder, `${name}.pdf`), Buffer.from(data, 'base64'));
+    await call('Emulation.setEmulatedMedia', { media: '' }, sessionId);
   };
   await print('empty');
   select('Feat', 1, 'Bodyguard');
@@ -139,6 +150,16 @@ try {
   importCharacter(legacy);
   verify(legacy);
   check("!document.querySelector('.character-reference h3 b') && document.querySelector('.character-reference').textContent.includes('<b>Custom feat</b>')", 'Imported custom text is preserved, escaped, and not guessed as book rules');
+
+  // The selection from the Safari report: CSS multicolumn printing stacked
+  // page-wide cards and clipped the remaining rules off the right edge.
+  const safari = { ...newCharacter(),
+    feats: pad(['Guide', 'Explorer', 'Favored Weapon', 'Quick and Nimble']),
+    gear: ['Knife', 'Old Rifle', 'Bow', 'Machete/Axe', 'Shotgun', 'Hunting Bow'] };
+  importCharacter(safari);
+  verify(safari);
+  const safariText = evaluate("[...document.querySelectorAll('.reference-card')].map(e => e.textContent.replace(/\\s+/g, ' ').trim())");
+  await print('safari-regression', artifacts);
 
   const stress = { ...newCharacter(),
     feats: ['Sensible Packer', 'Linguist', 'Bodyguard', 'Quick Fingers', 'Moneybags', 'Chin Up'],
@@ -187,6 +208,7 @@ try {
   console.log('PASS: all 42 complete Feats, 34 picker items, legacy text, six longest Feats plus all 12 traits fit; autosave/reload and native print event');
 
   writeFileSync(join(scratch, 'expected.json'), JSON.stringify({
+    safariText,
     feats: saved.feats.map(name => ({ name: name.toUpperCase(), body: normalize(source.feats.find(f => f.name === name.toUpperCase()).body) })),
     gear: saved.gear.map(name => ({ name: name.toUpperCase(), detail: source.gear[name].detail })),
     traits: Object.entries(source.gearFeats).map(([name, body]) => ({ name, body: normalize(body) })),
@@ -198,6 +220,13 @@ expected = json.loads((scratch / 'expected.json').read_text())
 norm = lambda text: ' '.join(text.split())
 empty = pymupdf.open(scratch / 'empty.pdf')
 assert len(empty) == 2 and 'Choose feats' in empty[1].get_text(), 'Empty sheet still prints two pages'
+safari = pymupdf.open(artifacts / 'safari-regression.pdf')
+assert len(safari) == 2, 'Safari regression selection fits on two pages'
+# Compare without whitespace: adjacent spans in textContent have no separating
+# space, but PDF extraction inserts one between the title and price/body.
+for card in expected['safariText']:
+    assert ''.join(card.upper().split()) in ''.join(safari[1].get_text().upper().split()), ('Safari regression missing card text', card)
+safari[1].get_pixmap(matrix=pymupdf.Matrix(2,2)).save(artifacts / 'safari-regression-page-2.png')
 baseline = None
 for folder, name in [(artifacts, 'selected-character'), (scratch, 'picker-open'), (scratch, 'narrow-scrolled')]:
     doc = pymupdf.open(folder / (name + '.pdf'))
@@ -224,7 +253,7 @@ for folder, name in [(artifacts, 'selected-character'), (scratch, 'picker-open')
         if name == 'selected-character': pix.save(artifacts / f'selected-character-page-{i+1}.png')
     if baseline is None: baseline = pixels
     else: assert pixels == baseline, (name, 'picker or scrolling changed printed pixels')
-print('PASS: empty PDF plus three populated PDFs; exactly 2 A4 landscape pages each; complete rules, portrait, multiline/bottom fields, safe margins, no UI; populated PDFs pixel-identical')
+print('PASS: empty PDF, Safari regression selection and three populated PDFs; exactly 2 A4 landscape pages each; complete rules, portrait, multiline/bottom fields, safe margins, no UI; populated PDFs pixel-identical')
 `, scratch, artifacts], { stdio: 'inherit' });
   evaluate('window.confirm = () => true');
   browser('click', '.builder-actions button:last-child');

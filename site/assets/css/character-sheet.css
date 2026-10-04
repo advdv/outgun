@@ -23,7 +23,9 @@
 .sheet-stage { position: relative; margin: 0 auto; }
 .sheet-stage + .sheet-stage { margin-top: 24px; }
 .character-reference { box-shadow: 0 3px 10px #37281630; font-size: 9.5pt; line-height: 1.16; }
-.character-reference-content { flex: 1; min-height: 0; columns: 3; column-gap: 2.5mm; column-fill: balance; }
+.character-reference-content { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5mm; flex: 1; min-height: 0; }
+.character-reference-column { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.character-reference-column > * { flex: none; }
 .character-reference .reference-card { padding: 1mm; margin-bottom: .7mm; }
 .character-reference .reference-card h3 { font-size: 10.5pt; margin-bottom: .7mm; }
 .character-reference .reference-card p + p { margin-top: .5mm; }

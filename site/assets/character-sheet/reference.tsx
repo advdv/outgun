@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef } from 'react';
+import { Children, useLayoutEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import type { Character } from './model';
 
 type Catalog = {
@@ -11,32 +12,67 @@ type Catalog = {
 const catalog: Catalog = JSON.parse(document.getElementById('character-reference-data')!.textContent!);
 const equipment = new Map(Object.entries(catalog.gear));
 
-export function CharacterReference({ character, scale, overflow }: {
-  character: Character; scale: number; overflow: (label: string, invalid: boolean) => void;
+function ReferenceColumns({ children, overflow }: {
+  children: ReactNode; overflow: (label: string, invalid: boolean) => void;
 }) {
   const content = useRef<HTMLDivElement>(null);
-  const feats = [...new Set(character.feats.filter(name => name.trim()))];
-  const gear = [...new Set(character.gear.filter(name => name.trim()))];
-  const traits = [...new Set(gear.flatMap(name => equipment.get(name)?.traits ?? []))];
+  const [breaks, setBreaks] = useState([0, 0]);
+  const blocks = Children.toArray(children);
 
   useLayoutEffect(() => {
     let mounted = true;
     const measure = () => {
       if (!mounted || !content.current) return;
       const element = content.current;
-      overflow('Selected reference', element.scrollWidth > element.clientWidth + 1 || element.scrollHeight > element.clientHeight + 1);
+      const scale = element.getBoundingClientRect().width / parseFloat(getComputedStyle(element).width);
+      const nodes = Array.from(element.querySelectorAll<HTMLElement>(':scope > div > *'));
+      const heights = [0];
+      for (const node of nodes) {
+        const style = getComputedStyle(node);
+        heights.push(heights.at(-1)! + node.getBoundingClientRect().height / scale
+          + parseFloat(style.marginTop) + parseFloat(style.marginBottom));
+      }
+      // Safari's print engine can discard CSS multi-columns. Balance explicit
+      // grid columns instead, keeping slot order and each heading with a card.
+      // At most 27 blocks: trying every pair of breaks is small and exact.
+      let shortest = Infinity;
+      let next = [0, 0];
+      for (let first = 1; first < nodes.length; first++) {
+        for (let second = first + 1; second <= nodes.length; second++) {
+          if ([first, second].some(index => index < nodes.length && nodes[index - 1].classList.contains('character-reference-section'))) continue;
+          const tallest = Math.max(heights[first], heights[second] - heights[first], heights.at(-1)! - heights[second]);
+          if (tallest < shortest) { shortest = tallest; next = [first, second]; }
+        }
+      }
+      setBreaks(previous => previous[0] === next[0] && previous[1] === next[1] ? previous : next);
+      overflow('Selected reference', shortest > element.clientHeight + 1
+        || nodes.some(node => node.scrollWidth > node.clientWidth + 1));
     };
     measure();
     void document.fonts.ready.then(measure);
     return () => { mounted = false; };
-  }, [character.feats, character.gear, overflow]);
+  }, [children, overflow]);
+
+  return <div className="character-reference-content" ref={content}>
+    {[0, breaks[0], breaks[1]].map((start, column) => <div className="character-reference-column" key={column}>
+      {blocks.slice(start, [...breaks, blocks.length][column])}
+    </div>)}
+  </div>;
+}
+
+export function CharacterReference({ character, scale, overflow }: {
+  character: Character; scale: number; overflow: (label: string, invalid: boolean) => void;
+}) {
+  const feats = [...new Set(character.feats.filter(name => name.trim()))];
+  const gear = [...new Set(character.gear.filter(name => name.trim()))];
+  const traits = [...new Set(gear.flatMap(name => equipment.get(name)?.traits ?? []))];
 
   return <article className="reference-sheet character-reference" aria-labelledby="character-reference-heading" style={{ transform: `scale(${scale})` }}>
     <header className="reference-page-header">
       <h2 id="character-reference-heading">Selected feats, guns &amp; gear</h2>
       <span>2 / 2</span>
     </header>
-    <div className="character-reference-content" ref={content}>
+    <ReferenceColumns overflow={overflow}>
       <h3 className="character-reference-section">Feats</h3>
       {!feats.length && <p className="character-reference-empty">Choose feats on the character sheet to add their rules here.</p>}
       {feats.map(name => {
@@ -64,7 +100,7 @@ export function CharacterReference({ character, scale, overflow }: {
         <h3>{name}</h3>
         <div className="reference-card-body" dangerouslySetInnerHTML={{ __html: catalog.traits[name] }} />
       </section>)}
-    </div>
+    </ReferenceColumns>
     <p className="reference-legend">1 Luck = activation cost. Passive benefits still apply as described in the Feat. Shared equipment traits are listed once.</p>
   </article>;
 }
