@@ -15,10 +15,22 @@ test('defaults preserve baselines and independent character records', () => {
   assert.equal(Object.keys(a.manualPoints).length, 25);
   assert.equal(ratingDetails(a).NERVES.total, 2);
   assert.equal(ratingDetails(a).STEALTH.total, 1);
+  assert.equal(a.luck, 1);
+  assert.equal(a.cash, 1);
+  assert.equal(a.grit, 0);
   a.feats[1] = 'Changed';
   a.manualPoints.STEALTH = 2;
   assert.equal(b.feats[1], '');
   assert.equal(b.manualPoints.STEALTH, 0);
+});
+
+test('new defaults do not refill spent Luck or Cash in current or legacy saves', () => {
+  const current = { ...newCharacter(), luck: 0, cash: 0 };
+  assert.deepEqual(parseCharacter(JSON.stringify(current)), current);
+  const { manualPoints, tropeAttribute, ...legacy } = current;
+  legacy.version = 1;
+  legacy.ratings = { ...BASE_RATINGS };
+  assert.deepEqual(parseCharacter(JSON.stringify(legacy)), current);
 });
 
 test('asymmetric edited character round-trips without losing zeroes or line breaks', () => {

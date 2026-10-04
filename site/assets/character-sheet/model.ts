@@ -304,7 +304,7 @@ export function newCharacter(): Character {
     identity: Object.fromEntries(IDENTITY.map(key => [key, ''])) as Character['identity'],
     manualPoints: Object.fromEntries(Object.keys(BASE_RATINGS).map(key => [key, 0])) as Record<RatingKey, number>,
     tropeAttribute: '',
-    luck: 0, grit: 0, cash: 0,
+    luck: 1, grit: 0, cash: 1,
     feats: Array(6).fill(''), gear: Array(6).fill(''), ammo: [0, 0, 0],
     backpack: '', bag: '', portrait: null,
   };

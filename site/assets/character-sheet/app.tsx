@@ -3,6 +3,7 @@ import type { CSSProperties, ChangeEvent } from 'react';
 import { createRoot } from 'react-dom/client';
 import { GROUPS, IDENTITY, IDENTITY_CHOICES, MAX_BACKUP_BYTES, STORAGE_KEY, WEAPONS, adventurePageUrl, changeManualPoint, chooseIdentity, chooseItem, chooseTropeAttribute, itemChoices, markValue, newCharacter, parseCharacter, ratingDetails, referencePages, tropeAttributes } from './model';
 import type { Attribute, Character, ChoiceField, IdentityKey, ItemField, RatingKey } from './model';
+import { useCharacterGuide } from './guide';
 
 const root = document.getElementById('character-builder')!;
 const artwork = root.dataset.artwork!;
@@ -138,6 +139,7 @@ function ChoicePicker({ field, heading, choices, value, canClear = false, filter
             {page && field !== 'background' && <button type="button" className="picker-page" aria-haspopup="dialog"
               onClick={event => readPage(name, referencePages(field, page), event.currentTarget)}
               aria-label={`${name}: Outgunned Adventure, ${field === 'role' ? 'pages' : 'page'} ${referencePages(field, page).join('–')} (opens page viewer)`}>
+              <svg className="info-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" /><path d="M10 9v5" /><circle className="info-dot" cx="10" cy="6" r=".8" /></svg>
               {field === 'role' ? 'pp.' : 'p.'} {referencePages(field, page).join('–')}
             </button>}
           </div>)}
@@ -256,7 +258,6 @@ function App() {
   const [saveStatus, setSaveStatus] = useState(loaded.error ? 'Local saving unavailable' : 'Saved on this device');
   const [message, setMessage] = useState(loaded.error || loaded.notice);
   const [overflows, setOverflows] = useState<Record<string, boolean>>({});
-  const [zoom, setZoom] = useState('fit');
   const [availableWidth, setAvailableWidth] = useState(1123);
   const [artReady, setArtReady] = useState(false);
   const [picker, setPicker] = useState<ChoiceField | { field: ItemField; index: number } | null>(null);
@@ -267,10 +268,12 @@ function App() {
   const backupInput = useRef<HTMLInputElement>(null);
   const portraitInput = useRef<HTMLInputElement>(null);
   const invalidFields = Object.keys(overflows).filter(key => overflows[key]);
-  const scale = zoom === 'fit' ? Math.min(1, availableWidth / (297 * 96 / 25.4)) : 1;
+  // Fit automatically, but scroll rather than making writing controls tiny.
+  const scale = Math.min(1, Math.max(840, availableWidth) / (297 * 96 / 25.4));
   const ratings = ratingDetails(character);
   const overlaps = Object.entries(ratings).filter(([, points]) => points.overlap);
   const attributeOptions = tropeAttributes(character.identity);
+  const guide = useCharacterGuide(artReady, !!picker || !!reference, character.identity.role);
 
   const closePicker = useCallback(() => {
     setPicker(null);
@@ -387,14 +390,13 @@ function App() {
         <button type="button" onClick={() => {
           if (window.confirm('Start a new blank sheet? Export a backup first to keep this character.')) {
             setCharacter(newCharacter()); setSavingEnabled(true); setMessage('New sheet started.');
+            if (guide.enabled) guide.restart();
           }
         }}>New sheet</button>
       </div>
       <div className="builder-view">
         <span className="save-status" role="status">{saveStatus}</span>
-        <label>View <select value={zoom} onChange={event => setZoom(event.target.value)} aria-label="Sheet zoom">
-          <option value="fit">Fit width</option><option value="100">100%</option>
-        </select></label>
+        {guide.tools}
       </div>
       <input ref={backupInput} className="file-input" type="file" accept="application/json,.json" aria-label="Import character backup" onChange={importBackup} />
       <input ref={portraitInput} className="file-input" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Upload portrait" onChange={uploadPortrait} />
@@ -452,15 +454,15 @@ function App() {
           <Field label="Backpack" value={character.backpack} x={556} y={462} w={113} h={95} line={19} multiline max={4000} change={value => update('backpack', value)} overflow={overflow} />
           <Field label="Bag" value={character.bag} x={697} y={462} w={112} h={95} line={19} multiline max={4000} change={value => update('bag', value)} overflow={overflow} />
           {invalidFields.length > 0 && <span className="sheet-overflow-note">Text does not fit: {invalidFields.join(', ')}. Shorten it before printing.</span>}
+          {guide.pins}
         </form>
       </div>
     </div>
     <div className="builder-notes">
       {overlaps.length > 0 && <p className="rating-overlap" role="status">Manual points overlap role/trope bonuses in {overlaps.map(([name, points]) => `${title(name)} (${points.overlap})`).join(', ')}. Totals are capped at 3; your blue points are kept. Remove or reassign them, or change your role/trope.</p>}
-      <p><strong>A4 landscape · 297 × 210 mm.</strong> The screen and print use this same sheet. Click a chevron to choose from the book; click other writing lines to type. Click a tracker to fill through it, or its last filled mark to erase it. On a small screen, use 100% and scroll to edit comfortably.</p>
-      <p>Selections update immediately. Click outside a panel or press Escape to close it. Role/trope points apply automatically; No role or No trope removes only their bonuses. Choose the trope’s attribute in its panel. Brown points are locked; click an empty diamond to add manual points or a blue diamond to remove them. Manual additions survive role/trope changes; free-point budgets aren’t enforced. Feats default to role/trope choices and gear to role starting choices; turn off each panel’s filter to browse its full catalog. Filters don’t remove existing picks or enforce quantities. Flavor choices remain unrestricted; this variant uses Adult only. Choose Empty slot to remove a feat or gear entry. Hot and other resources remain manual. Drafts stay in this browser; export a backup to move devices or keep another character. When printing, use A4 landscape, 100% scale, no margins and no browser headers/footers.</p>
       {character.portrait && <button type="button" onClick={() => update('portrait', null)}>Remove portrait</button>}
     </div>
+    {guide.tour}
     {picker && <ChoicePicker key={typeof picker === 'string' ? picker : `${picker.field}-${picker.index}`}
       field={typeof picker === 'string' ? picker : picker.field}
       heading={typeof picker === 'string' ? `Choose ${picker === 'age' ? 'an' : 'a'} ${picker}` : picker.field === 'feats' ? 'Choose a feat' : 'Choose guns & gear'}
