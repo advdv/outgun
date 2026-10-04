@@ -71,6 +71,7 @@
 .guide-progress { padding-right: 22px; color: #634123; font: 600 15px/1.3 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: .025em; }
 .guide-popover h2 { margin: 12px 20px 14px 0; font: 700 28px/1.05 'Barlow Condensed', sans-serif; text-transform: uppercase; }
 .guide-copy p + p { margin-top: 12px; }
+.guide-callout { padding: 12px 14px; border-left: 3px solid #8c4928; background: #eee1c4; }
 .guide-close { position: absolute; top: 8px; right: 8px; width: 36px; height: 36px; font-size: 26px; cursor: pointer; }
 .guide-source { margin-top: 14px; font-size: 13px; color: #645848; }
 .guide-source summary { cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
@@ -113,6 +114,7 @@
 .picker-option:has(input:focus-visible) { outline: 2px solid #8c4928; outline-offset: -2px; }
 .picker-option:has(input:checked) .picker-name { font-weight: bold; }
 .picker-name { flex: 1; min-width: 0; font-size: 18px; }
+.picker-origin { display: block; width: fit-content; margin-top: 5px; padding: 2px 6px; border: 1px solid #c4b69c; color: #634123; font-size: 12px; line-height: 1.3; font-weight: 600; }
 .picker-check { width: 18px; flex-shrink: 0; font-size: 22px; }
 .picker-page { display: flex; align-items: center; gap: 6px; flex-shrink: 0; padding: 18px 10px; color: #645848; font-size: 14px; white-space: nowrap; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .info-icon { width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.5; }

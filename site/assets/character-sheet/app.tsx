@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { CSSProperties, ChangeEvent } from 'react';
 import { createRoot } from 'react-dom/client';
-import { GROUPS, IDENTITY, IDENTITY_CHOICES, MAX_BACKUP_BYTES, STORAGE_KEY, WEAPONS, adventurePageUrl, changeManualPoint, chooseIdentity, chooseItem, chooseTropeAttribute, itemChoices, markValue, newCharacter, parseCharacter, ratingDetails, referencePages, tropeAttributes } from './model';
+import { GROUPS, IDENTITY, IDENTITY_CHOICES, MAX_BACKUP_BYTES, ROLE_ITEMS, STORAGE_KEY, TROPE_FEATS, WEAPONS, adventurePageUrl, changeManualPoint, chooseIdentity, chooseItem, chooseTropeAttribute, itemChoices, markValue, newCharacter, parseCharacter, ratingDetails, referencePages, tropeAttributes } from './model';
 import type { Attribute, Character, ChoiceField, IdentityKey, ItemField, RatingKey } from './model';
 import { useCharacterGuide } from './guide';
 
@@ -78,9 +78,10 @@ function Field({ label, value, x, y, w, h, line = 14, multiline = false, max = 3
   </div>;
 }
 
-function ChoicePicker({ field, heading, choices, value, canClear = false, filter, attributeChoice, select, readPage, close }: {
+function ChoicePicker({ field, heading, choices, value, identity, canClear = false, filter, attributeChoice, select, readPage, close }: {
   field: ChoiceField | ItemField;
   heading: string; choices: readonly (readonly [string, string])[]; value: string; canClear?: boolean;
+  identity: Character['identity'];
   filter?: { enabled: boolean; label: string; change: (enabled: boolean) => void };
   attributeChoice?: { value: Attribute; options: Attribute[]; change: (value: Attribute) => void };
   select: (value: string) => void; close: () => void;
@@ -102,6 +103,8 @@ function ChoicePicker({ field, heading, choices, value, canClear = false, filter
     { label: 'Non-weapons', options: choices.filter(([name]) => !WEAPONS.includes(name)) },
   ] : [{ label: '', options: [...empty, ...choices] }];
   const emptyLabel = field === 'role' ? 'No role' : field === 'trope' ? 'No trope' : 'Empty slot';
+  const roleFeats = Object.entries(ROLE_ITEMS).find(([name]) => name === identity.role)?.[1].feats ?? [];
+  const tropeFeats = Object.entries(TROPE_FEATS).find(([name]) => name === identity.trope)?.[1] ?? [];
   return <div id="choice-picker" className="choice-picker" role="dialog" aria-labelledby="picker-heading">
     <div className="picker-header">
       <div><h2 id="picker-heading">{heading}</h2><p>Outgunned Adventure</p></div>
@@ -129,20 +132,27 @@ function ChoicePicker({ field, heading, choices, value, canClear = false, filter
       <fieldset aria-labelledby="picker-heading">
         {groups.filter(group => group.options.length).map(({ label, options }) => <div className="picker-group" key={label}>
           {label && <h3 className="picker-group-heading">{label}</h3>}
-          {options.map(([name, page]) => <div className="picker-option" key={name}>
-            <label className="picker-select">
-              <input type="radio" name="sheet-choice" value={name} aria-label={name || emptyLabel}
-                checked={value === name} onChange={() => select(name)} />
-              <span className="picker-name">{name || emptyLabel}</span>
-              <span className="picker-check" aria-hidden="true">{value === name ? '✓' : ''}</span>
-            </label>
-            {page && field !== 'background' && <button type="button" className="picker-page" aria-haspopup="dialog"
-              onClick={event => readPage(name, referencePages(field, page), event.currentTarget)}
-              aria-label={`${name}: Outgunned Adventure, ${field === 'role' ? 'pages' : 'page'} ${referencePages(field, page).join('–')} (opens page viewer)`}>
-              <svg className="info-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" /><path d="M10 9v5" /><circle className="info-dot" cx="10" cy="6" r=".8" /></svg>
-              {field === 'role' ? 'pp.' : 'p.'} {referencePages(field, page).join('–')}
-            </button>}
-          </div>)}
+          {options.map(([name, page], index) => {
+            const origin = field === 'feats' && name ? [roleFeats.includes(name) && 'Role', tropeFeats.includes(name) && 'Trope']
+              .filter(Boolean).join(' · ') || 'Outside role & trope' : '';
+            return <div className="picker-option" key={name}>
+              <label className="picker-select">
+                <input type="radio" name="sheet-choice" value={name} aria-label={name || emptyLabel}
+                  aria-describedby={origin ? `picker-origin-${index}` : undefined}
+                  checked={value === name} onChange={() => select(name)} />
+                <span className="picker-name">{name || emptyLabel}
+                  {origin && <span className="picker-origin" id={`picker-origin-${index}`}>{origin}</span>}
+                </span>
+                <span className="picker-check" aria-hidden="true">{value === name ? '✓' : ''}</span>
+              </label>
+              {page && field !== 'background' && <button type="button" className="picker-page" aria-haspopup="dialog"
+                onClick={event => readPage(name, referencePages(field, page), event.currentTarget)}
+                aria-label={`${name}: Outgunned Adventure, ${field === 'role' ? 'pages' : 'page'} ${referencePages(field, page).join('–')} (opens page viewer)`}>
+                <svg className="info-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" /><path d="M10 9v5" /><circle className="info-dot" cx="10" cy="6" r=".8" /></svg>
+                {field === 'role' ? 'pp.' : 'p.'} {referencePages(field, page).join('–')}
+              </button>}
+            </div>;
+          })}
         </div>)}
       </fieldset>
     </div>
@@ -468,6 +478,7 @@ function App() {
       heading={typeof picker === 'string' ? `Choose ${picker === 'age' ? 'an' : 'a'} ${picker}` : picker.field === 'feats' ? 'Choose a feat' : 'Choose guns & gear'}
       choices={typeof picker === 'string' ? IDENTITY_CHOICES[picker] : itemChoices(picker.field, character.identity, itemLimits[picker.field])}
       value={typeof picker === 'string' ? character.identity[picker] : character[picker.field][picker.index]}
+      identity={character.identity}
       canClear={typeof picker !== 'string' || picker === 'role' || picker === 'trope'}
       attributeChoice={picker === 'trope' && attributeOptions.length ? {
         value: character.tropeAttribute as Attribute, options: attributeOptions,

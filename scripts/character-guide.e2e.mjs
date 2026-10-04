@@ -32,7 +32,7 @@ const capture = name => {
 const showGuide = index => {
   if (evaluate("!!document.querySelector('.guide-popover')")) click('.guide-close');
   click(`#guide-pin-${index}`);
-  wait(`document.querySelector('.guide-progress')?.textContent.startsWith('${index + 1} of 7')`);
+  wait(`document.querySelector('.guide-progress')?.textContent.startsWith('${index + 1} of 8')`);
 };
 const chooser = name => {
   click(`.sheet-choice[aria-label^=${JSON.stringify(name)}]`);
@@ -50,6 +50,10 @@ const reference = (name, pages) => {
 };
 const choose = value => click(`.picker-option input[value=${JSON.stringify(value)}]`);
 const closePicker = () => { browser('press', 'Escape'); wait("!document.querySelector('#choice-picker') && !!document.querySelector('.guide-popover')"); };
+const featOrigin = name => evaluate(`(() => {
+  const input = [...document.querySelectorAll('.picker-option input')].find(e => e.value === ${JSON.stringify(name)});
+  return document.getElementById(input.getAttribute('aria-describedby'))?.textContent ?? '';
+})()`);
 
 // agent-browser's PDF shortcut defaults to Letter. Use the same browser's CDP
 // with preferCSSPageSize so this verifies the actual @page A4 landscape layout.
@@ -86,7 +90,7 @@ try {
   evaluate('localStorage.clear()');
   browser('reload');
   heading('Pick a name');
-  check("document.querySelectorAll('.guide-pin').length === 7");
+  check("document.querySelectorAll('.guide-pin').length === 8");
   check("!document.querySelector('[aria-label=\"Sheet zoom\"]') && !document.querySelector('.builder-notes').textContent.includes('A4 landscape')");
   check("document.querySelector('.guide-popover').getAttribute('aria-modal') === 'false' && !document.querySelector('.react-joyride__overlay')");
   check("document.querySelector('[aria-label=\"Luck 1 of 6\"]').getAttribute('aria-pressed') === 'true' && document.querySelector('[aria-label=\"Cash 1 of 5\"]').getAttribute('aria-pressed') === 'true'");
@@ -118,8 +122,31 @@ try {
   check("document.querySelector('.picker-attribute select').value === 'FOCUS' && document.querySelector('.picker-attribute select').disabled");
   closePicker();
   click('.guide-next');
+  heading('Add character flavor');
+  check(`(() => {
+    const highlight = document.querySelector('#guide-target-4.is-active').getBoundingClientRect();
+    return ['Background (flavor):', 'Age (flavor):', 'Flaw (flavor):', 'Catchphrase (flavor):'].every(name => {
+      const field = [...document.querySelectorAll('.sheet-choice')].find(e => e.getAttribute('aria-label').startsWith(name)).getBoundingClientRect();
+      // pt-to-pixel rounding differs for Age's separate left/width coordinates.
+      return field.left >= highlight.left - 1 && field.right <= highlight.right + 1 && field.top >= highlight.top - 1 && field.bottom <= highlight.bottom + 1;
+    });
+  })()`, 'Flavor highlight contains all four fields');
+  check("document.querySelector('.guide-copy').textContent.includes('guide the Director')");
+  check("document.querySelector('#guide-pin-4').getBoundingClientRect().right < document.querySelector('[aria-label=\"Grit 1 of 12\"]').getBoundingClientRect().left", 'Flavor pin leaves the first Grit control clear');
+  for (const [field, value] of [['Background', 'Explorer'], ['Age', 'Adult'], ['Flaw', 'I’m afraid of spiders'], ['Catchphrase', 'I’ve had worse!']]) {
+    chooser(`${field} (flavor):`);
+    choose(value);
+    closePicker();
+    check(`JSON.parse(localStorage.getItem('outgun.character.v1')).identity[${JSON.stringify(field.toLowerCase())}] === ${JSON.stringify(value)}`);
+  }
+  capture('guide-flavor');
+  click('.guide-next');
   heading('Pick extra attributes and skills');
-  check("document.querySelector('.guide-copy').textContent.includes('2 extra Skill points') && document.querySelector('.guide-copy').textContent.includes('5 dice')");
+  assert.equal(evaluate("document.querySelector('.guide-callout').textContent"), 'Now add 2 extra Skill points. Put 1 point in each of two Skills, or 2 points in one Skill. No Skill can have more than 3 points. There are no extra free Attribute points.');
+  check("getComputedStyle(document.querySelector('.guide-callout')).borderLeftWidth === '3px' && getComputedStyle(document.querySelector('.guide-callout')).backgroundColor !== 'rgba(0, 0, 0, 0)'");
+  check("[...document.querySelectorAll('.guide-copy > p')].some(p => p.textContent.startsWith('A dice roll uses')) && [...document.querySelectorAll('.guide-copy > p')].some(p => p.textContent === 'For example, Brawn 3 + Fight 2 gives you 5 dice.')");
+  check("!document.querySelector('.guide-copy').textContent.includes('per rating') && !document.querySelector('.guide-copy').textContent.includes('Click empty diamonds')");
+  capture('guide-points');
   click('[aria-label="Force 2 of 3"]');
   click('[aria-label="Heal 2 of 3"]');
   check("JSON.parse(localStorage.getItem('outgun.character.v1')).manualPoints.FORCE === 1 && JSON.parse(localStorage.getItem('outgun.character.v1')).manualPoints.HEAL === 1");
@@ -127,10 +154,48 @@ try {
   heading('Pick feats');
   for (const [slot, feat, page] of [[1, 'Fighter', 55], [2, 'Gunslinger', 55], [3, 'Archeology', 53]]) {
     chooser(`Feat ${slot}:`);
+    if (slot === 1) {
+      for (const [name, origin] of [['', ''], ['Fighter', 'Role'], ['Gunslinger', 'Role'], ['Archeology', 'Trope'], ['Eye for Details', 'Trope'], ['Thrill Seeker', 'Role · Trope']]) {
+        assert.equal(featOrigin(name), origin, `${name}: accessible feat origin`);
+      }
+      check("!document.querySelector('.picker-option input[value=\"\"]').closest('.picker-option').querySelector('.picker-origin')");
+      click('.picker-filter input');
+      assert.equal(featOrigin('Artist'), 'Outside role & trope');
+      assert.equal(featOrigin('Thrill Seeker'), 'Role · Trope');
+      capture('guide-feats-unfiltered');
+      click('.picker-filter input');
+    }
     reference(feat, [page]);
     choose(feat);
+    if (slot === 1) {
+      evaluate("document.querySelector('.picker-list').scrollTop = 180");
+      capture('guide-feat-origins');
+    }
     closePicker();
   }
+  // Sources follow the selected identity, not just the initial filtered list.
+  chooser('Role:');
+  choose('The Professor');
+  closePicker();
+  chooser('Feat 1:');
+  assert.equal(featOrigin('Archeology'), 'Role · Trope');
+  click('.picker-filter input');
+  assert.equal(featOrigin('Fighter'), 'Outside role & trope');
+  click('.picker-filter input');
+  closePicker();
+  chooser('Trope:');
+  choose('Born Rebel');
+  closePicker();
+  chooser('Feat 1:');
+  assert.equal(featOrigin('Archeology'), 'Role');
+  assert.equal(featOrigin('Gunslinger'), 'Trope');
+  closePicker();
+  chooser('Role:');
+  choose('The Daredevil');
+  closePicker();
+  chooser('Trope:');
+  choose('Action Archeologist');
+  closePicker();
   click('.guide-next');
   heading('Pick gear');
   check("document.querySelector('.guide-copy').textContent.includes('3 items: a pistol or revolver, a knife, and a rope')");
@@ -142,7 +207,7 @@ try {
   }
   click('.guide-next');
   check("!document.querySelector('.guide-pin') && !document.querySelector('.guide-popover') && document.querySelector('.guide-toggle').getAttribute('aria-checked') === 'false'");
-  console.log('PASS: all seven creation steps, editable targets, portrait upload, point grants, feats/gear, and info/page viewer round trips');
+  console.log('PASS: all eight creation steps, four flavor fields, highlighted Skill allowance, accessible feat origins (role/trope/both/outside), changed identity, and info/page viewer round trips');
 
   browser('reload');
   wait("!!document.querySelector('.guide-toggle')");
@@ -152,13 +217,13 @@ try {
   click('.guide-navigation button:first-child');
   heading('Pick feats');
   click('.guide-close');
-  check("document.querySelectorAll('.guide-pin').length === 7 && !document.querySelector('.guide-popover') && document.activeElement.id === 'guide-pin-5'");
+  check("document.querySelectorAll('.guide-pin').length === 8 && !document.querySelector('.guide-popover') && document.activeElement.id === 'guide-pin-6'");
   showGuide(3);
   heading('Pick a trope');
   browser('press', 'Escape');
   check("!document.querySelector('.guide-popover') && JSON.parse(localStorage.getItem('outgun.guide.v1')).index === 3");
   browser('reload');
-  wait("document.querySelectorAll('.guide-pin').length === 7");
+  wait("document.querySelectorAll('.guide-pin').length === 8");
   check("!document.querySelector('.guide-popover')");
   click('.guide-restart');
   heading('Pick a name');
@@ -172,11 +237,26 @@ try {
   browser('set', 'viewport', '390', '844', '2');
   click('.guide-restart');
   heading('Pick a name');
-  for (let index = 0; index < 7; index++) {
+  for (let index = 0; index < 8; index++) {
     if (index > 0) click('.guide-next');
-    wait(`document.querySelector('.guide-progress')?.textContent.startsWith('${index + 1} of 7')`);
+    wait(`document.querySelector('.guide-progress')?.textContent.startsWith('${index + 1} of 8')`);
     wait("(() => { const p = document.querySelector('.guide-popover').getBoundingClientRect(); return p.left >= 0 && p.right <= innerWidth + 1 && p.top >= 0 && p.bottom <= innerHeight + 1; })()");
     check(`(() => { const p = document.querySelector('.guide-popover').getBoundingClientRect(), t = document.querySelector('#guide-target-${index}').getBoundingClientRect(); return p.right <= t.left || p.left >= t.right || p.bottom <= t.top || p.top >= t.bottom; })()`, `Narrow step ${index + 1} must not cover its target`);
+    if (index === 4 || index === 5) capture(`guide-narrow-step-${index + 1}`);
+    if (index === 6) {
+      chooser('Feat 1:');
+      assert.equal(featOrigin('Fighter'), 'Role');
+      assert.equal(featOrigin('Archeology'), 'Trope');
+      assert.equal(featOrigin('Thrill Seeker'), 'Role · Trope');
+      check("document.querySelector('.picker-list').scrollWidth === document.querySelector('.picker-list').clientWidth", 'Feat names, origins, and page links fit the narrow panel');
+      capture('guide-narrow-feats');
+      click('.picker-filter input');
+      assert.equal(featOrigin('Artist'), 'Outside role & trope');
+      check("document.querySelector('.picker-list').scrollWidth === document.querySelector('.picker-list').clientWidth", 'Outside-source labels also fit the narrow panel');
+      capture('guide-narrow-feats-unfiltered');
+      click('.picker-filter input');
+      closePicker();
+    }
   }
   check("document.querySelector('.sheet-viewport').scrollWidth > document.querySelector('.sheet-viewport').clientWidth && document.querySelector('.character-sheet').offsetWidth > 1100");
   capture('guide-narrow');
@@ -200,7 +280,7 @@ try {
   browser('reload');
   wait("document.querySelector('.sheet-portrait img')?.naturalWidth > 0");
   assert.deepEqual(evaluate("JSON.parse(localStorage.getItem('outgun.character.v1'))"), saved);
-  showGuide(6);
+  showGuide(5);
   browser('scroll', 'down', '650');
   evaluate('window.__printCalled = false; window.print = () => { window.__printCalled = true; }');
   click('.builder-primary');
@@ -223,9 +303,9 @@ for name in ['character-guide-on', 'character-guide-off', 'character-narrow']:
     page = doc[0]
     assert abs(page.rect.width - 841.89) < 1 and abs(page.rect.height - 595.28) < 1, page.rect
     text = page.get_text()
-    for expected in ['Mara Voss', 'The Daredevil', 'Action Archeologist', 'Fighter', 'Gunslinger', 'Archeology', 'Know the currents.', 'Lantern', 'Spare socks', 'Train ticket']:
+    for expected in ['Mara Voss', 'The Daredevil', 'Action Archeologist', 'Explorer', 'Adult', 'afraid of spiders', 'had worse!', 'Fighter', 'Gunslinger', 'Archeology', 'Know the currents.', 'Lantern', 'Spare socks', 'Train ticket']:
         assert expected in text, (name, expected)
-    for excluded in ['Pick gear', 'CREATE YOUR ADVENTURER', 'Finish guide', 'Restart guide', 'Saved on this device']:
+    for excluded in ['Pick gear', 'extra Skill points', 'For example', 'CREATE YOUR ADVENTURER', 'Finish guide', 'Restart guide', 'Saved on this device']:
         assert excluded not in text, (name, excluded)
     pix = page.get_pixmap(matrix=pymupdf.Matrix(1.5, 1.5))
     pixels.append(pix.samples)
@@ -257,6 +337,16 @@ print('PASS: three populated PDFs, one A4 landscape page each; expected bottom/m
   heading('Pick a name');
   check("document.querySelector('[aria-label=Name]').value === '' && !document.querySelector('.sheet-portrait img')");
   console.log('PASS: spent Luck/Cash stay zero after reload; New sheet restores defaults and respects the guide preference');
+  for (const [oldIndex, newIndex, title] of [[3, 3, 'Pick a trope'], [4, 5, 'Pick extra attributes and skills'], [6, 7, 'Pick gear']]) {
+    evaluate(`localStorage.setItem('outgun.guide.v1', JSON.stringify({ enabled: true, open: true, index: ${oldIndex} }))`);
+    browser('reload');
+    heading(title);
+    assert.equal(evaluate("JSON.parse(localStorage.getItem('outgun.guide.v1')).index"), newIndex);
+    browser('reload');
+    heading(title);
+    assert.equal(evaluate("JSON.parse(localStorage.getItem('outgun.guide.v1')).index"), newIndex);
+  }
+  console.log('PASS: existing seven-step progress migrates once and retains the same topic');
   assert.deepEqual(browser('errors').errors, []);
   console.log('PASS: no browser errors');
 } finally {

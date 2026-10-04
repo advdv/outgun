@@ -9,6 +9,7 @@ const sections = [
   { title: 'Pick an avatar', area: [25, 24, 101, 142], pin: [8, 174], placement: 'right' },
   { title: 'Pick a role', area: [155, 63, 338, 23], pin: [499, 65], placement: 'right-start' },
   { title: 'Pick a trope', area: [155, 93, 338, 23], pin: [499, 95], placement: 'right-start' },
+  { title: 'Add character flavor', area: [155, 123, 338, 83], pin: [495, 145], placement: 'right-start' },
   { title: 'Pick extra attributes and skills', area: [25, 217, 202, 65], pin: [5, 217], placement: 'right' },
   { title: 'Pick feats', area: [258, 241, 241, 49], pin: [239, 220], placement: 'right' },
   { title: 'Pick gear', area: [522, 247, 288, 145], pin: [811, 220], placement: 'left' },
@@ -48,8 +49,10 @@ export function useCharacterGuide(ready: boolean, suspended: boolean, role: stri
     try {
       const saved = JSON.parse(localStorage.getItem(GUIDE_KEY) || 'null');
       if (saved && typeof saved.enabled === 'boolean' && typeof saved.open === 'boolean'
-        && Number.isInteger(saved.index) && saved.index >= 0 && saved.index < sections.length) return {
-        enabled: saved.enabled as boolean, open: saved.open as boolean, index: saved.index as number,
+        && Number.isInteger(saved.index) && saved.index >= 0 && saved.index < (saved.version === 2 ? sections.length : 7)) return {
+        enabled: saved.enabled as boolean, open: saved.open as boolean,
+        // Preserve the current topic when inserting flavor into an existing tour.
+        index: saved.version !== 2 && saved.index >= 4 ? saved.index + 1 : saved.index as number,
       };
       return { enabled: !localStorage.getItem(STORAGE_KEY), open: true, index: 0 };
     } catch { return { enabled: true, open: true, index: 0 }; }
@@ -67,7 +70,7 @@ export function useCharacterGuide(ready: boolean, suspended: boolean, role: stri
   };
 
   useEffect(() => {
-    try { localStorage.setItem(GUIDE_KEY, JSON.stringify(guide)); } catch { /* Help still works without storage. */ }
+    try { localStorage.setItem(GUIDE_KEY, JSON.stringify({ ...guide, version: 2 })); } catch { /* Help still works without storage. */ }
   }, [guide]);
 
   useEffect(() => {
@@ -91,12 +94,16 @@ export function useCharacterGuide(ready: boolean, suspended: boolean, role: stri
     <><p>Your trope gives your adventurer their personality and movie archetype. Open the Trope line and follow a pick’s <strong>ⓘ page reference</strong> to learn more.</p>
       <p>Its points apply automatically. Choose its Attribute in the panel; if your role already grants one of the two options, the other is required.</p>
       <Rule page="p. 44">“When you choose a Trope, you gain 1 point in an Attribute and 1 point each in 8 Skills.” “If your Role has already given you a point in one of the Attributes associated with your Trope, then you must choose the other one.”</Rule></>,
-    <><p>Your role and trope supply <strong>2 Attribute points and 18 Skill points</strong> automatically. Now add <strong>2 extra Skill points</strong>, split between skills or both in one, up to 3 points per rating. There are no extra free Attribute points.</p>
-      <p>A roll uses <strong>Attribute + Skill dice</strong>: Brawn 3 + Fight 2 means 5 dice. Higher ratings give you more dice to make matching sets.</p>
-      <p>Click empty diamonds to add blue manual points; click blue to remove. Brown points are locked. The sheet does not enforce your two-point budget.</p>
+    <><p><strong>Background, Age, Flaw, and Catchphrase</strong> give the Director a quick picture of your adventurer: where they come from, what matters to them, and what might get them into trouble.</p>
+      <p>Use these flavor fields to guide the Director toward fitting scenes, contacts, and challenges for your character. Click each line to choose a suggestion; short, memorable details are enough. This sheet uses Adult for age.</p>
+      <Rule page="p. 18">“Your background gives you access to information, to contacts, or to specific knowledge.” “Your flaw is the thing that keeps tripping you up throughout your adventures.”</Rule></>,
+    <><p>Your role and trope supply <strong>2 Attribute points and 18 Skill points</strong> automatically.</p>
+      <p className="guide-callout"><strong>Now add 2 extra Skill points.</strong> Put 1 point in each of two Skills, or 2 points in one Skill. No Skill can have more than 3 points. There are no extra free Attribute points.</p>
+      <p>A dice roll uses <strong>Attribute + Skill dice</strong>. Higher scores give you more dice to make matching sets.</p>
+      <p>For example, Brawn 3 + Fight 2 gives you <strong>5 dice</strong>.</p>
       <Rule page="p. 50">“You can have up to 3 points in each Attribute and Skill.” “You can add 2 free Skill Points wherever you like.” “Choose one Attribute and one Skill and add up their scores: that is how many dice you have in your pool.”</Rule></>,
     <><p>Choose <strong>3 feats: 2 from your role and 1 from your trope</strong>. These special talents give you advantages in play. Click a feat slot, then follow the <strong>ⓘ page reference</strong> to read what each talent does.</p>
-      <p>The filter shows available catalog feats from your role or trope. It does not enforce the 2 + 1 split or the total; the extra slots are for later adventures.</p>
+      <p>The <strong>Role</strong> and <strong>Trope</strong> labels show which of your choices offers each feat. Some feats appear on both lists. The filter does not enforce the 2 + 1 split or the total; the extra slots are for later adventures.</p>
       <Rule page="p. 52">“When creating your Adventurer, you can choose 2 Feats from the list offered by your Role and 1 from the list for your Trope.”</Rule></>,
     <><p><strong>{Object.hasOwn(kits, role) ? `${role}: ` : 'Start with your role’s kit. '}</strong>{Object.hasOwn(kits, role) ? kits[role] : 'There is no fixed item count for everyone; choose a role and check its page reference for the exact quantities.'}</p>
       <p>The gear filter follows your <strong>role, not your trope</strong>. It lists eligible items but does not enforce quantities or either/or choices. Use each item’s <strong>ⓘ page reference</strong> for details.</p>
@@ -105,7 +112,7 @@ export function useCharacterGuide(ready: boolean, suspended: boolean, role: stri
   ];
   const steps: Step[] = sections.map((section, index) => ({
     target: `#guide-target-${index}`, title: section.title, placement: section.placement,
-    offset: index === 0 || index === 2 || index === 3 ? 28 : 12,
+    offset: section.placement === 'right-start' ? 28 : 12,
     content: <>
       <button type="button" className="guide-close" aria-label="Close guide bubble" onClick={close}>×</button>
       <div className="guide-copy">{content[index]}</div>
@@ -113,7 +120,7 @@ export function useCharacterGuide(ready: boolean, suspended: boolean, role: stri
         <button type="button" disabled={index === 0} onClick={() => jump(index - 1)}>Back</button>
         <button type="button" className="guide-next" onClick={() => {
           if (index === sections.length - 1) hide(); else jump(index + 1);
-        }}>{index === sections.length - 1 ? 'Finish guide' : `Next: ${['', 'Avatar', 'Role', 'Trope', 'Points', 'Feats', 'Gear'][index + 1]} →`}</button>
+        }}>{index === sections.length - 1 ? 'Finish guide' : `Next: ${['', 'Avatar', 'Role', 'Trope', 'Flavor', 'Points', 'Feats', 'Gear'][index + 1]} →`}</button>
       </div>
       <button type="button" className="guide-hide" onClick={hide}>Hide guide</button>
     </>,
