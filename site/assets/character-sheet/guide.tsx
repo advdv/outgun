@@ -5,10 +5,10 @@ import { STORAGE_KEY } from './model';
 
 const GUIDE_KEY = 'outgun.guide.v1';
 const sections = [
-  { title: 'Pick a name', area: [155, 33, 338, 23], pin: [499, 35], placement: 'right' },
+  { title: 'Pick a name', area: [155, 33, 338, 23], pin: [499, 35], placement: 'right-start' },
   { title: 'Pick an avatar', area: [25, 24, 101, 142], pin: [8, 174], placement: 'right' },
-  { title: 'Pick a role', area: [155, 63, 338, 23], pin: [499, 65], placement: 'right' },
-  { title: 'Pick a trope', area: [155, 93, 338, 23], pin: [499, 95], placement: 'right' },
+  { title: 'Pick a role', area: [155, 63, 338, 23], pin: [499, 65], placement: 'right-start' },
+  { title: 'Pick a trope', area: [155, 93, 338, 23], pin: [499, 95], placement: 'right-start' },
   { title: 'Pick extra attributes and skills', area: [25, 217, 202, 65], pin: [5, 217], placement: 'right' },
   { title: 'Pick feats', area: [258, 241, 241, 49], pin: [239, 220], placement: 'right' },
   { title: 'Pick gear', area: [522, 247, 288, 145], pin: [811, 220], placement: 'left' },

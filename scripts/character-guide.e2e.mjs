@@ -238,6 +238,7 @@ print('PASS: three populated PDFs, one A4 landscape page each; expected bottom/m
   browser('set', 'viewport', '1440', '1000', '2');
   click('.guide-toggle');
   showGuide(2);
+  check("(() => { const e = document.querySelector('.guide-toggle'), r = e.getBoundingClientRect(); return e.contains(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2)); })()", 'The role bubble must leave the toolbar guide switch usable');
   capture('guide-populated');
   click('.guide-hide');
   for (const name of ['Luck 1 of 6', 'Cash 1 of 5']) {
