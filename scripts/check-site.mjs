@@ -59,8 +59,10 @@ assert(timeline.indexOf('1929:') < timeline.indexOf('conference-ticket') && time
 assert(/datetime=["']?1932-08/.test(timeline) && timeline.includes('London'), 'Missing conference date or location');
 assert(timeline.includes('International Union of Prehistoric and Protohistoric Sciences') && timeline.includes('You are invited') && timeline.includes('Campaign opening'), 'Missing conference invitation content');
 assert(html.indexOf('Creating your Adventurer') < html.indexOf('/images/adventure/expedition-chest.webp'), 'Chest must be in the creation section');
-const creationSteps = html.match(/<ol>([\s\S]*?)<\/ol>/)?.[1] || '';
-assert.equal((creationSteps.match(/<li\b/g) || []).length, 8, 'Preserve all eight creation steps');
+const creation = html.slice(html.indexOf('Creating your Adventurer'), html.indexOf('Illustrations by Daniela Giubellini'));
+assert(creation.includes('on-screen guide') && !creation.includes('<ol>'), 'Landing instructions must defer to the sheet guide, not repeat its steps');
+assert(creation.includes('saves in this browser') && creation.includes('Export backup') && creation.includes('Print / save PDF'), 'Keep the short save, backup, and print guidance');
+assert(!creation.includes('does not store your sheet'), 'Outdated saving warning must not return');
 for (const image of ['dart-trap', 'explorer', 'expedition-chest']) {
   assert(attributes.some(value => value.endsWith(`/images/adventure/${image}.webp`)), `Missing landing illustration: ${image}`);
 }

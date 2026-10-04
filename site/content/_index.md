@@ -66,17 +66,8 @@ However, if you want a general idea of what was going on in the world in the 20s
 
 {{< book-art kind="chest" image="expedition-chest" width="720" height="542" alt="A leather hat, coiled whip, and compass rest on a wooden expedition chest." source="p. 10" >}}
 
-Use the handy [online character sheet creator]({{< relref "/character-builder" >}}) to create your character sheet. It will guide you step-by-step through the process of setting your character:
+Open the [character sheet]({{< relref "/character-builder" >}}) and follow the on-screen guide—it walks you through every choice.
 
-1. Choose a Role
-2. Fill in your Personal Data
-3. Choose a Trope
-4. Mark the Attribute and Skill points gained from your Role and Trope
-5. Add 2 free Skill Points
-6. Choose and note 3 Feats from your Role and Trope
-7. Choose your Gear depending on your Role
-8. Mark 1 Luck, 1 Spotlight, and 1 Cash
-
-> **IMPORTANT:** This online sheet creator does not store your sheet by itself. If you want to edit it later, please use the export function to store it on your computer. Then you can import it later and continue working on it.
+Your progress saves in this browser. Use **Export backup** to keep a copy, or **Print / save PDF** when you’re ready to play.
 
 Illustrations by Daniela Giubellini, from *Outgunned: Adventure*. © 2024 Two Little Mice. An unofficial fan project; not affiliated with or endorsed by Two Little Mice.

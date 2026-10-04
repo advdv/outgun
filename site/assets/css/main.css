@@ -55,7 +55,7 @@
   .prose-landing blockquote { @apply border-l-4 border-[#b78a45] bg-[#704323] p-6 font-body text-base text-paper not-italic; }
   .prose-landing blockquote strong { color: inherit; }
   .prose-landing blockquote p::before, .prose-landing blockquote p::after { content: none; }
-  .prose-landing > p:last-child { @apply mt-12 border-t border-ink/20 pt-5 text-sm text-ink/65; }
+  .prose-landing > p:last-child { @apply mt-12 border-t border-ink/20 pt-5 text-sm text-ink/65; clear: both; }
   .prose-landing ul { @apply list-none border-l border-rust/40 pl-6; }
   .prose-landing ul li { @apply relative pl-0; }
   .prose-landing ul li::before { content: ''; @apply absolute top-3 -left-[1.8rem] size-2 rotate-45 bg-rust; }
