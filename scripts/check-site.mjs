@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { IDENTITY_CHOICES, ITEM_CHOICES, adventurePageUrl, referencePages } from '../site/assets/character-sheet/model.ts';
+import { referenceData } from './reference-data.mjs';
 
 const html = readFileSync('public/index.html', 'utf8');
 const base = new URL(process.env.HUGO_BASEURL || 'https://advdv.github.io/outgun/');
@@ -10,7 +11,7 @@ const pageAttributes = source => [...source.matchAll(/(?:href|src|data-artwork)=
 const attributes = pageAttributes(html);
 let checked = 0;
 const stylesheets = new Set();
-for (const page of ['index.html', 'kitchen-sink/index.html', 'character-builder/index.html', 'player-cheat-sheet/index.html']) {
+for (const page of ['index.html', 'kitchen-sink/index.html', 'character-builder/index.html', 'player-cheat-sheet/index.html', 'reference-sheets/index.html']) {
   const source = readFileSync(join('public', page), 'utf8');
   const pageUrl = new URL(page, base);
   for (const value of pageAttributes(source)) {
@@ -69,6 +70,14 @@ for (const image of ['dart-trap', 'explorer', 'expedition-chest']) {
 assert(html.includes('Daniela Giubellini'), 'Missing illustration credit');
 assert(attributes.some(value => value.endsWith('/character-builder/')), 'Missing homepage builder link');
 assert(attributes.some(value => value.endsWith('/player-cheat-sheet/')), 'Missing homepage cheat-sheet link');
+assert(attributes.some(value => value.endsWith('/reference-sheets/')), 'Missing homepage reference-sheets link');
+const reference = readFileSync('public/reference-sheets/index.html', 'utf8');
+assert.equal((reference.match(/<article\b/g) || []).length, 7, 'Print the entire seven-page reference document');
+assert.equal((reference.match(/class=["']?reference-card["'\s>]/g) || []).length, 74, 'Keep 42 Feats and all 32 equipment cards');
+assert.equal((reference.match(/class=.?reference-luck\b/g) || []).length, 18, 'Preserve verified Luck activation symbols');
+assert(!reference.includes('raw HTML omitted'), 'Reference text must render as static HTML');
+assert(reference.includes('Print all 7 pages / save PDF'), 'One print action for the whole reference document');
+assert.deepEqual(JSON.parse(readFileSync('site/assets/reference-sheets.json', 'utf8')), referenceData(), 'Reference text must match the extracted book');
 const cheatSheet = readFileSync('public/player-cheat-sheet/index.html', 'utf8');
 assert.equal((cheatSheet.match(/class=.?cheat-card\b/g) || []).length, 7, 'Keep all seven rule cards');
 assert(!cheatSheet.includes('raw HTML omitted'), 'Markdown rendering must not strip the rule cards or dice');

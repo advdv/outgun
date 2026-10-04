@@ -72,4 +72,6 @@ Your progress saves in this browser. Use **Export backup** to keep a copy, or **
 
 Keep the [player cheat sheet]({{< relref "/player-cheat-sheet" >}}) beside you for dice rolls, re-rolls, and combat. Read it online or print it on one A4 landscape page.
 
+Use the [reference sheets]({{< relref "/reference-sheets" >}}) for Attributes, Skills, all Feats, and guns and gear with their weapon Feats explained. Print or save all seven A4 landscape pages as one PDF.
+
 Illustrations by Daniela Giubellini, from *Outgunned: Adventure*. © 2024 Two Little Mice. An unofficial fan project; not affiliated with or endorsed by Two Little Mice.

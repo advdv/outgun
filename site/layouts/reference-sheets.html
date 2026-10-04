@@ -1,0 +1,68 @@
+{{ define "head" }}
+{{ with resources.Get "css/reference-sheets.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+{{ end }}
+{{ end }}
+
+{{ define "main" }}
+{{ $data := resources.Get "reference-sheets.json" | transform.Unmarshal }}
+<main id="main" class="reference-main">
+  <div class="reference-toolbar">
+    <a href="{{ site.Home.RelPermalink }}">← Back to Field Notes</a>
+    <h1>{{ .Title }}</h1>
+    <div class="reference-actions" hidden>
+      <label for="reference-zoom">View</label>
+      <select id="reference-zoom"><option value="fit">Fit pages</option><option value="actual">100%</option></select>
+      <button type="button" id="reference-print">Print all 7 pages / save PDF</button>
+    </div>
+  </div>
+  <p class="reference-hint">One document, seven pages. Choose “Save as PDF” in the print dialog to download all seven. Use A4 landscape, all pages, 100% scale, no margins, and no browser headers or footers.</p>
+  <noscript><p class="reference-hint">Use your browser’s Print command to print all seven pages. Scroll sideways to read them on a narrow screen.</p></noscript>
+  <div class="reference-viewport" role="region" aria-label="Seven-page reference document" tabindex="0">
+    {{ range $index, $page := .Params.pages }}
+    <div class="reference-stage">
+      <article class="reference-sheet reference-{{ .kind }}" aria-labelledby="reference-page-{{ add $index 1 }}">
+        <header class="reference-page-header">
+          <h2 id="reference-page-{{ add $index 1 }}">{{ .title }}</h2>
+          <span>{{ add $index 1 }} / 7</span>
+        </header>
+        {{ if eq .kind "attributes" }}
+        <p class="reference-reminder">Any Skill can pair with any Attribute.</p>
+        <div class="reference-attribute-columns">
+          {{ range $data.attributes }}
+          <section class="reference-attribute">
+            <h3>{{ .name }}</h3><p class="reference-meaning">{{ .meaning }}</p>
+            {{ range .skills }}<div class="reference-skill"><h4>{{ .name }}</h4><p>{{ .meaning }}</p></div>{{ end }}
+          </section>
+          {{ end }}
+        </div>
+        {{ else if eq .kind "general" }}
+        <div class="reference-gear-grid">
+          {{ range .items }}{{ partial "reference-card.html" (dict "card" (index $data.gear .) "data" $data) }}{{ end }}
+        </div>
+        {{ else }}
+        <div class="reference-columns">
+          {{ $offset := int (.start | default 0) }}
+          {{ range .columns }}
+          <div class="reference-column">
+            {{ if eq $page.kind "feats" }}
+              {{ range first . (after $offset $data.feats) }}{{ partial "reference-card.html" (dict "card" . "data" $data) }}{{ end }}
+              {{ $offset = add $offset . }}
+            {{ else }}
+              {{ range . }}{{ partial "reference-card.html" (dict "card" (index $data.gear .) "data" $data) }}{{ end }}
+            {{ end }}
+          </div>
+          {{ end }}
+        </div>
+        {{ end }}
+        {{ if eq .kind "feats" }}<p class="reference-legend">1 Luck = activation cost. Passive benefits still apply as described in the Feat.</p>{{ end }}
+        {{ with .reminder }}<p class="reference-reminder">{{ . }}</p>{{ end }}
+      </article>
+    </div>
+    {{ end }}
+  </div>
+  {{ with resources.Get "reference-sheets.ts" | js.Build (dict "target" "es2022" "minify" (not hugo.IsDevelopment)) | fingerprint }}
+  <script type="module" src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"></script>
+  {{ end }}
+</main>
+{{ end }}

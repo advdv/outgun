@@ -1,0 +1,17 @@
+{{ $data := .data }}
+{{ with .card }}
+<section class="reference-card" data-name="{{ .name }}">
+  <h3><span>{{ .name }}</span>{{ if .luck }}<span class="reference-luck">1 Luck</span>{{ end }}{{ with .cost }}<span class="reference-cost">{{ . }}{{ if ne . "—" }} Cash{{ end }}</span>{{ end }}</h3>
+  <div class="reference-card-body">
+    {{/* Preserve the source's straight apostrophes instead of smartening them. */}}
+    {{ with .body }}{{ replace . "'" "&#39;" | markdownify }}{{ end }}
+    {{ with .detail }}<p>{{ . }}</p>{{ end }}
+    {{ range .traits }}
+    <div class="reference-trait">
+      <h4>{{ . }}</h4>
+      {{ index $data.gearFeats . | markdownify }}
+    </div>
+    {{ end }}
+  </div>
+</section>
+{{ end }}

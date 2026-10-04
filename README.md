@@ -108,6 +108,41 @@ dice, card bounds, zoom, scrolling, and four actual single-page A4 PDFs. Desktop
 narrow Fit, scrolled 100%, and JavaScript-disabled PDFs must be pixel-identical.
 Chromium verification does not establish native Safari compatibility.
 
+### Printable reference sheets
+
+Open `/reference-sheets/` from the homepage. All seven pages stay visible in one
+document: Attributes and Skills, three pages of all 42 Feats, and three pages of
+guns, ammunition, other weapons, and general gear. Every equipment card repeats
+its listed weapon/gear Feat definitions. **Print all 7 pages / save PDF** opens
+the browser print dialog; choose **Save as PDF** and **All pages** to download
+one seven-page PDF. Browser printing also works without JavaScript.
+
+The page order and column groups live in `site/content/reference-sheets.md`.
+`site/assets/reference-sheets.json` contains the extracted book text, generated
+from `html/` (printed pp. 51, 53–59, 132–135):
+
+```sh
+node scripts/reference-data.mjs --write
+node scripts/reference-data.mjs --check
+```
+
+The 18 Luck activation markers lost during text extraction were checked against
+the site's existing book-page images. They render as small **1 Luck** labels;
+the original Feat descriptions, including passive benefits, remain unchanged.
+The production check detects catalog drift from the extracted source.
+
+```sh
+node scripts/reference-sheets.e2e.mjs <reference-sheets-url> [review-artifact-directory]
+```
+
+This exercises the real print button and verifies four seven-page A4 landscape
+PDFs: desktop, narrow Fit, scrolled 100% on the last page, and JavaScript disabled.
+It checks exact card text, Luck markers, item costs and traits, page order,
+card bounds, print margins, exclusion of browser UI, and pixel-identical output
+across all four states. Review PNGs are rendered from the actual PDF pages.
+The print layout uses normal flow and the same 1px bottom allowance on every
+page. Native Safari and physical printers still need device-specific testing.
+
 ### Rulebook page viewer
 
 Page references in the selection panels open a full-screen image viewer.

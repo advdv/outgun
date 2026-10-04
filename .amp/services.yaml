@@ -11,3 +11,5 @@ services:
         title: Field Notes homepage
       - url: /player-cheat-sheet/
         title: Printable player cheat sheet
+      - url: /reference-sheets/
+        title: Seven-page printable reference

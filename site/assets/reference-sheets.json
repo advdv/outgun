@@ -1,0 +1,651 @@
+{
+  "attributes": [
+    {
+      "name": "BRAWN",
+      "meaning": "Use brawn for all actions that require physical effort.",
+      "skills": [
+        {
+          "name": "Endure",
+          "meaning": "Handle pain, keep going despite exhaustion, hold your liquor."
+        },
+        {
+          "name": "Fight",
+          "meaning": "Fight enemies bare handed or in close quarters."
+        },
+        {
+          "name": "Force",
+          "meaning": "Hoist, push, pull, or break things."
+        },
+        {
+          "name": "Stunt",
+          "meaning": "Jump or run recklessly, dodge bullets."
+        }
+      ]
+    },
+    {
+      "name": "NERVES",
+      "meaning": "You need nerves of steel for actions that require quick reflexes and steady hands.",
+      "skills": [
+        {
+          "name": "Cool",
+          "meaning": "Keep your cool, hold still, or show courage."
+        },
+        {
+          "name": "Drive",
+          "meaning": "Drive a car or bike, pilot a plane."
+        },
+        {
+          "name": "Shoot",
+          "meaning": "Shoot with pistols and rifles, throw objects with precision."
+        },
+        {
+          "name": "Survival",
+          "meaning": "Find your bearings in the wilds, improvise weapons or shelter, hunt your dinner."
+        }
+      ]
+    },
+    {
+      "name": "SMOOTH",
+      "meaning": "Show off how smooth you are whenever you have to interact with other people or want to manipulate them.",
+      "skills": [
+        {
+          "name": "Flirt",
+          "meaning": "Seduce someone or use your charm."
+        },
+        {
+          "name": "Leadership",
+          "meaning": "Inspire, give orders, or intimidate people."
+        },
+        {
+          "name": "Speech",
+          "meaning": "Persuade or deceive someone, or carry out negotiations."
+        },
+        {
+          "name": "Style",
+          "meaning": "Show style and elegance, clean up nice, or prove your artistic talent."
+        }
+      ]
+    },
+    {
+      "name": "FOCUS",
+      "meaning": "You’ll need focus to concentrate, to notice details, and to recall memories and knowledge.",
+      "skills": [
+        {
+          "name": "Detect",
+          "meaning": "Find clues and intel, notice details, sniff out lies."
+        },
+        {
+          "name": "Heal",
+          "meaning": "Give first aid or comfort someone."
+        },
+        {
+          "name": "Fix",
+          "meaning": "Repair a mechanism or vehicle, deactivate a trap."
+        },
+        {
+          "name": "Know",
+          "meaning": "Remember information you learned, recall details and other useful knowledge."
+        }
+      ]
+    },
+    {
+      "name": "CRIME",
+      "meaning": "Your aptitude for crime will come in handy when acting in secret or to notice incoming threats.",
+      "skills": [
+        {
+          "name": "Awareness",
+          "meaning": "Keep your eyes and ears open, notice incoming threats."
+        },
+        {
+          "name": "Dexterity",
+          "meaning": "Perform sleight of hand, steal something, pick a lock."
+        },
+        {
+          "name": "Stealth",
+          "meaning": "Hide, sneak, or move quietly."
+        },
+        {
+          "name": "Streetwise",
+          "meaning": "Interact with criminals, recall information useful for moving in seedy neighborhoods or dealing with organized crime."
+        }
+      ]
+    }
+  ],
+  "feats": [
+    {
+      "name": "ARCHEOLOGY",
+      "body": "_You know history and the myths that surround it like the back of your hand._ Gain a Free Re-roll for all rolls regarding archeology, dead languages, or the history, culture, and legends of ancient civilizations.",
+      "luck": false,
+      "page": 53
+    },
+    {
+      "name": "ARTIST",
+      "body": "_Popular or misunderstood, you’re still an artist. The world is your stage._ Choose an art form (e.g.: dancing, singing, painting, etc.) Gain a Free Re-roll for all rolls regarding your chosen art form.",
+      "luck": false,
+      "page": 53
+    },
+    {
+      "name": "BIG AND STRONG",
+      "body": "_You’re unbelievably tall, large, and bulky._ Your considerable size grants you Help whenever you try to lift or break objects, but it poses a Hindrance when you try to hide in small spaces or balance your mass in unsteady situations.",
+      "luck": false,
+      "page": 53
+    },
+    {
+      "name": "BODYGUARD",
+      "body": "_You step in at the last second to help your friend, disregarding your own safety and health._ \n\nAfter another Adventurer fails a roll, you suffer the consequences of their failure (for example, if your friend should lose Grit or suffer a Condition, you lose Grit or suffer the Condition in their stead).",
+      "luck": true,
+      "page": 53
+    },
+    {
+      "name": "CHIN UP",
+      "body": "_Even in the darkest times, your friends can always rely on you._ **[Full Turn]** Remove the Scared or Like a Fool Condition, or another emotional Condition from an ally. Alternatively, while at Camp, you can take the Cheer Up action without needing to roll the dice.",
+      "luck": true,
+      "page": 53
+    },
+    {
+      "name": "DISGUISE",
+      "body": "_In the bag, you see an officer’s uniform. And it’s in your size._ \n\n**[Full Turn]** Find, steal, or craft the perfect disguise for yourself and/or one other Adventurer without rolling the dice.",
+      "luck": true,
+      "page": 53
+    },
+    {
+      "name": "ESTIMATE",
+      "body": "_Every object you see and handle tells you a story, and whispers to you its price._ Gain a Free Re-roll when evaluating or dating precious items, jewels, and ancient artifacts, and when recognizing fakes.",
+      "luck": false,
+      "page": 54
+    },
+    {
+      "name": "EXPLORER",
+      "body": "_There is no obstacle you can’t overcome._ \n\nGain a Free Re-roll when climbing, swimming, or traveling in wild environments.",
+      "luck": false,
+      "page": 55
+    },
+    {
+      "name": "EYE FOR DETAILS",
+      "body": "_You notice or remember details that elude everyone else._ **[Quick Action]** You either come up with a detail that can prove helpful in a difficult situation (for example, a loophole or a hidden passage), or ask the Director for a clue or suggestion.",
+      "luck": true,
+      "page": 54
+    },
+    {
+      "name": "FAST REFLEXES",
+      "body": "_You’re always alert, ready, and quick._ \n\nReact against an Enemy by rolling Brawn+Stunt instead of the requested Skill. You ignore all -1s from Conditions and circumstances.",
+      "luck": true,
+      "page": 55
+    },
+    {
+      "name": "FAVORED WEAPON",
+      "body": "_Your weapon is an extension of your arm, and it never fails you._ \n\nChoose a melee weapon (e.g. saber, whip, boomerang, etc.). Gain a Free Re-roll when using, repairing, evaluating, or handling the chosen weapon.",
+      "luck": false,
+      "page": 55
+    },
+    {
+      "name": "FIGHTER",
+      "body": "_Your fists don't go unnoticed._ \n\nGain a Free Re-roll for all Action and Reaction Rolls made when fighting with your hands against human enemies.",
+      "luck": false,
+      "page": 55
+    },
+    {
+      "name": "FIX-IT",
+      "body": "_If anyone can fix it, it’s you!_ \n\nGain a Free Re-roll when repairing rides or disarming traps.",
+      "luck": false,
+      "page": 55
+    },
+    {
+      "name": "GET DOWN!",
+      "body": "_You grab your friend and drag them away from danger one second before disaster._ **[Full Turn]** You and another Adventurer quickly hide, dodge a hail of bullets, or avoid being run over without needing to roll the dice.",
+      "luck": true,
+      "page": 55
+    },
+    {
+      "name": "GUIDE",
+      "body": "_You always know where you are and where you’re going._ Gain a Free Re-roll whenever you’re finding your bearings, following tracks, locating food, or searching for your friends.",
+      "luck": false,
+      "page": 55
+    },
+    {
+      "name": "GUNSLINGER",
+      "body": "_The gun is an extension of your arm._ \n\nGain a Free Re-roll when using, repairing, evaluating, or handling a pistol or revolver.",
+      "luck": false,
+      "page": 55
+    },
+    {
+      "name": "HARDENED",
+      "body": "_You are afraid of nothing and nobody._ Gain a Free Re-roll when intimidating others or resisting fear.",
+      "luck": false,
+      "page": 56
+    },
+    {
+      "name": "HAWKEYE",
+      "body": "_Your aim never misses._ \n\nChoose between hunting rifle or bow. Gain a Free Re-roll when using, repairing, evaluating, or handling that weapon. \n\nYou can spend 1 Luck to repeat an Action Roll made to shoot with your chosen weapon. You must keep the new result.",
+      "luck": true,
+      "page": 56
+    },
+    {
+      "name": "HEARTBREAKER",
+      "body": "_Nobody can resist your damned smile._ \n\nGain a Free Re-roll when seducing or making a good impression on others.",
+      "luck": false,
+      "page": 56
+    },
+    {
+      "name": "I MEANT TO DO THAT!",
+      "body": "_You stumble, grab onto a lever, and open a secret passage._ After you fail a Reaction Roll that was not caused by an Enemy, you can immediately generate a lucky turn of events or an unexpected opportunity.",
+      "luck": true,
+      "page": 56
+    },
+    {
+      "name": "LINGUIST",
+      "body": "_When you need it, you remember that you studied that language in college, or that you can understand the basics of an unknown dialect._ \n\nGain a Free Re-roll to all rolls made to understand or try to speak an unknown language. \n\nYou can spend 1 Luck to become fluent in that language until the end of the Session, without needing to make additional rolls.",
+      "luck": true,
+      "page": 56
+    },
+    {
+      "name": "LOCKPICKER",
+      "body": "_Doors, safes, and vaults stand no chance against your surgically precise methods._ Gain a Free Re-roll when trying to pick any lock, door, or closed container.",
+      "luck": false,
+      "page": 56
+    },
+    {
+      "name": "MAVERICK",
+      "body": "_You do things your own way and march to your own tune._ Gain a Free Re-roll to all Action Rolls that clearly and openly go against the choices and directions of the rest of the group.",
+      "luck": false,
+      "page": 56
+    },
+    {
+      "name": "MONEYBAGS",
+      "body": "_You inherited a fortune, or started at rock bottom and built a fortune for yourself._ \n\nYou start the game with 4 Cash. **[Full Turn]** You can spend 1 Luck to find a contact, passage to somewhere, an invite to an event, or another service thanks to your huge wealth or fame.",
+      "luck": true,
+      "page": 57
+    },
+    {
+      "name": "PHYSICIAN",
+      "body": "_You’re a nurse, medical doctor, or army medic. You’re certainly not squeamish about blood._ \n\nGain a Free Re-roll for all rolls made to find a diagnosis, to operate on someone, or to remove physical Conditions such as the Hurt Condition.",
+      "luck": false,
+      "page": 57
+    },
+    {
+      "name": "PILOT",
+      "body": "_You feel truly at peace only when you’re above the clouds._ \n\nGain a Free Re-roll when piloting, repairing, or evaluating flying rides.",
+      "luck": false,
+      "page": 57
+    },
+    {
+      "name": "QUICK AND NIMBLE",
+      "body": "_You are lithe, thin, or especially slight._ Your slender frame grants you Help whenever you try to hide, sneak, or balance, but it poses a Hindrance when you try to lift or break objects.",
+      "luck": false,
+      "page": 57
+    },
+    {
+      "name": "QUICK FINGERS",
+      "body": "_If you want something, you just need to get your hands on it._ \n\nGain a Free Re-roll when using sleight of hand. **[Full Turn]** You can spend 1 Luck to immediately retrieve a small item you lost during this Session, or to ensure a small object goes unnoticed during a search or check.",
+      "luck": true,
+      "page": 57
+    },
+    {
+      "name": "REASSURE",
+      "body": "_You lock eyes with your friend, and let them know you believe in them._ Grant +1 to another Adventurer who is about to roll 4 dice or fewer, or allow a friend who has filled in their Bad Box to avoid suffering a Condition.",
+      "luck": true,
+      "page": 58
+    },
+    {
+      "name": "SADDLE UP",
+      "body": "_You grab your friend and start running without looking back._ \n\n**[Quick Action]** You and one other Adventurer skip the next Reaction Turn while running.",
+      "luck": true,
+      "page": 58
+    },
+    {
+      "name": "SAILOR",
+      "body": "_You have salt water in your veins._ \n\nGain a Free Re-roll when driving, repairing, or evaluating a nautical ride.",
+      "luck": false,
+      "page": 58
+    },
+    {
+      "name": "SENSIBLE PACKER",
+      "body": "_Not even you know what’s in your backpack, but you're sure that there’s something useful._ \n\nYour Bag and Backpack never become a Hindrance to you, regardless of the circumstances. \n\n**[Quick Action]** So long as you are carrying your Bag or Backpack, you can spend 1 Luck to find a tool or weapon in it. The item found can’t be worth more than 2$, is not in sellable condition, and becomes unserviceable after the end of this Scene.",
+      "luck": true,
+      "page": 58
+    },
+    {
+      "name": "SILVER TONGUE",
+      "body": "_Your words speak louder than actions, and you certainly know how to talk your way out of trouble._ \n\nGain a Free Re-roll for all rolls made to lie, to persuade others, to find a compromise, or to bargain.",
+      "luck": false,
+      "page": 58
+    },
+    {
+      "name": "SKULKER",
+      "body": "_Your prey stands no chance._ \n\nGain a Free Re-roll when hiding or sneaking in wild environments. Additionally, you ignore all drawbacks from Partial Cover when you’re in the wilds.",
+      "luck": false,
+      "page": 58
+    },
+    {
+      "name": "SPECIALIST",
+      "body": "_No worry: this is your specialty._ \n\nChoose one technical specialty (e.g.: demolition, radio, excavation, etc.). Gain a Free Re-roll for all rolls regarding your chosen specialty.",
+      "luck": false,
+      "page": 58
+    },
+    {
+      "name": "SUBTERFUGE",
+      "body": "_What the others don’t know can’t hurt them. And most importantly, it can't hurt you._ Gain a Free Re-roll when lying, deceiving, or cheating.",
+      "luck": false,
+      "page": 59
+    },
+    {
+      "name": "TEAMWORK",
+      "body": "_Someone distracts them, and you strike. That’s what I call teamwork!_ **[Full Turn]** After another Adventurer gave you an Assist this Turn, you can spend 1 Luck to gain an automatic success without rolling the dice.",
+      "luck": true,
+      "page": 59
+    },
+    {
+      "name": "THAT WAS CLOSE!",
+      "body": "_Thanks to your instincts or to a stroke of luck, you move away before it’s too late._ Repeat one Reaction Roll of any kind. Ignore all -1s from Conditions and circumstances. You must keep the new result.",
+      "luck": true,
+      "page": 59
+    },
+    {
+      "name": "THRILL SEEKER",
+      "body": "_When things get serious, just get out of the line of fire._ \n\nGain a Free Re-roll when dodging bullets, arrows, or triggered traps, and for all rolls to get out of the way and find cover.",
+      "luck": false,
+      "page": 59
+    },
+    {
+      "name": "TOO YOUNG TO DIE",
+      "body": "_You’re young and carefree. You feel like nothing can stop you._ When filling in the Bad Box, you suffer no Condition. \n\nYou can only gain this Feat when creating a Young Adventurer. You cannot choose this Feat while Advancing.",
+      "luck": false,
+      "page": 59
+    },
+    {
+      "name": "TRAILBLAZER",
+      "body": "_Where others see obstacles, you find a path._ \n\n**[Full Turn]** Create a safe path, an alternative route, some space, or an opening thanks to your technical or natural knowledge.",
+      "luck": true,
+      "page": 59
+    },
+    {
+      "name": "WATCH AND LEARN",
+      "body": "_If they can do it, so can you._ \n\nAfter another Adventurer succeeds in an Action Roll this Turn, you automatically succeed in the same action without rolling the dice.",
+      "luck": true,
+      "page": 59
+    }
+  ],
+  "gearFeats": {
+    "ACCURATE": "This weapon is especially precise. You can spend one Turn to take aim at a target. On your next Turn, you gain +1 to your roll to hit that target.",
+    "SINGLE SHOT": "The gun doesn’t use a Mag but single munitions. Ignore Mags and keep track of munitions in your equipment.",
+    "SILENT": "The weapon is very quiet. When shooting, you don’t alert the enemy and don’t reveal your position.",
+    "RAPID FIRE": "When laying down Covering Fire you also gain +1 to your next Reaction Roll.",
+    "SLOW RELOAD": "The weapon requires a longer time to be reloaded. You need a Full Action instead of a Quick Action in order to reload the gun.",
+    "UNCOMMON": "The weapon or gear is hard to come by. The Director is tasked with determining if and how you can find or craft the item you are looking for and what the price will be, based on the circumstances.",
+    "IMPACT": "The weapon grants Help to crash through doors and objects and to hurl Enemies away.",
+    "MELEE WEAPON": "If you are not trained with them, melee weapons grant you no special advantage, but they are essential if you have the Favored Weapon Feat.",
+    "BULKY": "The weapon or piece of gear is especially big or heavy, it poses a Hindrance when you need to move quickly, climb, or swim.",
+    "FIXED": "The weapon is fixed on the ground or on a ride, it cannot be moved or carried. Fixed weapons have no mags and can keep shooting until they are destroyed.",
+    "SHARP": "The weapon grants Help to cut ropes, carve wooden objects, and to cut through the vegetation.",
+    "BOOM!": "The weapon has powerful explosive blasts, it grants Help to crash through obstacles, gates, rides, or walls. \n\nEnemies who sustain a hit from a weapon with this Feat always lose 1 additional Grit, but Adventurers nearby will also run the risk of becoming Hurt."
+  },
+  "gear": {
+    "Elegant Clothes": {
+      "name": "Elegant Clothes",
+      "cost": "3",
+      "detail": "Grant Help for stylish occasions but are a Hindrance to movements.",
+      "traits": [],
+      "page": 132
+    },
+    "Lockpicking Set": {
+      "name": "Lockpicking Set",
+      "cost": "2",
+      "detail": "Grants Help to pick locks and disarm traps.",
+      "traits": [],
+      "page": 132
+    },
+    "Tool-bag": {
+      "name": "Tool-bag",
+      "cost": "1",
+      "detail": "Grants Help to repair objects or rides.",
+      "traits": [],
+      "page": 132
+    },
+    "Knife": {
+      "name": "Knife",
+      "cost": "1",
+      "detail": "",
+      "traits": [
+        "SHARP"
+      ],
+      "page": 132
+    },
+    "First-aid Kit": {
+      "name": "First-aid Kit",
+      "cost": "2",
+      "detail": "Grants Help to treat wounds.",
+      "traits": [],
+      "page": 132
+    },
+    "Grappling Hook": {
+      "name": "Grappling Hook",
+      "cost": "1",
+      "detail": "Grants Help to climb and swing.",
+      "traits": [],
+      "page": 132
+    },
+    "Rope": {
+      "name": "Rope",
+      "cost": "1",
+      "detail": "A long rope, very sturdy.",
+      "traits": [],
+      "page": 132
+    },
+    "Compass": {
+      "name": "Compass",
+      "cost": "1",
+      "detail": "Grants Help to find your bearings or magnetic North.",
+      "traits": [],
+      "page": 132
+    },
+    "Winter Clothes": {
+      "name": "Winter Clothes",
+      "cost": "1",
+      "detail": "Grant Help to withstand cold or bad weather.",
+      "traits": [],
+      "page": 132
+    },
+    "Lantern": {
+      "name": "Lantern",
+      "cost": "1",
+      "detail": "Grants Help to see in the dark but is a Hindrance when hiding.",
+      "traits": [],
+      "page": 132
+    },
+    "Climbing Gear": {
+      "name": "Climbing Gear",
+      "cost": "2",
+      "detail": "Grants Help when climbing walls made of rock or ice.",
+      "traits": [],
+      "page": 132
+    },
+    "Camping Cookware": {
+      "name": "Camping Cookware",
+      "cost": "1",
+      "detail": "Grants Help to cook in a Camp.",
+      "traits": [],
+      "page": 132
+    },
+    "Musical Instrument": {
+      "name": "Musical Instrument",
+      "cost": "2",
+      "detail": "Allows you to play and perform.",
+      "traits": [],
+      "page": 132
+    },
+    "Old Ride": {
+      "name": "Old Ride",
+      "cost": "3",
+      "detail": "An old plane, ship, or jeep.",
+      "traits": [],
+      "page": 132
+    },
+    "Lighter": {
+      "name": "Lighter",
+      "cost": "1",
+      "detail": "Grants Help to light a fire.",
+      "traits": [],
+      "page": 132
+    },
+    "Radio": {
+      "name": "Radio",
+      "cost": "3",
+      "detail": "Allows you to communicate at a distance.",
+      "traits": [
+        "BULKY"
+      ],
+      "page": 132
+    },
+    "Pistol/Revolver": {
+      "name": "Pistol/Revolver",
+      "cost": "1",
+      "detail": "Allows you to shoot.",
+      "traits": [],
+      "page": 133
+    },
+    "Old Rifle": {
+      "name": "Old Rifle",
+      "cost": "1",
+      "detail": "Allows you to shoot with +1.",
+      "traits": [
+        "SLOW RELOAD"
+      ],
+      "page": 133
+    },
+    "Hunting Rifle": {
+      "name": "Hunting Rifle",
+      "cost": "2",
+      "detail": "Allows you to shoot with +1.",
+      "traits": [
+        "ACCURATE",
+        "SLOW RELOAD"
+      ],
+      "page": 133
+    },
+    "Shotgun": {
+      "name": "Shotgun",
+      "cost": "2",
+      "detail": "Allows you to shoot with +1.",
+      "traits": [
+        "IMPACT",
+        "SLOW RELOAD"
+      ],
+      "page": 133
+    },
+    "Machine Gun": {
+      "name": "Machine Gun",
+      "cost": "3",
+      "detail": "Allows you to shoot with +1.",
+      "traits": [
+        "RAPID FIRE"
+      ],
+      "page": 133
+    },
+    "Gatling Gun": {
+      "name": "Gatling Gun",
+      "cost": "—",
+      "detail": "Allows you to shoot with +2.",
+      "traits": [
+        "FIXED",
+        "RAPID FIRE",
+        "UNCOMMON"
+      ],
+      "page": 133
+    },
+    "Bow": {
+      "name": "Bow",
+      "cost": "2",
+      "detail": "Allows you to shoot arrows.",
+      "traits": [
+        "SILENT",
+        "SINGLE SHOT"
+      ],
+      "page": 133
+    },
+    "Hunting Bow": {
+      "name": "Hunting Bow",
+      "cost": "3",
+      "detail": "Allows you to shoot arrows with +1.",
+      "traits": [
+        "ACCURATE",
+        "SILENT",
+        "SINGLE SHOT"
+      ],
+      "page": 133
+    },
+    "Dynamite": {
+      "name": "Dynamite",
+      "cost": "2",
+      "detail": "",
+      "traits": [
+        "BOOM!",
+        "SINGLE SHOT"
+      ],
+      "page": 133
+    },
+    "Machete/Axe": {
+      "name": "Machete/Axe",
+      "cost": "1",
+      "detail": "",
+      "traits": [
+        "MELEE WEAPON",
+        "SHARP"
+      ],
+      "page": 133
+    },
+    "Club/Hammer": {
+      "name": "Club/Hammer",
+      "cost": "1",
+      "detail": "",
+      "traits": [
+        "IMPACT",
+        "MELEE WEAPON"
+      ],
+      "page": 133
+    },
+    "Boomerang": {
+      "name": "Boomerang",
+      "cost": "2",
+      "detail": "Comes back when thrown.",
+      "traits": [],
+      "page": 133
+    },
+    "Whip": {
+      "name": "Whip",
+      "cost": "1",
+      "detail": "Can be used to grab distant items.",
+      "traits": [
+        "MELEE WEAPON"
+      ],
+      "page": 133
+    },
+    "Rocket Launcher": {
+      "name": "Rocket Launcher",
+      "cost": "—",
+      "detail": "Allows you to shoot with +1.",
+      "traits": [
+        "BOOM!",
+        "SINGLE SHOT",
+        "SLOW RELOAD",
+        "UNCOMMON"
+      ],
+      "page": 133
+    },
+    "Projectiles": {
+      "name": "Projectiles",
+      "cost": "—",
+      "detail": "10 arrows for a bow or 1 rocket for a rocket launcher.",
+      "traits": [
+        "UNCOMMON"
+      ],
+      "page": 133
+    },
+    "Mags (2)": {
+      "name": "Mags (2)",
+      "cost": "1",
+      "detail": "2 Mags for a type of weapon of your choice.",
+      "traits": [],
+      "page": 133
+    }
+  }
+}

@@ -1,0 +1,52 @@
+.reference-main { max-width: 1280px; margin: auto; padding: 24px; }
+.reference-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-bottom: 12px; font-size: 15px; }
+.reference-toolbar a { text-decoration: underline; text-underline-offset: 4px; }
+.reference-toolbar h1 { margin: 0; font-size: 18px; font-weight: bold; }
+.reference-actions:not([hidden]) { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-left: auto; }
+.reference-actions select, .reference-actions button { border: 1px solid #a8987e; padding: 8px 12px; background: #fbf8f0; cursor: pointer; }
+.reference-actions button { background: #634123; border-color: #634123; color: #fff9eb; }
+.reference-actions button:hover { background: #432b17; }
+.reference-hint { margin: 0 0 16px; font-size: 14px; color: #645848; }
+.reference-viewport { width: 100%; overflow: auto; padding-bottom: 12px; }
+.reference-stage { width: 297mm; height: 210mm; margin: 0 auto 24px; overflow: hidden; }
+.reference-stage:last-child { margin-bottom: 0; }
+.reference-sheet { box-sizing: border-box; width: 297mm; height: 210mm; padding: 7mm; display: flex; flex-direction: column; gap: 3mm; transform-origin: top left; background: #fcfaf4; color: #29281f; font: 10.5pt/1.22 'Source Sans 3', sans-serif; }
+.reference-page-header { display: flex; justify-content: space-between; align-items: baseline; flex: none; border-block: .3mm solid #634123; padding: 1mm 0; }
+.reference-page-header h2 { margin: 0; font: 700 11pt/1 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+.reference-page-header > span { font-size: 10pt; line-height: 1; }
+.reference-columns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5mm; flex: 1; min-height: 0; }
+.reference-column { display: flex; flex-direction: column; gap: 2mm; min-width: 0; }
+.reference-card { padding: 2mm; border: .2mm solid #78624b; break-inside: avoid; }
+.reference-card h3, .reference-attribute h3 { display: flex; align-items: baseline; justify-content: space-between; gap: 2mm; margin: 0 0 1.2mm; font: 700 11.5pt/1.1 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+.reference-cost, .reference-luck { font: 10pt 'Source Sans 3', sans-serif; white-space: nowrap; text-transform: none; color: #634123; }
+.reference-luck { border: .2mm solid #bd9b6f; padding: 0 1mm; background: #f1e5d0; font-size: 9pt; }
+.reference-card p, .reference-attribute p { margin: 0; }
+.reference-card p + p { margin-top: 1.1mm; }
+.reference-card em { color: #504739; }
+.reference-reminder { margin: 0; padding: 1.7mm 2.5mm; background: #f1e5d0; border: .2mm solid #bd9b6f; flex: none; }
+.reference-legend { margin: 0; flex: none; font-size: 9pt; color: #645848; }
+.reference-attribute-columns { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2.5mm; flex: 1; min-height: 0; }
+.reference-attribute { display: flex; flex-direction: column; padding: 2.5mm; border: .2mm solid #78624b; font-size: 11.2pt; line-height: 1.25; }
+.reference-attribute h3 { font-size: 12pt; margin-bottom: 2mm; }
+.reference-meaning { min-height: 34mm; font-style: italic; }
+.reference-skill { flex: 1; border-top: .2mm solid #b8a78e; padding-top: 2.3mm; margin-top: 2.3mm; }
+.reference-skill h4 { font-size: 11.2pt; font-weight: bold; line-height: 1.2; margin: 0 0 1mm; }
+.reference-trait { margin-top: 1.7mm; padding-top: 1.3mm; border-top: .2mm solid #d8c9ae; }
+.reference-trait h4 { margin: 0 0 .5mm; font: 700 10.5pt/1 'Barlow Condensed', sans-serif; text-transform: uppercase; color: #634123; }
+.reference-equipment { font-size: 10.3pt; line-height: 1.2; }
+.reference-equipment .reference-reminder { font-size: 10pt; }
+.reference-gear-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(0, 1fr)) auto; gap: 2.5mm; flex: 1; min-height: 0; }
+@media (max-width: 640px) { .reference-main { padding: 20px 12px; } .reference-actions:not([hidden]) { margin-left: 0; } }
+
+@page { size: A4 landscape; margin: 0; }
+@media print {
+  html, body { width: 297mm; height: auto; margin: 0 !important; padding: 0 !important; overflow: visible !important; background: white !important; }
+  body > :not(main), .reference-toolbar, .reference-hint, .reference-main noscript { display: none !important; }
+  .reference-main { width: 297mm; max-width: none; margin: 0; padding: 0; }
+  .reference-viewport { width: 297mm; padding: 0; overflow: visible; }
+  /* Normal flow avoids Safari's reported fixed-position offset. Each page
+     retains the character sheet's 1px bottom allowance for print rounding. */
+  .reference-stage { width: 297mm !important; height: calc(210mm - 1px) !important; margin: 0; overflow: hidden; break-after: page; }
+  .reference-stage:last-child { break-after: auto; }
+  .reference-sheet { transform: none !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
