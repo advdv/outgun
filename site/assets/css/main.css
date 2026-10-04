@@ -66,10 +66,58 @@
   .prose-landing .book-art-hero { @apply mt-0; }
   .prose-landing .book-art-hero img { aspect-ratio: 2.1; object-fit: cover; object-position: center 35%; border-bottom: 4px solid #985d14; }
   .prose-landing .book-art-chest img { mix-blend-mode: multiply; mask-image: radial-gradient(ellipse, black 57%, transparent 73%); }
+  .prose-landing > ol { display: flow-root; }
+  .prose-landing > blockquote { clear: both; }
   @media (min-width: 640px) {
     .prose-landing .book-art-explorer { float: right; width: 46%; margin: 0 0 1.5rem 2rem; }
     .prose-landing .book-art-chest { float: left; width: 42%; margin: 0 2rem 1.5rem 0; }
   }
+
+/* A paper conference ticket, kept as live text within the historical timeline. */
+.prose-landing li:has(.conference-ticket) { margin-block: 2rem; }
+.prose-landing li:has(.conference-ticket)::before { width: 0.8rem; height: 0.8rem; left: -1.95rem; top: 1.3rem; box-shadow: 0 0 0 3px var(--color-paper); }
+.conference-ticket {
+  --ticket-gold: #d8b678;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 145px;
+  color: #f8efda;
+  background: #4b2e19 url('../images/paper.svg');
+  border: 1px solid #9d713b;
+  box-shadow: 0 6px 12px #41271626;
+  font-family: Georgia, 'Times New Roman', serif;
+  line-height: 1.5;
+  text-align: center;
+}
+.conference-ticket-body { position: relative; isolation: isolate; overflow: hidden; padding: 1.8rem 1.4rem; outline: 1px solid #d8b67880; outline-offset: -8px; }
+.conference-ticket-body > :not(svg) { position: relative; }
+.conference-globe { position: absolute; width: 210px; height: 252px; left: -105px; top: 50%; transform: translateY(-50%); color: var(--ticket-gold); opacity: 0.28; z-index: -1; }
+.conference-ticket .conference-kicker { margin: 0 0 1rem; font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ticket-gold); }
+.conference-ticket h3 { margin: 0; color: inherit; font-family: inherit; font-size: clamp(1.2rem, 2.2vw, 1.5rem); font-weight: normal; line-height: 1.35; text-transform: none; text-wrap: balance; }
+.conference-divider { display: flex; align-items: center; gap: 0.6rem; width: 60%; margin: 1rem auto; color: var(--ticket-gold); font-size: 0.6rem; }
+.conference-divider::before, .conference-divider::after { content: ''; flex: 1; height: 1px; background: currentColor; opacity: 0.6; }
+.conference-ticket .conference-welcome { margin: 0 0 0.5rem; font-size: 1.25rem; font-style: italic; text-wrap: balance; }
+.conference-ticket .conference-description { max-width: 31ch; margin: 0 auto; font-size: 0.95rem; }
+.conference-ticket .conference-opening { display: flex; align-items: center; justify-content: center; gap: 0.65rem; margin: 1.2rem 0 0; color: var(--ticket-gold); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; }
+.conference-opening span { font-size: 1.5rem; }
+.conference-opening span:last-child { transform: scaleX(-1); }
+.conference-ticket-stub { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1.5rem 0.75rem; border-left: 2px dashed #9d713b; background: #eddfbf url('../images/paper.svg'); color: #704323; outline: 1px solid #9d713b; outline-offset: -8px; }
+.conference-ticket-stub::before, .conference-ticket-stub::after { content: ''; position: absolute; left: -10px; width: 18px; height: 9px; background: var(--color-paper); border: 1px solid #9d713b; }
+.conference-ticket-stub::before { top: -1px; border-top: 0; border-radius: 0 0 10px 10px; }
+.conference-ticket-stub::after { bottom: -1px; border-bottom: 0; border-radius: 10px 10px 0 0; }
+.conference-city { font-family: var(--font-display); font-size: 1.15rem; letter-spacing: 0.2em; text-transform: uppercase; }
+.conference-stub-rule { width: 2rem; height: 1px; margin: 1.2rem 0; background: #9d713b; }
+.conference-ticket time { display: flex; flex-direction: column; font-family: var(--font-display); font-size: 1.4rem; line-height: 1.1; text-transform: uppercase; }
+.conference-year { font-size: 3.6rem; }
+@media (max-width: 479px) {
+  .conference-ticket { grid-template-columns: minmax(0, 1fr); }
+  .conference-ticket-body { padding: 1.6rem 1.25rem; }
+  .conference-ticket-stub { flex-direction: row; gap: 1rem; padding: 1.1rem; border-left: 0; border-top: 2px dashed #9d713b; }
+  .conference-ticket-stub::before, .conference-ticket-stub::after { top: -10px; width: 9px; height: 18px; }
+  .conference-ticket-stub::before { left: -1px; border: 1px solid #9d713b; border-left: 0; border-radius: 0 10px 10px 0; }
+  .conference-ticket-stub::after { left: auto; right: -1px; bottom: auto; border: 1px solid #9d713b; border-right: 0; border-radius: 10px 0 0 10px; }
+  .conference-stub-rule { width: 1px; height: 2.5rem; margin: 0; }
+  .conference-year { font-size: 2.8rem; }
+}
 
 @layer components {
   .field-note { @apply my-7 border-l-4 border-rust bg-sand/50 p-6; }

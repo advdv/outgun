@@ -50,7 +50,17 @@ assert(specimen.includes('<details') && specimen.includes('<table'), 'Missing sp
 assert(!html.includes('Lorem ipsum') && !html.includes('<aside') && !html.includes('<details'), 'Homepage still contains specimen content');
 assert.equal((html.match(/<h1\b/g) || []).length, 1, 'Landing page must have one title');
 assert(html.includes('A New Adventure') && html.includes('Historical Timeline') && html.includes('Creating your Adventurer'), 'Missing landing content');
-assert.equal((html.match(/<h2\b/g) || []).length, 5, 'Missing landing sections');
+assert.equal((html.match(/<h2\b/g) || []).length, 4, 'Missing landing sections');
+assert(!html.includes('Before you create an Adventurer'), 'Removed preparation section still present');
+const timeline = html.match(/<ul>([\s\S]*?)<\/ul>/)?.[1];
+assert(timeline, 'Missing historical timeline');
+assert.equal((timeline.match(/<li\b/g) || []).length, 10, 'Preserve nine dates plus the conference invitation');
+assert(timeline.indexOf('1929:') < timeline.indexOf('conference-ticket') && timeline.indexOf('conference-ticket') < timeline.indexOf('1933:'), 'Invitation must be between 1929 and 1933');
+assert(/datetime=["']?1932-08/.test(timeline) && timeline.includes('London'), 'Missing conference date or location');
+assert(timeline.includes('International Union of Prehistoric and Protohistoric Sciences') && timeline.includes('You are invited') && timeline.includes('Campaign opening'), 'Missing conference invitation content');
+assert(html.indexOf('Creating your Adventurer') < html.indexOf('/images/adventure/expedition-chest.webp'), 'Chest must be in the creation section');
+const creationSteps = html.match(/<ol>([\s\S]*?)<\/ol>/)?.[1] || '';
+assert.equal((creationSteps.match(/<li\b/g) || []).length, 8, 'Preserve all eight creation steps');
 for (const image of ['dart-trap', 'explorer', 'expedition-chest']) {
   assert(attributes.some(value => value.endsWith(`/images/adventure/${image}.webp`)), `Missing landing illustration: ${image}`);
 }

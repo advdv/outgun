@@ -56,22 +56,15 @@ However, if you want a general idea of what was going on in the world in the 20s
 - **1922:** Howard Carter finds Tutankhamun’s tomb.
 - **1926:** This is the year when the movie “The Mummy” is set.
 - **1929:** Wall Street crashes, starting the Great Depression.
+- {{< conference-invitation >}}
 - **1933:** Hitler and the Nazi party rise to power in Germany.
 - **1936:** This is the year when the movie “Raiders of the Lost Ark” is set.
 - **1937:** Amelia Earhart tries her brave flight around the World.
 - **1939:** Beginning of World War II.
 
-## Before you create an Adventurer
+## Creating your Adventurer
 
 {{< book-art kind="chest" image="expedition-chest" width="720" height="542" alt="A leather hat, coiled whip, and compass rest on a wooden expedition chest." source="p. 10" >}}
-
-Before you start and create your Adventurer, it helps to understand at a high level how your decisions influence how you play.
-
-The most important parts to decide on are a **Role**, **Trope** and initial **Gear**.
-
-They determine which and how many **Attribute** and **Skill** points you get.
-
-## Creating your Adventurer
 
 Use the handy [online character sheet creator]({{< relref "/character-builder" >}}) to create your character sheet. It will guide you step-by-step through the process of setting your character:
 
