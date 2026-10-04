@@ -38,6 +38,17 @@ const chooser = name => {
   click(`.sheet-choice[aria-label^=${JSON.stringify(name)}]`);
   wait("!!document.querySelector('#choice-picker') && !document.querySelector('.guide-popover')");
   check("[...document.querySelectorAll('.picker-page')].every(e => e.querySelector('.info-icon[aria-hidden=true]') && /p{1,2}[.] [0-9]/.test(e.textContent))", 'Every page reference needs an info icon and page number');
+  if (name === 'Role:' || name === 'Trope:') {
+    assert.equal(evaluate("document.querySelectorAll('.picker-description').length"), name === 'Role:' ? 10 : 15);
+    check(`(() => {
+      const options = [...document.querySelectorAll('.picker-option')];
+      return options.every(option => {
+        const input = option.querySelector('input'), description = option.querySelector('.picker-description');
+        return input.value ? description?.textContent.length > 0 && description.htmlFor === input.id
+          && input.getAttribute('aria-describedby')?.split(' ').includes(description.id) : !description;
+      });
+    })()`, 'Every role/trope description labels its own radio; the empty choice has none');
+  }
 };
 const reference = (name, pages) => {
   click(`.picker-page[aria-label^=${JSON.stringify(name + ':')}]`);
@@ -109,7 +120,8 @@ try {
   chooser('Role:');
   assert.equal(evaluate("document.querySelectorAll('.picker-page').length"), 10);
   reference('The Daredevil', [22, 23]);
-  choose('The Daredevil');
+  click('.picker-option:has(input[value="The Daredevil"]) .picker-description');
+  check("JSON.parse(localStorage.getItem('outgun.character.v1')).identity.role === 'The Daredevil' && document.querySelector('.picker-option input[value=\"The Daredevil\"]').checked", 'Clicking a role description saves only its name');
   capture('guide-info-panel');
   closePicker();
   heading('Pick a role');
@@ -119,8 +131,10 @@ try {
   heading('Pick a trope');
   chooser('Trope:');
   reference('Action Archeologist', [45]);
-  choose('Action Archeologist');
+  click('.picker-option:has(input[value="Action Archeologist"]) .picker-description');
+  check("JSON.parse(localStorage.getItem('outgun.character.v1')).identity.trope === 'Action Archeologist' && document.querySelector('.picker-option input[value=\"Action Archeologist\"]').checked", 'Clicking a trope description saves only its name');
   check("document.querySelector('.picker-attribute select').value === 'FOCUS' && document.querySelector('.picker-attribute select').disabled");
+  capture('guide-trope-descriptions');
   closePicker();
   click('.guide-next');
   heading('Add character flavor');
@@ -254,6 +268,20 @@ try {
     wait(`document.querySelector('.guide-progress')?.textContent.startsWith('${index + 1} of 8')`);
     wait("(() => { const p = document.querySelector('.guide-popover').getBoundingClientRect(); return p.left >= 0 && p.right <= innerWidth + 1 && p.top >= 0 && p.bottom <= innerHeight + 1; })()");
     check(`(() => { const p = document.querySelector('.guide-popover').getBoundingClientRect(), t = document.querySelector('#guide-target-${index}').getBoundingClientRect(); return p.right <= t.left || p.left >= t.right || p.bottom <= t.top || p.top >= t.bottom; })()`, `Narrow step ${index + 1} must not cover its target`);
+    if (index === 2 || index === 3) {
+      const field = index === 2 ? 'Role' : 'Trope';
+      chooser(`${field}:`);
+      browser('scrollintoview', `.picker-option:has(input[value="${index === 2 ? 'The Heart' : 'Cowardly Lion'}"])`);
+      check(`(() => {
+        const list = document.querySelector('.picker-list');
+        return list.scrollWidth === list.clientWidth && [...list.querySelectorAll('.picker-description')].every(e =>
+          e.scrollWidth === e.clientWidth && e.scrollHeight === e.clientHeight && getComputedStyle(e).overflow === 'visible');
+      })()`, 'Role/trope descriptions wrap fully without clipping or horizontal overflow');
+      capture(`guide-narrow-${field.toLowerCase()}`);
+      browser('scrollintoview', '.picker-option:last-child');
+      check("(() => { const last = document.querySelector('.picker-option:last-child').getBoundingClientRect(), list = document.querySelector('.picker-list').getBoundingClientRect(); return last.bottom <= list.bottom + 1 && last.top >= list.top; })()", 'The final role/trope remains fully reachable by scrolling');
+      closePicker();
+    }
     if (index === 4 || index === 5) capture(`guide-narrow-step-${index + 1}`);
     if (index === 6) {
       chooser('Feat 1:');
@@ -311,6 +339,11 @@ try {
   chooser('Feat 1:');
   await printPdf('character-picker-open');
   closePicker();
+  for (const field of ['Role', 'Trope']) {
+    chooser(`${field}:`);
+    await printPdf(`character-${field.toLowerCase()}-picker-open`);
+    closePicker();
+  }
   click('.guide-toggle');
   browser('scroll', 'down', '550');
   await printPdf('character-guide-off');
@@ -322,7 +355,7 @@ try {
 import pathlib, sys, pymupdf
 folder = pathlib.Path(sys.argv[1])
 pixels = []
-for name in ['character-guide-on', 'character-picker-open', 'character-guide-off', 'character-narrow']:
+for name in ['character-guide-on', 'character-picker-open', 'character-role-picker-open', 'character-trope-picker-open', 'character-guide-off', 'character-narrow']:
     doc = pymupdf.open(folder / (name + '.pdf'))
     assert len(doc) == 1, (name, len(doc))
     page = doc[0]
@@ -330,13 +363,13 @@ for name in ['character-guide-on', 'character-picker-open', 'character-guide-off
     text = page.get_text()
     for expected in ['Mara Voss', 'The Daredevil', 'Action Archeologist', 'Explorer', 'Adult', 'afraid of spiders', 'had worse!', 'Fighter', 'Gunslinger', 'Archeology', 'Know the currents.', 'Lantern', 'Spare socks', 'Train ticket']:
         assert expected in text, (name, expected)
-    for excluded in ['Pick gear', 'extra Skill points', 'For example', 'Your fists', 'whispers to you its price', 'CREATE YOUR ADVENTURER', 'Finish guide', 'Restart guide', 'Saved on this device']:
+    for excluded in ['Pick gear', 'extra Skill points', 'For example', 'Your fists', 'whispers to you its price', 'An adventurer always ready', 'perfect blend of body and mind', 'CREATE YOUR ADVENTURER', 'Finish guide', 'Restart guide', 'Saved on this device']:
         assert excluded not in text, (name, excluded)
     pix = page.get_pixmap(matrix=pymupdf.Matrix(1.5, 1.5))
     pixels.append(pix.samples)
     if name == 'character-guide-on': pix.save(folder / 'character-print.png')
 assert all(p == pixels[0] for p in pixels), 'Guide/picker/viewport state changed printed pixels'
-print('PASS: four populated PDFs, one A4 landscape page each; expected bottom/multiline text; guide on/off, open feat picker and narrow scrolled output pixel-identical')
+print('PASS: six populated PDFs, one A4 landscape page each; expected bottom/multiline text; guide on/off, open feat/role/trope pickers and narrow scrolled output pixel-identical')
 `, artifacts], { stdio: 'inherit' });
   console.log('PASS: narrow-screen target visibility, autosave/import, populated portrait/trackers/multiline/bottom fields, and Print button');
 

@@ -99,6 +99,24 @@ test('pickers contain the ten standard roles and fifteen tropes, with correct bo
   assert(!IDENTITY_CHOICES.role.some(([name]) => name.includes('Fortune Seeker')));
 });
 
+test('every role has its complete italic introduction from its cited page', () => {
+  for (const [name, page, description] of IDENTITY_CHOICES.role) {
+    const introduction = pageSource(Number(page)).match(/^_([^_]+)_/m)?.[1];
+    assert(introduction, `Missing source introduction for ${name}`);
+    assert.equal(description, introduction, `${name}: use the complete role introduction`);
+  }
+});
+
+test('every trope has a verbatim excerpt from its own descriptive prose, not its catchphrase', () => {
+  for (const [name, page, description] of IDENTITY_CHOICES.trope) {
+    const entries = [...pageSource(Number(page)).matchAll(/# <mark>([^<]+)<\/mark>([\s\S]*?)(?=\n# <mark>|$)/g)];
+    const entry = entries.find(([, heading]) => heading.toLowerCase() === name.toLowerCase())?.[2];
+    assert(entry, `Missing source entry for ${name}`);
+    const paragraphs = entry.split(/\n\s*\n/).map(text => text.trim()).filter(text => /^[A-Z]/.test(text));
+    assert(description && paragraphs.some(text => text.includes(description)), `${name}: use an excerpt from this trope's prose`);
+  }
+});
+
 test('flavor suggestions are deduplicated and each citation contains its exact text', () => {
   for (const [field, count] of [['background', 28], ['age', 1], ['flaw', 34], ['catchphrase', 34]]) {
     const options = IDENTITY_CHOICES[field];

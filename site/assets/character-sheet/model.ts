@@ -17,20 +17,37 @@ export type IdentityKey = typeof IDENTITY[number];
 
 // Outgunned Adventure, printed pages (the extracted files are numbered two higher).
 // Standard roles: pp. 20–41. Tropes: pp. 44–49. Fortune Seeker is omitted as a role.
+// Descriptions are complete italic role introductions or verbatim trope prose excerpts.
 // Personal-data suggestions are pooled across roles, with duplicates listed once.
 export const IDENTITY_CHOICES = {
   role: [
-    ['The Daredevil', '22'], ['The Guardian', '24'], ['The Captain', '26'],
-    ['The Hunter', '28'], ['The Heart', '30'], ['The Star', '32'],
-    ['The Professor', '34'], ['The Technician', '36'], ['The Scoundrel', '38'],
-    ['The Smuggler', '40'],
+    ['The Daredevil', '22', 'An adventurer always ready for action, a deserter trying to turn their life around, or a treasure hunter looking for a thrill.'],
+    ['The Guardian', '24', 'A strapping adventurer who takes care of their companions, the sworn protector of a dangerous treasure, or a trusted bodyguard.'],
+    ['The Captain', '26', 'A veteran ready to dive back into the action, a skilled expedition leader, a fearless aviator, or a sailor with years of experience.'],
+    ['The Hunter', '28', 'An explorer of the wilderness, a slayer of dangerous beasts, an expert guide, or a bounty hunter.'],
+    ['The Heart', '30', 'A loyal friend who always knows just what to say, an artist with an endless stream of anecdotes, or a first-rate chef who can make you forget all your problems.'],
+    ['The Star', '32', 'A cabaret singer, a wealthy patron of the arts, a world-famous actor, or an upper-cruster in search of a thrill.'],
+    ['The Professor', '34', 'A disheveled researcher who dedicated their entire life to one discovery, a professor with elbow patches, or a young bookworm chasing their dreams.'],
+    ['The Technician', '36', 'A demolition expert, a radio technician, a mechanic with years of experience, or a sapper in the army.'],
+    ['The Scoundrel', '38', 'A lovable crook, an urchin who came up on the street, or a gentleman thief.'],
+    ['The Smuggler', '40', 'A courier trying to evade the law, an archeologist with a mountain of debts, or an adventurer who fell off the wagon.'],
   ],
   trope: [
-    ['Action Archeologist', '45'], ['Adventuring Author', '45'], ['Born Rebel', '45'],
-    ['Cold and Distant', '46'], ['Cowardly Lion', '46'], ['Detestable Bastard', '46'],
-    ['Dreamer', '47'], ['Flying Steamroller', '47'], ['Gentle Giant', '47'],
-    ['Indispensable Rogue', '48'], ['Parental Figure', '48'], ['Proper Gentleman/Lady', '48'],
-    ['Reluctant Hero', '49'], ['Salty Dog', '49'], ['Wild at Heart', '49'],
+    ['Action Archeologist', '45', 'You are the perfect blend of body and mind, theory and practice.'],
+    ['Adventuring Author', '45', 'You write thrilling adventure novels, or dangerous investigative reports for a growing number of readers.'],
+    ['Born Rebel', '45', 'For years, someone, perhaps everyone, has been telling you what to do, but now you’ve had enough.'],
+    ['Cold and Distant', '46', 'You have your reasons for going on this adventure, and making friends is not one of them.'],
+    ['Cowardly Lion', '46', 'However, despite your strenuous attachment to your life and your disproportionate caution, when the situation really calls for it, you will find a way to prove your courage.'],
+    ['Detestable Bastard', '46', 'When you see a chance to make a buck, you have to try, and when your life is at stake, you have no time to worry about others.'],
+    ['Dreamer', '47', 'Regardless of the subject, you dream big and are willing to fight for your dreams.'],
+    ['Flying Steamroller', '47', 'When you’re piloting your plane or airship, you feel completely free, and you just can’t wait to test its limits.'],
+    ['Gentle Giant', '47', 'Despite your remarkable size, you are a real softie.'],
+    ['Indispensable Rogue', '48', "You may not follow the highest ideals, and perhaps you've done a couple things you regret, but you’re just too useful to be left behind."],
+    ['Parental Figure', '48', 'At least one of your companions feels like you are the parent they never had.'],
+    ['Proper Gentleman/Lady', '48', 'A proper gentleman or lady can be recognized not by their bank account and elegant clothes, but by their impeccable manners.'],
+    ['Reluctant Hero', '49', 'When heroism knocks on your door, you’re pretty sure you shouldn’t open.'],
+    ['Salty Dog', '49', "You’ve spent your life at sea, only coming to land in a harbor here and there, and you've learned that nobody holds a candle against the forces of nature."],
+    ['Wild at Heart', '49', 'You grew up surrounded by nature, or chose to leave civilization behind.'],
   ],
   background: [
     ['Former Soldier', '22'], ['Explorer', '22'], ['Tomb Robber', '22'],
