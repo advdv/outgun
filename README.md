@@ -84,6 +84,30 @@ links for the builder and homepage. The builder sends `X-Amp-Review-Widget: off`
 to prevent the portal's feedback button from appearing in printed output.
 Portal reviews remain enabled on the homepage.
 
+### Printable player cheat sheet
+
+Open `/player-cheat-sheet/` from the homepage for the compact player rules.
+The copy lives in `site/content/player-cheat-sheet.md`; the visual difficulty
+table lives in `site/layouts/shortcodes/cheat-difficulty.html`. Its identical
+star dice have accessible matching-count labels, not numerical pips.
+
+The page uses static Hugo cards, with a small TypeScript bundle for Fit/100%
+zoom and printing. It remains readable and printable without JavaScript.
+Screen and print share the same A4 landscape layout, 7 mm safe margins, normal
+document flow, and the character sheet's 1px bottom rounding allowance. The
+preview disables the portal review widget on this page too.
+
+After `amp orb services ensure`, verify the running page with:
+
+```sh
+node scripts/player-cheat-sheet.e2e.mjs <cheat-sheet-url> [review-artifact-directory]
+```
+
+This uses `agent-browser` and `uv`/PyMuPDF to verify the landing link, accessible
+dice, card bounds, zoom, scrolling, and four actual single-page A4 PDFs. Desktop,
+narrow Fit, scrolled 100%, and JavaScript-disabled PDFs must be pixel-identical.
+Chromium verification does not establish native Safari compatibility.
+
 ### Rulebook page viewer
 
 Page references in the selection panels open a full-screen image viewer.

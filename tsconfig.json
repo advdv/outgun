@@ -9,5 +9,5 @@
     "noEmit": true,
     "skipLibCheck": true
   },
-  "include": ["site/assets/character-sheet/**/*.ts", "site/assets/character-sheet/**/*.tsx"]
+  "include": ["site/assets/**/*.ts", "site/assets/**/*.tsx"]
 }

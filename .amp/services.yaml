@@ -9,3 +9,5 @@ services:
     portals:
       - url: /
         title: Field Notes homepage
+      - url: /player-cheat-sheet/
+        title: Printable player cheat sheet

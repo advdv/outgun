@@ -1,0 +1,5 @@
+{{ $id := anchorize (.Get 0) }}
+<section class="cheat-card" id="{{ $id }}" aria-labelledby="{{ $id }}-title">
+  <h2 id="{{ $id }}-title">{{ .Get 0 }}</h2>
+  {{ .Page.RenderString (dict "display" "block") .Inner }}
+</section>

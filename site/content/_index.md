@@ -70,4 +70,6 @@ Open the [character sheet]({{< relref "/character-builder" >}}) and follow the o
 
 Your progress saves in this browser. Use **Export backup** to keep a copy, or **Print / save PDF** when you’re ready to play.
 
+Keep the [player cheat sheet]({{< relref "/player-cheat-sheet" >}}) beside you for dice rolls, re-rolls, and combat. Read it online or print it on one A4 landscape page.
+
 Illustrations by Daniela Giubellini, from *Outgunned: Adventure*. © 2024 Two Little Mice. An unofficial fan project; not affiliated with or endorsed by Two Little Mice.

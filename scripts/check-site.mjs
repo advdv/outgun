@@ -10,7 +10,7 @@ const pageAttributes = source => [...source.matchAll(/(?:href|src|data-artwork)=
 const attributes = pageAttributes(html);
 let checked = 0;
 const stylesheets = new Set();
-for (const page of ['index.html', 'kitchen-sink/index.html', 'character-builder/index.html']) {
+for (const page of ['index.html', 'kitchen-sink/index.html', 'character-builder/index.html', 'player-cheat-sheet/index.html']) {
   const source = readFileSync(join('public', page), 'utf8');
   const pageUrl = new URL(page, base);
   for (const value of pageAttributes(source)) {
@@ -68,6 +68,18 @@ for (const image of ['dart-trap', 'explorer', 'expedition-chest']) {
 }
 assert(html.includes('Daniela Giubellini'), 'Missing illustration credit');
 assert(attributes.some(value => value.endsWith('/character-builder/')), 'Missing homepage builder link');
+assert(attributes.some(value => value.endsWith('/player-cheat-sheet/')), 'Missing homepage cheat-sheet link');
+const cheatSheet = readFileSync('public/player-cheat-sheet/index.html', 'utf8');
+assert.equal((cheatSheet.match(/class=.?cheat-card\b/g) || []).length, 7, 'Keep all seven rule cards');
+assert(!cheatSheet.includes('raw HTML omitted'), 'Markdown rendering must not strip the rule cards or dice');
+const diceGroups = [...cheatSheet.matchAll(/<span\b[^>]*class=.?matching-dice\b[^>]*>[\s\S]*?<\/span>/g)].map(match => match[0]);
+assert.deepEqual(diceGroups.map(group => (group.match(/<svg\b/g) || []).length), [2, 3, 4, 5], 'Difficulty needs 2/3/4/5 matching dice');
+for (const [index, group] of diceGroups.entries()) {
+  assert(group.includes(`aria-label="${index + 2} matching dice"`), 'Dice groups need readable accessible labels');
+  assert(!group.includes('<circle'), 'Symbol dice must not have numeric pips');
+}
+assert.equal(new Set([...cheatSheet.matchAll(/<path d="([^"]+)"/g)].map(match => match[1])).size, 1, 'All dice must use the same star');
+assert(!/\bpp?\.\s*\d/.test(cheatSheet), 'Do not restore removed page references');
 const builder = readFileSync('public/character-builder/index.html', 'utf8');
 assert(builder.includes('data-artwork=') && /<script[^>]+type=.?module/.test(builder), 'Builder app not mounted');
 assert(!html.includes('<script'), 'React should only load on the builder page');
@@ -106,4 +118,4 @@ for (const [name, page] of IDENTITY_CHOICES.role) {
 }
 const files = readdirSync('public', { recursive: true });
 assert(!files.some(file => /\.pdf$|page-\d+\.md$|(^|\/)html\//.test(file)), 'Source books leaked into output');
-console.log(`PASS: ${checked} local links/assets, ${manifest.pageCount} rulebook WebPs, 10 role crops, all panel citations, Pages base path, and source PDF/text exclusion`);
+console.log(`PASS: ${checked} local links/assets, seven cheat-sheet cards with accessible symbol dice, ${manifest.pageCount} rulebook WebPs, 10 role crops, all panel citations, Pages base path, and source PDF/text exclusion`);

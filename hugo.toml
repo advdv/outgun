@@ -36,3 +36,8 @@ endLevel = 2
 for = '/character-builder/**'
 [server.headers.values]
 X-Amp-Review-Widget = 'off'
+
+[[server.headers]]
+for = '/player-cheat-sheet/**'
+[server.headers.values]
+X-Amp-Review-Widget = 'off'

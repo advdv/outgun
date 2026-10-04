@@ -1,0 +1,46 @@
+.cheat-main { max-width: 1280px; margin: auto; padding: 24px; }
+.cheat-toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; font-size: 15px; }
+.cheat-toolbar a { text-decoration: underline; text-underline-offset: 4px; }
+.cheat-actions:not([hidden]) { display: flex; align-items: center; gap: 10px; }
+.cheat-actions select, .cheat-actions button { border: 1px solid #a8987e; padding: 8px 12px; background: #fbf8f0; cursor: pointer; }
+.cheat-actions button { background: #634123; border-color: #634123; color: #fff9eb; }
+.cheat-actions button:hover { background: #432b17; }
+.cheat-viewport { width: 100%; overflow: auto; padding-bottom: 12px; }
+.cheat-stage { width: 297mm; height: 210mm; margin: auto; overflow: hidden; }
+.cheat-sheet { display: flex; flex-direction: column; gap: 2.5mm; width: 297mm; height: 210mm; padding: 7mm; box-sizing: border-box; transform-origin: top left; background: #fcfaf4; color: #29281f; font: 10.5pt/1.22 'Source Sans 3', sans-serif; }
+.cheat-sheet h1 { flex: none; margin: 0; border-block: .3mm solid #634123; padding: 1mm 0; font: 700 11pt/1 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+.cheat-columns { flex: 1; min-height: 0; display: grid; grid-template-columns: 1.04fr 1.17fr .91fr; gap: 3mm; }
+.cheat-column { display: flex; flex-direction: column; gap: 3mm; min-width: 0; }
+.cheat-card { flex: 1 1 auto; border: .25mm solid #78624b; padding: 2.5mm; }
+.cheat-card h2 { margin: 0 0 2mm; font: 700 12pt/1.05 'Barlow Condensed', sans-serif; text-transform: uppercase; }
+.cheat-card h3 { margin: 2.5mm 0 .8mm; font-size: 10.5pt; font-weight: bold; line-height: 1.1; }
+.cheat-card p { margin: 0; }
+.cheat-card p + p, .cheat-card ul + p { margin-top: 2mm; }
+.cheat-card ul { margin: .5mm 0 0; padding-left: 3.8mm; list-style: disc; }
+.cheat-card li + li { margin-top: .5mm; }
+.cheat-card blockquote { margin: 2mm 0 0; border: .25mm solid #bd9b6f; padding: 1.5mm 2mm; background: #f1e5d0; border-radius: .5mm; }
+#re-rolls blockquote:last-child, #damage-control blockquote { border-color: #a23720; color: #8c2517; background: #fff9f0; }
+.cheat-card table { width: 100%; margin: 2mm 0; border-collapse: collapse; }
+.cheat-card th, .cheat-card td { border: .25mm solid #78624b; padding: 1mm 1.8mm; }
+.cheat-card th { background: #eee1c9; font-weight: bold; }
+.cheat-card td:first-child { font-weight: bold; }
+#difficulty thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+#difficulty tbody th { text-align: left; background: transparent; }
+#difficulty tbody tr:nth-child(2) { background: #f1e5d0; }
+.matching-dice { display: flex; align-items: center; gap: 1mm; width: max-content; }
+.symbol-die { display: block; width: 5mm; height: 5mm; flex: none; }
+.cheat-print-hint { margin-top: 8px; font-size: 14px; color: #645848; }
+@media (max-width: 640px) { .cheat-main { padding: 20px 12px; } }
+
+/* Keep the same composition at every screen width and in print. */
+@page { size: A4 landscape; margin: 0; }
+@media print {
+  html, body { width: 297mm; height: auto; margin: 0 !important; padding: 0 !important; overflow: visible !important; background: white !important; }
+  body > :not(main), .cheat-toolbar, .cheat-print-hint, .cheat-main noscript { display: none !important; }
+  .cheat-main { width: 297mm; max-width: none; margin: 0; padding: 0; }
+  .cheat-viewport { width: 297mm; padding: 0; overflow: visible; }
+  /* Normal flow avoids the character sheet's reported Safari offset with fixed
+     positioning. Trim only the bottom paper margin to prevent a rounding page. */
+  .cheat-stage { width: 297mm !important; height: calc(210mm - 1px) !important; margin: 0; overflow: hidden; }
+  .cheat-sheet { transform: none !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}

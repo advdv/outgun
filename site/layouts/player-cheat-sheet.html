@@ -1,0 +1,31 @@
+{{ define "head" }}
+{{ with resources.Get "css/player-cheat-sheet.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+{{ end }}
+{{ end }}
+
+{{ define "main" }}
+<main id="main" class="cheat-main">
+  <div class="cheat-toolbar">
+    <a href="{{ site.Home.RelPermalink }}">← Back to Field Notes</a>
+    <div class="cheat-actions" hidden>
+      <label for="cheat-zoom">View</label>
+      <select id="cheat-zoom"><option value="fit">Fit page</option><option value="actual">100%</option></select>
+      <button type="button" id="cheat-print">Print / save PDF</button>
+    </div>
+  </div>
+  <div class="cheat-viewport" role="region" aria-label="Player cheat sheet preview" tabindex="0">
+    <div class="cheat-stage">
+      <article class="cheat-sheet" aria-labelledby="cheat-title">
+        <h1 id="cheat-title">{{ .Title }}</h1>
+        <div class="cheat-columns">{{ .Content }}</div>
+      </article>
+    </div>
+  </div>
+  <p class="cheat-print-hint">Print at A4 landscape, 100% scale, with no margins or browser headers and footers.</p>
+  <noscript><p class="cheat-print-hint">Use your browser’s Print command to print the sheet. Scroll sideways to read it on a narrow screen.</p></noscript>
+  {{ with resources.Get "player-cheat-sheet.ts" | js.Build (dict "target" "es2022" "minify" (not hugo.IsDevelopment)) | fingerprint }}
+  <script type="module" src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"></script>
+  {{ end }}
+</main>
+{{ end }}
