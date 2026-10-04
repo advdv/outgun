@@ -230,6 +230,15 @@ test('feat and gear catalogs cite their descriptions, with distinct source-backe
   assert.equal(adventurePageUrl('133', '/books/adventure/'), '/books/adventure/page-0135.webp');
 });
 
+test('every feat has its own complete italic introduction from its cited page', () => {
+  for (const [name, page, description] of ITEM_CHOICES.feats) {
+    const entries = [...pageSource(Number(page)).matchAll(/^#+ \*\*(.+)\*\*\s*\n+_([^_]+)_/gm)];
+    const introduction = entries.find(([, heading]) => heading === name.toUpperCase())?.[2];
+    assert(introduction, `Missing source introduction for ${name}`);
+    assert.equal(description, introduction, `${name}: use the full introduction, not mechanics or another feat's text`);
+  }
+});
+
 test('weapon grouping includes knives and uncommon weapons but excludes ammunition and tools', () => {
   const weapons = ITEM_CHOICES.gear.filter(([name]) => WEAPONS.includes(name)).map(([name]) => name);
   assert.equal(weapons.length, 15);

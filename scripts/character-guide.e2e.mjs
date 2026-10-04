@@ -52,7 +52,8 @@ const choose = value => click(`.picker-option input[value=${JSON.stringify(value
 const closePicker = () => { browser('press', 'Escape'); wait("!document.querySelector('#choice-picker') && !!document.querySelector('.guide-popover')"); };
 const featOrigin = name => evaluate(`(() => {
   const input = [...document.querySelectorAll('.picker-option input')].find(e => e.value === ${JSON.stringify(name)});
-  return document.getElementById(input.getAttribute('aria-describedby'))?.textContent ?? '';
+  return input.getAttribute('aria-describedby')?.split(' ').map(id => document.getElementById(id))
+    .find(e => e?.classList.contains('picker-origin'))?.textContent ?? '';
 })()`);
 
 // agent-browser's PDF shortcut defaults to Letter. Use the same browser's CDP
@@ -163,6 +164,17 @@ try {
       assert.equal(featOrigin('Artist'), 'Outside role & trope');
       assert.equal(featOrigin('Thrill Seeker'), 'Role · Trope');
       capture('guide-feats-unfiltered');
+      check("document.querySelectorAll('.picker-description').length === 37 && !document.querySelector('.picker-option input[value=\"\"]').closest('.picker-option').querySelector('.picker-description')");
+      check(`(() => {
+        const input = document.querySelector('.picker-option input[value="Estimate"]');
+        const description = input.closest('.picker-option').querySelector('.picker-description');
+        return description.textContent === 'Every object you see and handle tells you a story, and whispers to you its price.'
+          && input.getAttribute('aria-describedby').split(' ').includes(description.id);
+      })()`, 'Estimate has the exact book introduction as its accessible description');
+      click('.picker-option:has(input[value="Estimate"]) .picker-description');
+      check("JSON.parse(localStorage.getItem('outgun.character.v1')).feats[0] === 'Estimate' && document.querySelector('.picker-option input[value=Estimate]').checked", 'Clicking the description selects only the feat name');
+      reference('Estimate', [54]);
+      capture('guide-feat-descriptions');
       click('.picker-filter input');
     }
     reference(feat, [page]);
@@ -254,6 +266,15 @@ try {
       assert.equal(featOrigin('Artist'), 'Outside role & trope');
       check("document.querySelector('.picker-list').scrollWidth === document.querySelector('.picker-list').clientWidth", 'Outside-source labels also fit the narrow panel');
       capture('guide-narrow-feats-unfiltered');
+      browser('scrollintoview', '.picker-option:has(input[value="Linguist"])');
+      check(`(() => {
+        const input = document.querySelector('.picker-option input[value="Linguist"]');
+        const description = input.closest('.picker-option').querySelector('.picker-description');
+        return description.textContent === 'When you need it, you remember that you studied that language in college, or that you can understand the basics of an unknown dialect.'
+          && description.scrollWidth === description.clientWidth && description.scrollHeight === description.clientHeight
+          && getComputedStyle(description).overflow === 'visible';
+      })()`, 'Long descriptions wrap fully without clipping or truncation');
+      capture('guide-narrow-long-description');
       click('.picker-filter input');
       closePicker();
     }
@@ -286,6 +307,10 @@ try {
   click('.builder-primary');
   wait('window.__printCalled');
   await printPdf('character-guide-on');
+  showGuide(6);
+  chooser('Feat 1:');
+  await printPdf('character-picker-open');
+  closePicker();
   click('.guide-toggle');
   browser('scroll', 'down', '550');
   await printPdf('character-guide-off');
@@ -297,7 +322,7 @@ try {
 import pathlib, sys, pymupdf
 folder = pathlib.Path(sys.argv[1])
 pixels = []
-for name in ['character-guide-on', 'character-guide-off', 'character-narrow']:
+for name in ['character-guide-on', 'character-picker-open', 'character-guide-off', 'character-narrow']:
     doc = pymupdf.open(folder / (name + '.pdf'))
     assert len(doc) == 1, (name, len(doc))
     page = doc[0]
@@ -305,13 +330,13 @@ for name in ['character-guide-on', 'character-guide-off', 'character-narrow']:
     text = page.get_text()
     for expected in ['Mara Voss', 'The Daredevil', 'Action Archeologist', 'Explorer', 'Adult', 'afraid of spiders', 'had worse!', 'Fighter', 'Gunslinger', 'Archeology', 'Know the currents.', 'Lantern', 'Spare socks', 'Train ticket']:
         assert expected in text, (name, expected)
-    for excluded in ['Pick gear', 'extra Skill points', 'For example', 'CREATE YOUR ADVENTURER', 'Finish guide', 'Restart guide', 'Saved on this device']:
+    for excluded in ['Pick gear', 'extra Skill points', 'For example', 'Your fists', 'whispers to you its price', 'CREATE YOUR ADVENTURER', 'Finish guide', 'Restart guide', 'Saved on this device']:
         assert excluded not in text, (name, excluded)
     pix = page.get_pixmap(matrix=pymupdf.Matrix(1.5, 1.5))
     pixels.append(pix.samples)
     if name == 'character-guide-on': pix.save(folder / 'character-print.png')
-assert pixels[0] == pixels[1] == pixels[2], 'Guide/viewport state changed printed pixels'
-print('PASS: three populated PDFs, one A4 landscape page each; expected bottom/multiline text; guide on/off and narrow scrolled output pixel-identical')
+assert all(p == pixels[0] for p in pixels), 'Guide/picker/viewport state changed printed pixels'
+print('PASS: four populated PDFs, one A4 landscape page each; expected bottom/multiline text; guide on/off, open feat picker and narrow scrolled output pixel-identical')
 `, artifacts], { stdio: 'inherit' });
   console.log('PASS: narrow-screen target visibility, autosave/import, populated portrait/trackers/multiline/bottom fields, and Print button');
 

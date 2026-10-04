@@ -80,7 +80,7 @@ function Field({ label, value, x, y, w, h, line = 14, multiline = false, max = 3
 
 function ChoicePicker({ field, heading, choices, value, identity, canClear = false, filter, attributeChoice, select, readPage, close }: {
   field: ChoiceField | ItemField;
-  heading: string; choices: readonly (readonly [string, string])[]; value: string; canClear?: boolean;
+  heading: string; choices: readonly (readonly [string, string, string?])[]; value: string; canClear?: boolean;
   identity: Character['identity'];
   filter?: { enabled: boolean; label: string; change: (enabled: boolean) => void };
   attributeChoice?: { value: Attribute; options: Attribute[]; change: (value: Attribute) => void };
@@ -132,13 +132,14 @@ function ChoicePicker({ field, heading, choices, value, identity, canClear = fal
       <fieldset aria-labelledby="picker-heading">
         {groups.filter(group => group.options.length).map(({ label, options }) => <div className="picker-group" key={label}>
           {label && <h3 className="picker-group-heading">{label}</h3>}
-          {options.map(([name, page], index) => {
+          {options.map(([name, page, description], index) => {
             const origin = field === 'feats' && name ? [roleFeats.includes(name) && 'Role', tropeFeats.includes(name) && 'Trope']
               .filter(Boolean).join(' · ') || 'Outside role & trope' : '';
             return <div className="picker-option" key={name}>
               <label className="picker-select">
                 <input type="radio" name="sheet-choice" value={name} aria-label={name || emptyLabel}
-                  aria-describedby={origin ? `picker-origin-${index}` : undefined}
+                  id={description ? `picker-choice-${index}` : undefined}
+                  aria-describedby={[origin && `picker-origin-${index}`, description && `picker-description-${index}`].filter(Boolean).join(' ') || undefined}
                   checked={value === name} onChange={() => select(name)} />
                 <span className="picker-name">{name || emptyLabel}
                   {origin && <span className="picker-origin" id={`picker-origin-${index}`}>{origin}</span>}
@@ -151,6 +152,8 @@ function ChoicePicker({ field, heading, choices, value, identity, canClear = fal
                 <svg className="info-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" /><path d="M10 9v5" /><circle className="info-dot" cx="10" cy="6" r=".8" /></svg>
                 {field === 'role' ? 'pp.' : 'p.'} {referencePages(field, page).join('–')}
               </button>}
+              {description && <label className="picker-description" id={`picker-description-${index}`}
+                htmlFor={`picker-choice-${index}`}>{description}</label>}
             </div>;
           })}
         </div>)}
