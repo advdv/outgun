@@ -1,93 +1,81 @@
 ---
-title: Into the unknown
+title: A New Adventure
 ---
 
-## The premise
+# A New Adventure
 
-Lorem ipsum dolor sit amet, **consectetur adipiscing elit**. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. This is a place for bold ideas and dog-eared notes; the real homebrew will follow.
+It’s been a while.
 
-Sed posuere consectetur est at lobortis. *A little improvisation goes a long way.* Donec ullamcorper nulla non metus auctor fringilla. Explore [the reference table](#at-a-glance), or keep reading for the full specimen.
+The world out there is full of unexplored jungles, lost pyramids, and cursed temples that are just waiting for an unprepared explorer to slip up. Collapsing floors, creaky bridges, poisoned darts, fire jets, and rolling boulders… You can expect all that, and even more.
 
-### Every good adventure starts somewhere
+But if I know you, and I’ve seen my fair share of people like you, a few obstacles and a handful of deadly traps won’t be enough to stop you. Of course not, you have your eyes set on the treasure. Wherever this journey may lead you, you will rise to the challenge.
 
-Maecenas faucibus mollis interdum. Vestibulum id ligula porta felis euismod semper. Aenean lacinia bibendum nulla sed consectetur. Cras mattis consectetur purus sit amet fermentum.
+So, get up now, on your feet.\
+Pack your bag and grab your hat.\
+Gather your maps, and take your pistol too, for good measure.\
+There’s no turning back now.
 
-> “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fortuna favet audaci.”
->
-> — A note in the expedition journal
+Adventure is back.
 
-#### A smaller detail worth remembering
+## Introduction
 
-Nullam quis risus eget urna mollis ornare vel eu leo. {{< mark >}}This phrase tests a highlight.{{< /mark >}} This text has a footnote.[^specimen]
+Outgunned: Adventure is a pulp adventure game inspired by the classics of the genre, from the immortal Indiana Jones, to The Mummy (1999). In adventure, the Players take on the role of brave Adventurers in search of an invaluable treasure.
 
-## The essentials
+__Who are we?__ One of the Players will be the "Director" of the game, they will be tasked with setting the scene of the world and interpreting supporting characters, extras, and enemies. The others will play as "Adventurers", people determined to find their treasure.
 
-{{< note title="In the field / a useful aside" >}}
-**Lorem ipsum dolor sit amet.** Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. This callout can hold a ruling, an example, or a note from the author.
-{{< /note >}}
+__Where are we?__ The game is set somewhere in a cooler version of our World, where the untamed wilderness hides remnants of forgotten civilizations, and mystery lies just around the corner.
 
-### Pack only what you need
+__When are we?__ The game is set sometime between 1920 and 1940, when the World was still wide, different, and unpredictable. Depending on the needs of your story, you can choose a set date, or settle for a vague “between the two Wars”.
 
-- **A starting point.** Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-- **A little uncertainty.** Ut enim ad minim veniam, quis nostrud exercitation.
-  - Duis aute irure dolor in reprehenderit.
-  - Excepteur sint occaecat cupidatat non proident.
-- **A way back.** Sed ut perspiciatis unde omnis iste natus error.
+__What dice do we roll?__ You’ll need a handful of 6-sided dice. There are special Adventure Dice designed especially for this game, but they are not required.
 
-### Then take the first step
+## A Good Day For an Adventure
 
-1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-2. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-3. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+In 1922, a guy named Howard Carter started digging in the desert and unearthed the lost tomb of Pharaoh Tutankhamun. Hundreds of pounds of solid gold with great historical value that propelled the whole World to set off on adventures, in search of Treasure.
 
-{{< note kind="dark" title="Director’s note / raise the stakes" >}}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. **Duis aute irure dolor** in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-{{< /note >}}
+That was the beginning of a new golden age of modern exploration. An age made up of zeppelin flights and rowdy jazz, that culminated in the 30s with the esoteric expeditions of those nutty Nazis.
 
-## At a glance
+A handful of years when scheduled flights allowed normal people to cross oceans and continents, but when the World had yet to be explored. United, connected, but still new and uncontaminated.
 
-A compact reference table. These entries are **placeholder content**, not game mechanics.
+And this is the age when your new adventure begins. These two decades bracketed between World Wars are the perfect time to put on your Adventurer’s boots and set off on the most thrilling and dangerous journey of your life.
 
-| Dossier | Observation | Status |
-| :--- | :--- | :--- |
-| 01 / Lorem | Dolor sit amet, consectetur adipiscing | In the field |
-| 02 / Ipsum | Sed do eiusmod tempor incididunt | Under review |
-| 03 / Dolor | Ut enim ad minim veniam | Draft |
-| 04 / Amet | Quis nostrud exercitation ullamco | Uncharted |
+## Historical Timeline
 
-## The toolkit
+Don't worry, you don’t need to be a History buff in order to play adventure.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. A small collection of specimen cards, labels, and technical text.
+Just let the vintage charm of these roaring years transport you to a wondrous World where adventure lies just around the corner.
 
-{{< toolkit >}}
+However, if you want a general idea of what was going on in the world in the 20s and 30s, here are some interesting dates:
 
-### From the notebook
+- **1918:** End of World War I.
+- **1920:** Prohibition begins in the United States of America, until 1933.
+- **1922:** Howard Carter finds Tutankhamun’s tomb.
+- **1926:** This is the year when the movie “The Mummy” is set.
+- **1929:** Wall Street crashes, starting the Great Depression.
+- **1933:** Hitler and the Nazi party rise to power in Germany.
+- **1936:** This is the year when the movie “Raiders of the Lost Ark” is set.
+- **1937:** Amelia Earhart tries her brave flight around the World.
+- **1939:** Beginning of World War II.
 
-Use an inline value such as `expedition.notes` or a longer block:
+## Before you create an Adventurer
 
-```toml
-[expedition]
-name = "Lorem ipsum"
-destination = "Terra incognita"
-status = "To be continued"
-```
+Before you start and create your Adventurer, it helps to understand at a high level how your decisions influence how you play.
 
-## In the margins
+The most important parts to decide on are a "role", "trope" and initial "gear".
 
-{{< details title="Open the sealed envelope" >}}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue. **This disclosure works without JavaScript**, with a mouse or keyboard.
-{{< /details >}}
+They determine which and how many "attribute" and "skill" points you get.
 
-{{< details title="A second note from the field" >}}
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
-{{< /details >}}
+## Creating your Adventurer
 
----
+Use the handy [online character sheet creator]({{< relref "/character-builder" >}}) to create your character sheet. It will guide you step-by-step through the process of setting your character:
 
-## About
+1. Choose a Role
+2. Fill in your Personal Data
+3. Choose a Trope
+4. Mark the Attribute and Skill points gained from your Role and Trope
+5. Add 2 free Skill Points
+6. Choose and note 3 Feats from your Role and Trope
+7. Choose your Gear depending on your Role
+8. Mark 1 Luck, 1 Spotlight, and 1 Cash
 
-**An unofficial homebrew. A work in progress.** This independent fan project is not affiliated with or endorsed by Two Little Mice. Outgunned and Outgunned: Adventure belong to their respective owners.
-
-The visual language takes inspiration from the book’s parchment pages, condensed headings, map motifs, and brown marginal panels. The character-sheet prototype uses adapted artwork from the original Two Little Mice sheet. Source-book PDFs are not republished here.
-
-[^specimen]: A specimen footnote. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+> **IMPORTANT:** This online sheet creator does not store your sheet by itself. If you want to edit it later, please use the export function to store it on your computer. Then you can import it later and continue working on it.

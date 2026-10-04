@@ -22,12 +22,13 @@
     <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-5 px-6 py-5 lg:px-10">
       <a href="{{ site.Home.RelPermalink }}" class="brand" aria-label="Field Notes home">OUTGUNNED<span>ADVENTURE / HOMEBREW</span></a>
       <p class="hidden text-sm text-ink/70 md:block">Unofficial ideas. Extraordinary adventures.</p>
-      <a class="eyebrow border-b border-rust pb-1" href="{{ site.Home.RelPermalink }}#about">About this project ↗</a>
+      <a class="eyebrow border-b border-rust pb-1" href="{{ with site.GetPage "/character-builder" }}{{ .RelPermalink }}{{ end }}">Create your Adventurer ↗</a>
     </div>
   </header>
   {{ block "main" . }}{{ end }}
   <footer class="mx-auto flex max-w-7xl flex-wrap justify-between gap-4 border-t border-ink/30 px-6 py-7 text-sm lg:px-10">
     <span>FIELD NOTES <span class="mx-2 text-rust">/</span> An independent homebrew journal</span>
+    <a class="underline underline-offset-4" href="{{ with site.GetPage "/kitchen-sink" }}{{ .RelPermalink }}{{ end }}">Kitchen sink</a>
     <a class="underline underline-offset-4" href="#top">Back to the top ↑</a>
   </footer>
 </body>

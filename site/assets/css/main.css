@@ -46,6 +46,12 @@
   .prose-field pre { @apply rounded-none bg-ink text-paper; }
   .prose-field mark { @apply bg-sand px-1 text-ink; }
 
+  .prose-landing { font-size: 1.125rem; line-height: 1.8; }
+  .prose-landing h1 { @apply mb-8 font-display text-[clamp(3.5rem,8vw,5.5rem)] leading-none uppercase tracking-tight; }
+  .prose-landing > h1 + p { @apply text-2xl text-rust; }
+  .prose-landing blockquote { @apply border-l-4 bg-sand/50 p-6 font-body text-base not-italic; }
+  .prose-landing blockquote p::before, .prose-landing blockquote p::after { content: none; }
+
 @layer components {
   .field-note { @apply my-7 border-l-4 border-rust bg-sand/50 p-6; }
   .field-note-dark { @apply border-rust bg-[#704323] text-paper; }
