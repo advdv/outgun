@@ -1,0 +1,4 @@
+<figure class="book-art book-art-{{ .Get "kind" }}">
+  <img src="{{ printf "images/adventure/%s.webp" (.Get "image") | relURL }}" alt="{{ .Get "alt" }}" width="{{ .Get "width" }}" height="{{ .Get "height" }}" {{ if eq (.Get "kind") "hero" }}fetchpriority="high"{{ else }}loading="lazy"{{ end }} decoding="async">
+  <figcaption>Outgunned: Adventure · {{ .Get "source" }}</figcaption>
+</figure>

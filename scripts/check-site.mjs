@@ -51,6 +51,10 @@ assert(!html.includes('Lorem ipsum') && !html.includes('<aside') && !html.includ
 assert.equal((html.match(/<h1\b/g) || []).length, 1, 'Landing page must have one title');
 assert(html.includes('A New Adventure') && html.includes('Historical Timeline') && html.includes('Creating your Adventurer'), 'Missing landing content');
 assert.equal((html.match(/<h2\b/g) || []).length, 5, 'Missing landing sections');
+for (const image of ['dart-trap', 'explorer', 'expedition-chest']) {
+  assert(attributes.some(value => value.endsWith(`/images/adventure/${image}.webp`)), `Missing landing illustration: ${image}`);
+}
+assert(html.includes('Daniela Giubellini'), 'Missing illustration credit');
 assert(attributes.some(value => value.endsWith('/character-builder/')), 'Missing homepage builder link');
 const builder = readFileSync('public/character-builder/index.html', 'utf8');
 assert(builder.includes('data-artwork=') && /<script[^>]+type=.?module/.test(builder), 'Builder app not mounted');

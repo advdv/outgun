@@ -47,10 +47,29 @@
   .prose-field mark { @apply bg-sand px-1 text-ink; }
 
   .prose-landing { font-size: 1.125rem; line-height: 1.8; }
-  .prose-landing h1 { @apply mb-8 font-display text-[clamp(3.5rem,8vw,5.5rem)] leading-none uppercase tracking-tight; }
-  .prose-landing > h1 + p { @apply text-2xl text-rust; }
-  .prose-landing blockquote { @apply border-l-4 bg-sand/50 p-6 font-body text-base not-italic; }
+  .prose-landing h1 { @apply mb-8 font-display text-[clamp(3.5rem,8vw,5.5rem)] leading-none uppercase tracking-tight italic; color: #985d14; text-shadow: 1px 2px 0 #f3eddf, 2px 3px 0 #704323; }
+  .prose-landing h2 { @apply border-rust/40 text-rust italic; clear: both; }
+  .prose-landing strong { color: #704323; }
+  .prose-landing strong em, .prose-landing em strong { @apply font-display text-[1.15em] uppercase; }
+  .prose-landing .book-art-hero + p { @apply text-2xl text-rust; }
+  .prose-landing blockquote { @apply border-l-4 border-[#b78a45] bg-[#704323] p-6 font-body text-base text-paper not-italic; }
+  .prose-landing blockquote strong { color: inherit; }
   .prose-landing blockquote p::before, .prose-landing blockquote p::after { content: none; }
+  .prose-landing > p:last-child { @apply mt-12 border-t border-ink/20 pt-5 text-sm text-ink/65; }
+  .prose-landing ul { @apply list-none border-l border-rust/40 pl-6; }
+  .prose-landing ul li { @apply relative pl-0; }
+  .prose-landing ul li::before { content: ''; @apply absolute top-3 -left-[1.8rem] size-2 rotate-45 bg-rust; }
+  .prose-landing ol li::marker { @apply font-display text-xl text-rust; }
+  .prose-landing .book-art { @apply my-8; }
+  .prose-landing .book-art img { @apply m-0 w-full; height: auto; }
+  .prose-landing .book-art figcaption { @apply mt-2 text-xs uppercase tracking-wider text-ink/60; }
+  .prose-landing .book-art-hero { @apply mt-0; }
+  .prose-landing .book-art-hero img { aspect-ratio: 2.1; object-fit: cover; object-position: center 35%; border-bottom: 4px solid #985d14; }
+  .prose-landing .book-art-chest img { mix-blend-mode: multiply; mask-image: radial-gradient(ellipse, black 57%, transparent 73%); }
+  @media (min-width: 640px) {
+    .prose-landing .book-art-explorer { float: right; width: 46%; margin: 0 0 1.5rem 2rem; }
+    .prose-landing .book-art-chest { float: left; width: 42%; margin: 0 2rem 1.5rem 0; }
+  }
 
 @layer components {
   .field-note { @apply my-7 border-l-4 border-rust bg-sand/50 p-6; }

@@ -4,22 +4,24 @@ title: A New Adventure
 
 # A New Adventure
 
-It’s been a while.
+{{< book-art kind="hero" image="dart-trap" width="1200" height="940" alt="An adventurer races through an ancient passage as poisoned darts fly past him." source="p. 14" >}}
 
-The world out there is full of unexplored jungles, lost pyramids, and cursed temples that are just waiting for an unprepared explorer to slip up. Collapsing floors, creaky bridges, poisoned darts, fire jets, and rolling boulders… You can expect all that, and even more.
+*It’s been a while.*
 
-But if I know you, and I’ve seen my fair share of people like you, a few obstacles and a handful of deadly traps won’t be enough to stop you. Of course not, you have your eyes set on the treasure. Wherever this journey may lead you, you will rise to the challenge.
+*The world out there is full of unexplored jungles, lost pyramids, and cursed temples that are just waiting for an unprepared explorer to slip up. Collapsing floors, creaky bridges, poisoned darts, fire jets, and rolling boulders… You can expect all that, and even more.*
+
+*But if I know you, and I’ve seen my fair share of people like you, a few obstacles and a handful of deadly traps won’t be enough to stop you. Of course not, you have your eyes set on the **treasure**. Wherever this journey may lead you, you will rise to the challenge.*
 
 So, get up now, on your feet.\
 Pack your bag and grab your hat.\
 Gather your maps, and take your pistol too, for good measure.\
 There’s no turning back now.
 
-Adventure is back.
+***Adventure is back.***
 
 ## Introduction
 
-Outgunned: Adventure is a pulp adventure game inspired by the classics of the genre, from the immortal Indiana Jones, to The Mummy (1999). In adventure, the Players take on the role of brave Adventurers in search of an invaluable treasure.
+***Outgunned: Adventure*** is a pulp adventure game inspired by the classics of the genre, from the immortal *Indiana Jones*, to *The Mummy (1999)*. In ***Adventure***, the Players take on the role of brave **Adventurers** in search of an invaluable treasure.
 
 __Who are we?__ One of the Players will be the "Director" of the game, they will be tasked with setting the scene of the world and interpreting supporting characters, extras, and enemies. The others will play as "Adventurers", people determined to find their treasure.
 
@@ -30,6 +32,8 @@ __When are we?__ The game is set sometime between 1920 and 1940, when the World 
 __What dice do we roll?__ You’ll need a handful of 6-sided dice. There are special Adventure Dice designed especially for this game, but they are not required.
 
 ## A Good Day For an Adventure
+
+{{< book-art kind="explorer" image="explorer" width="850" height="813" alt="A hat-wearing explorer with a pistol discovers overgrown stone ruins." source="p. 12" >}}
 
 In 1922, a guy named Howard Carter started digging in the desert and unearthed the lost tomb of Pharaoh Tutankhamun. Hundreds of pounds of solid gold with great historical value that propelled the whole World to set off on adventures, in search of Treasure.
 
@@ -59,11 +63,13 @@ However, if you want a general idea of what was going on in the world in the 20s
 
 ## Before you create an Adventurer
 
+{{< book-art kind="chest" image="expedition-chest" width="720" height="542" alt="A leather hat, coiled whip, and compass rest on a wooden expedition chest." source="p. 10" >}}
+
 Before you start and create your Adventurer, it helps to understand at a high level how your decisions influence how you play.
 
-The most important parts to decide on are a "role", "trope" and initial "gear".
+The most important parts to decide on are a **Role**, **Trope** and initial **Gear**.
 
-They determine which and how many "attribute" and "skill" points you get.
+They determine which and how many **Attribute** and **Skill** points you get.
 
 ## Creating your Adventurer
 
@@ -79,3 +85,5 @@ Use the handy [online character sheet creator]({{< relref "/character-builder" >
 8. Mark 1 Luck, 1 Spotlight, and 1 Cash
 
 > **IMPORTANT:** This online sheet creator does not store your sheet by itself. If you want to edit it later, please use the export function to store it on your computer. Then you can import it later and continue working on it.
+
+Illustrations by Daniela Giubellini, from *Outgunned: Adventure*. © 2024 Two Little Mice. An unofficial fan project; not affiliated with or endorsed by Two Little Mice.
