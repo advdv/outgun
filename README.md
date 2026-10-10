@@ -206,21 +206,37 @@ Open `/cupboard-sensor/` over HTTPS (or localhost for development), click
 **Start camera**, and allow camera access. The page shows mean image brightness,
 its rolling 10-second minimum/maximum, and mean absolute pixel lightness change
 between samples, all on a 0–100% scale. It samples a 160 × 120 image roughly five
-times a second while the tab is visible. No microphone, audio playback,
-recording, or uploading is involved.
+times a second while the tab is visible. No microphone, recording, or uploading
+is involved.
+
+Click **Enable music** once per page load to allow browser audio, and wait for
+Ready or Playing. The supplied `site/static/audio/raiders-march.mp3` is downloaded
+and decoded once using Web Audio. Every START plays from **6 seconds**, never
+the previous position. It loops from 6 seconds to the end while START remains
+active. STOP immediately stops the source; Disable music silences it without
+stopping calibration. Use the Mac's volume controls. Audio interruptions require
+clicking Enable music again, and loading/permission failures offer a retry.
+
+Decoding the full track avoids streaming delays after arming, at the cost of
+roughly 120 MB of decoded audio memory on the installation laptop. The MP3 is
+bundled unchanged and will be publicly downloadable if this site is published;
+confirm the necessary music redistribution/performance rights before publishing
+or exhibiting. Loading the page offline after a reload is not implemented.
 
 The visual **Music: START / STOP** flag defaults to Start at ≥54% and Stop at
 ≤52%, assuming brighter means open. These sit between the supplied calibration
 graph's approximately 49–50% closed and 56–58% open plateaus, not its brief
 39.9%/61.0% extremes. Each crossing must persist for 600 ms; values between the
 thresholds retain the previous state. Comparisons use the displayed 0.1% precision.
-This is only a flag: it does not play music.
+The flag shows the sensor signal; the separate audio status reports whether
+music is enabled and playing.
 
 Edit the numeric thresholds and click **Apply thresholds** to update the solid
 graph lines and rearm from STOP. Values must be 0–100% in steps of 0.1, with Stop
 below Start; invalid edits leave the applied settings unchanged. Settings are
 held only in memory, so reloading restores defaults. Camera stop, mute, a hidden
-tab, or a sampling gap longer than one second resets the flag to STOP.
+tab, or a sampling gap longer than one second resets the flag to STOP and stops
+playback. Finishing a download after STOP cannot start stale playback.
 
 The brightness graph keeps the last three minutes, with a fixed 0–100% axis and
 labeled low/high dashed lines for that visible history (not trigger thresholds).
@@ -244,7 +260,10 @@ node scripts/cupboard-sensor.e2e.mjs <sensor-url> [review-artifact-directory]
 This checks the displayed measurements using synthetic video, including spatial
 changes with unchanged average brightness, range expiry, graph low/high marks,
 freeze/reset behaviour, trigger hysteresis and hold time, configurable thresholds,
-and stop/retry behaviour.
+and stop/retry behaviour. It captures real browser audio output and compares two
+separate openings against the supplied MP3 at 6 seconds, checks silence after
+STOP, and exercises load failure/retry and closing the door during loading.
+Chromium verification does not establish native Safari or speaker compatibility.
 
 ## Agent-readable HTML
 

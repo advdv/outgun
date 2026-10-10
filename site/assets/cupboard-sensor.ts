@@ -14,6 +14,9 @@ const trace = document.querySelector<SVGPathElement>('#sensor-trace')!;
 const lowLine = document.querySelector<SVGLineElement>('#sensor-low-line')!;
 const highLine = document.querySelector<SVGLineElement>('#sensor-high-line')!;
 const music = document.querySelector<HTMLElement>('#sensor-music')!;
+const soundToggle = document.querySelector<HTMLButtonElement>('#sensor-sound-toggle')!;
+const soundStatus = document.querySelector<HTMLElement>('#sensor-sound-status')!;
+const trackLink = document.querySelector<HTMLAnchorElement>('#sensor-track')!;
 const thresholdForm = document.querySelector<HTMLFormElement>('#sensor-thresholds')!;
 const startInput = document.querySelector<HTMLInputElement>('#sensor-start-threshold')!;
 const stopInput = document.querySelector<HTMLInputElement>('#sensor-stop-threshold')!;
@@ -30,6 +33,7 @@ canvas.height = 120;
 const context = canvas.getContext('2d', { willReadFrequently: true })!;
 const historyDuration = 180_000;
 const triggerHold = 600;
+const musicOffset = 6;
 
 let stream: MediaStream | null = null;
 let animation = 0;
@@ -40,6 +44,83 @@ let thresholds = { start: startInput.valueAsNumber, stop: stopInput.valueAsNumbe
 type MusicState = 'start' | 'stop';
 let musicState: MusicState = 'stop';
 let pendingTrigger: { state: MusicState; since: number } | null = null;
+let audioContext: AudioContext | null = null;
+let audioBuffer: AudioBuffer | null = null;
+let audioSource: AudioBufferSourceNode | null = null;
+let soundEnabled = false;
+
+function stopSound() {
+  audioSource?.stop();
+  audioSource?.disconnect();
+  audioSource = null;
+}
+
+function syncSound() {
+  if (!soundEnabled) return;
+  if (musicState === 'stop' || !stream || document.hidden) {
+    stopSound();
+    soundStatus.textContent = 'Ready. Waiting for the door to open.';
+  } else if (!audioSource && audioContext?.state === 'running' && audioBuffer) {
+    // A fresh source starts at 0:06 on every opening, never at the paused position.
+    audioSource = audioContext.createBufferSource();
+    audioSource.buffer = audioBuffer;
+    audioSource.loop = true;
+    audioSource.loopStart = musicOffset;
+    audioSource.loopEnd = audioBuffer.duration;
+    audioSource.connect(audioContext.destination);
+    audioSource.start(0, musicOffset);
+    soundStatus.textContent = 'Playing from 0:06. Loops from 0:06 while the door stays open.';
+  }
+}
+
+soundToggle.disabled = false;
+soundToggle.addEventListener('click', async () => {
+  if (soundEnabled) {
+    soundEnabled = false;
+    stopSound();
+    soundToggle.textContent = 'Enable music';
+    soundStatus.textContent = 'Music disabled. The sensor still shows the door state.';
+    return;
+  }
+  soundToggle.disabled = true;
+  soundStatus.textContent = 'Loading music… Wait until ready before testing the door.';
+  try {
+    if (!audioContext) {
+      audioContext = new AudioContext();
+      audioContext.addEventListener('statechange', () => {
+        if (soundEnabled && audioContext?.state !== 'running') {
+          soundEnabled = false;
+          stopSound();
+          soundToggle.textContent = 'Enable music';
+          soundStatus.textContent = 'Audio interrupted. Click Enable music to rearm.';
+        }
+      });
+    }
+    // Resume inside the operator's click, before fetching/decoding the track.
+    await audioContext.resume();
+    if (!audioBuffer) {
+      const response = await fetch(trackLink.href);
+      if (!response.ok) throw new Error('Music download failed');
+      audioBuffer = await audioContext.decodeAudioData(await response.arrayBuffer());
+      if (audioBuffer.duration <= musicOffset) {
+        audioBuffer = null;
+        throw new Error('Track ends before the start offset');
+      }
+    }
+    if (audioContext.state !== 'running') throw new Error('Audio is blocked');
+    soundEnabled = true;
+    soundToggle.textContent = 'Disable music';
+    // Loading may finish after a STOP; use the current signal, not the old one.
+    syncSound();
+  } catch {
+    soundEnabled = false;
+    stopSound();
+    soundToggle.textContent = 'Enable music';
+    soundStatus.textContent = 'Could not load or enable music. Check your connection and browser sound permissions, then click Enable music to retry.';
+  } finally {
+    soundToggle.disabled = false;
+  }
+});
 
 function setMusic(state: MusicState) {
   musicState = state;
@@ -48,6 +129,7 @@ function setMusic(state: MusicState) {
     music.textContent = `Music: ${state.toUpperCase()}`;
   }
   pendingTrigger = null;
+  syncSound();
 }
 
 function updateMusic(value: number, now: number) {

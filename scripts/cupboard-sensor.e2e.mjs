@@ -212,11 +212,102 @@ try {
   capture('trigger-narrow');
   browser('click', '#sensor-toggle');
   assert.equal(flag(), 'Music: STOP');
+
+  // Tap real PCM at the browser's audio output, without replacing playback.
+  // Compare it with an independently decoded 0:06 excerpt, not source-node calls.
+  evaluate(`(() => {
+    const connect = AudioNode.prototype.connect;
+    AudioNode.prototype.connect = function(destination, ...args) {
+      const result = connect.call(this, destination, ...args);
+      if (destination instanceof AudioDestinationNode) {
+        const context = destination.context;
+        if (!window.audioTap) {
+          window.testAudioContext = context;
+          const tap = context.createScriptProcessor(4096, 2, 1);
+          tap.onaudioprocess = event => {
+            const samples = event.inputBuffer.getChannelData(0);
+            window.outputPeak = Math.max(...samples.map(Math.abs));
+            if (window.recordSound && window.recordSound.length < 16384
+              && (window.recordSound.length || window.outputPeak > 0)) {
+              window.recordSound.push(...samples);
+            }
+          };
+          connect.call(tap, destination);
+          window.audioTap = tap;
+        }
+        connect.call(this, window.audioTap);
+      }
+      return result;
+    };
+    window.realFetch = window.fetch;
+    window.fetch = async () => { throw new TypeError('Test network failure'); };
+  })()`);
+  browser('set', 'viewport', '1280', '900', '2');
+  browser('click', '#sensor-sound-toggle');
+  waitFor("document.querySelector('#sensor-sound-status').textContent.startsWith('Could not')");
+  capture('music-error');
+  assert(evaluate("!document.querySelector('#sensor-sound-toggle').disabled"), 'Audio failure allows retry');
+
+  // The door closes while the track is loading: finishing must not play stale START.
+  paintGray(145);
+  browser('click', '#sensor-toggle');
+  waitFor("document.querySelector('#sensor-music').dataset.state === 'start'");
+  evaluate("window.fetch = (...args) => new Promise(resolve => { window.finishMusicLoad = () => resolve(window.realFetch(...args)); })");
+  browser('click', '#sensor-sound-toggle');
+  waitFor('!!window.finishMusicLoad');
+  capture('music-loading');
+  paintGray(126);
+  waitFor("document.querySelector('#sensor-music').dataset.state === 'stop'");
+  evaluate('window.finishMusicLoad(); window.fetch = window.realFetch');
+  waitFor("document.querySelector('#sensor-sound-status').textContent.startsWith('Ready.')");
+  assert(!evaluate('!!window.audioTap'), 'Finishing a load after STOP produces no audio');
+  capture('music-ready');
+
+  for (let opening = 1; opening <= 2; opening++) {
+    evaluate('window.recordSound = []');
+    paintGray(145);
+    waitFor('window.recordSound.length >= 16384');
+    if (opening === 1) evaluate(`(async () => {
+      const bytes = await (await fetch(document.querySelector('#sensor-track').href)).arrayBuffer();
+      const reference = new OfflineAudioContext(2, 1, window.testAudioContext.sampleRate);
+      const buffer = await reference.decodeAudioData(bytes);
+      window.expectedSound = Array.from(buffer.getChannelData(0).slice(6 * buffer.sampleRate, 6 * buffer.sampleRate + 8192));
+    })()`);
+    const error = evaluate(`(() => {
+      const actual = window.recordSound.slice(window.recordSound.findIndex(value => Math.abs(value) > 0.000001));
+      const expected = window.expectedSound.slice(window.expectedSound.findIndex(value => Math.abs(value) > 0.000001));
+      return actual.slice(0, 4096).reduce((sum, value, i) => sum + (value - expected[i]) ** 2, 0)
+        / expected.slice(0, 4096).reduce((sum, value) => sum + value ** 2, 0);
+    })()`);
+    assert(error < 0.000001, `Opening ${opening} must output the actual MP3 from 6 seconds (relative squared error ${error})`);
+    console.log(`PASS: opening ${opening} outputs the supplied MP3 from 6 seconds (PCM error ${error})`);
+    if (opening === 1) {
+      capture('music-playing');
+      browser('set', 'viewport', '390', '844', '2');
+      assert(evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Music controls fit narrow screens');
+      capture('music-narrow');
+      browser('set', 'viewport', '1280', '900', '2');
+    }
+    paintGray(126);
+    waitFor("document.querySelector('#sensor-music').dataset.state === 'stop' && window.outputPeak === 0");
+  }
+  paintGray(145);
+  waitFor('window.outputPeak > 0.01');
+  browser('click', '#sensor-sound-toggle');
+  waitFor('window.outputPeak === 0');
+  assert.equal(flag(), 'Music: START', 'Disabling sound does not stop calibration');
+  browser('click', '#sensor-sound-toggle');
+  waitFor('window.outputPeak > 0.01');
+  browser('click', '#sensor-toggle');
+  waitFor('window.outputPeak === 0');
+  console.log('PASS: audio failure/retry, STOP during loading, silent door-close, disable/re-enable, and camera-stop silence');
+
   configure(60, 40);
   browser('reload');
   waitFor("!document.querySelector('#sensor-apply-thresholds').disabled");
   assert.deepEqual(applied(), ['54.0%', '52.0%'], 'Reload restores the documented defaults');
   assert.equal(flag(), 'Music: STOP');
+  assert.equal(evaluate("document.querySelector('#sensor-sound-toggle').textContent"), 'Enable music', 'Reload never autoplays sound');
   assert.equal(evaluate("document.querySelector('video').srcObject"), null);
   console.log('PASS: configurable lines and trigger values, inclusive thresholds, validation, reload defaults, camera-stop reset');
   assert.deepEqual(browser('errors').errors, []);

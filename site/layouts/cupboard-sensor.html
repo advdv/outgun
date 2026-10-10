@@ -1,6 +1,6 @@
 {{ define "main" }}
 <main id="main" class="mx-auto max-w-4xl px-6 py-10">
-  <p class="eyebrow text-rust">Exhibition / calibration only</p>
+  <p class="eyebrow text-rust">Exhibition / cupboard music</p>
   <h1 class="mt-2 font-display text-5xl">{{ .Title }}</h1>
 
   <div class="mt-6 flex flex-wrap items-center gap-4">
@@ -11,7 +11,12 @@
 
   <section class="mt-6 border border-ink/25 p-4" aria-label="Music trigger">
     <p id="sensor-music" role="status" data-state="stop" class="px-4 py-2 font-display text-3xl uppercase data-[state=start]:bg-[#285b38] data-[state=start]:text-white data-[state=stop]:bg-sand/60 data-[state=stop]:text-ink">Music: STOP</p>
-    <p class="mt-2 text-sm">Indicator only—no audio. A crossing must last 0.6 seconds. Between thresholds, keep the previous state.</p>
+    <div class="mt-4 flex flex-wrap items-center gap-3">
+      <button type="button" id="sensor-sound-toggle" class="button-secondary disabled:opacity-50" disabled>Enable music</button>
+      <p id="sensor-sound-status" role="status" class="min-w-0 flex-1 basis-64">Music disabled. Click Enable music once to allow sound.</p>
+    </div>
+    <p class="mt-3 text-sm">Track: <a id="sensor-track" href="{{ "audio/raiders-march.mp3" | relURL }}" download class="underline">Raiders of the Lost Ark March</a>. Every start and loop begins at <strong>0:06</strong>. Closing the door stops playback; reopening restarts, not resumes. Use your Mac’s volume controls.</p>
+    <p class="mt-2 text-sm">The flag shows the sensor’s START/STOP signal. A crossing must last 0.6 seconds. Between thresholds, keep the previous state.</p>
     <form id="sensor-thresholds" class="mt-4 flex flex-wrap items-end gap-3" novalidate aria-label="Adjust trigger thresholds">
       <label class="text-sm" for="sensor-start-threshold">Start at or above (%)
         <input id="sensor-start-threshold" type="number" min="0" max="100" step="0.1" value="54" required class="mt-1 block w-28 border border-ink/40 bg-paper px-3 py-2 text-lg tabular-nums" aria-describedby="sensor-threshold-help sensor-threshold-error">
@@ -82,7 +87,7 @@
     <video id="sensor-video" muted playsinline aria-label="Live webcam preview" class="mt-3 w-64 max-w-full bg-ink"></video>
     <p class="mt-2 text-sm">Use this to aim the camera. Keep this panel closed while measuring to avoid changing the screen’s glow.</p>
   </details>
-  <p class="mt-4 text-sm text-ink/70">Samples about 5 times per second while this tab is visible. Camera only: no microphone, audio playback, recording, or uploads. Keep this page open and the Mac awake.</p>
+  <p class="mt-4 text-sm text-ink/70">Samples about 5 times per second while this tab is visible. No microphone, recording, or uploads. Keep this page visible and the Mac awake. Stopping the camera or hiding the tab stops the music.</p>
   {{ with resources.Get "cupboard-sensor.ts" | js.Build (dict "target" "es2022" "minify" (not hugo.IsDevelopment)) | fingerprint }}
   <script type="module" src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"></script>
   {{ end }}
