@@ -211,9 +211,14 @@ is involved.
 
 Click **Enable music** once per page load to allow browser audio, and wait for
 Ready or Playing. The supplied `site/static/audio/raiders-march.mp3` is downloaded
-and decoded once using Web Audio. Every START plays from **6 seconds**, never
-the previous position. It loops from 6 seconds to the end while START remains
-active. STOP immediately stops the source; Disable music silences it without
+and decoded once using Web Audio. Every START plays from the applied **Start
+offset**, never the previous position. The default is **0.06 seconds (60 ms)**,
+not 0:06. Enter seconds in steps of 0.01 and click **Apply offset**; this restarts
+any playing music. Empty, negative, fractional-step, and past-end values are
+rejected without changing the applied offset. Before the track loads, its length
+is unknown; an out-of-range offset prevents enabling music until corrected.
+Reloading restores the default. Music loops from the offset to the end while
+START remains active. STOP immediately stops the source; Disable music silences it without
 stopping calibration. Use the Mac's volume controls. Audio interruptions require
 clicking Enable music again, and loading/permission failures offer a retry.
 
@@ -261,8 +266,9 @@ This checks the displayed measurements using synthetic video, including spatial
 changes with unchanged average brightness, range expiry, graph low/high marks,
 freeze/reset behaviour, trigger hysteresis and hold time, configurable thresholds,
 and stop/retry behaviour. It captures real browser audio output and compares two
-separate openings against the supplied MP3 at 6 seconds, checks silence after
-STOP, and exercises load failure/retry and closing the door during loading.
+separate openings against the supplied MP3 at the default and a custom fractional
+offset, checks validation and silence after STOP, and exercises load failure/retry
+and closing the door during loading.
 Chromium verification does not establish native Safari or speaker compatibility.
 
 ## Agent-readable HTML

@@ -5,9 +5,13 @@ layout: cupboard-sensor
 
 Click **Start camera** and allow camera access, then click **Enable music**.
 Wait for the music status to say **Ready** or **Playing**. Open and close the
-cupboard: each opening plays the supplied track from **0:06**, looping back to
-**0:06** if the door stays open. Each closing stops it. Reloading requires
-enabling the camera and music again.
+cupboard: each opening plays the supplied track from the applied **Start offset**,
+looping back to that position if the door stays open. Each closing stops it.
+
+The default offset is **0.06 seconds (60 milliseconds)**. Enter seconds and click
+**Apply offset** to change it; use **6** for six seconds. Applying an offset
+restarts any playing music at that position. Reloading restores the default and
+requires enabling the camera and music again.
 
 The flag should read
 **Music: START** when open and **Music: STOP** when closed. The defaults assume

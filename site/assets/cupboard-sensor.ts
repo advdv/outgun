@@ -17,6 +17,10 @@ const music = document.querySelector<HTMLElement>('#sensor-music')!;
 const soundToggle = document.querySelector<HTMLButtonElement>('#sensor-sound-toggle')!;
 const soundStatus = document.querySelector<HTMLElement>('#sensor-sound-status')!;
 const trackLink = document.querySelector<HTMLAnchorElement>('#sensor-track')!;
+const offsetForm = document.querySelector<HTMLFormElement>('#sensor-offset-form')!;
+const offsetInput = document.querySelector<HTMLInputElement>('#sensor-start-offset')!;
+const offsetLabel = document.querySelector<HTMLElement>('#sensor-offset-label')!;
+const offsetError = document.querySelector<HTMLElement>('#sensor-offset-error')!;
 const thresholdForm = document.querySelector<HTMLFormElement>('#sensor-thresholds')!;
 const startInput = document.querySelector<HTMLInputElement>('#sensor-start-threshold')!;
 const stopInput = document.querySelector<HTMLInputElement>('#sensor-stop-threshold')!;
@@ -33,7 +37,6 @@ canvas.height = 120;
 const context = canvas.getContext('2d', { willReadFrequently: true })!;
 const historyDuration = 180_000;
 const triggerHold = 600;
-const musicOffset = 6;
 
 let stream: MediaStream | null = null;
 let animation = 0;
@@ -48,6 +51,29 @@ let audioContext: AudioContext | null = null;
 let audioBuffer: AudioBuffer | null = null;
 let audioSource: AudioBufferSourceNode | null = null;
 let soundEnabled = false;
+let musicOffset = offsetInput.valueAsNumber;
+offsetLabel.textContent = musicOffset.toFixed(2);
+
+offsetForm.addEventListener('submit', event => {
+  event.preventDefault();
+  const next = offsetInput.valueAsNumber;
+  const valid = offsetInput.validity.valid && Number.isFinite(next)
+    && (!audioBuffer || next < audioBuffer.duration);
+  offsetInput.setAttribute('aria-invalid', String(!valid));
+  offsetError.hidden = valid;
+  if (!valid) {
+    offsetError.textContent = audioBuffer
+      ? `Not applied. Use 0 or more seconds in steps of 0.01, before the track ends (${audioBuffer.duration.toFixed(2)} seconds).`
+      : 'Not applied. Use 0 or more seconds in steps of 0.01. The track length is checked when music loads.';
+    return;
+  }
+  musicOffset = next;
+  offsetLabel.textContent = musicOffset.toFixed(2);
+  stopSound();
+  syncSound();
+  if (!soundEnabled && !soundToggle.disabled) soundStatus.textContent = 'Offset applied. Click Enable music to allow sound.';
+});
+document.querySelector<HTMLButtonElement>('#sensor-apply-offset')!.disabled = false;
 
 function stopSound() {
   audioSource?.stop();
@@ -61,7 +87,7 @@ function syncSound() {
     stopSound();
     soundStatus.textContent = 'Ready. Waiting for the door to open.';
   } else if (!audioSource && audioContext?.state === 'running' && audioBuffer) {
-    // A fresh source starts at 0:06 on every opening, never at the paused position.
+    // A fresh source uses the applied offset, never the previous playback position.
     audioSource = audioContext.createBufferSource();
     audioSource.buffer = audioBuffer;
     audioSource.loop = true;
@@ -69,7 +95,7 @@ function syncSound() {
     audioSource.loopEnd = audioBuffer.duration;
     audioSource.connect(audioContext.destination);
     audioSource.start(0, musicOffset);
-    soundStatus.textContent = 'Playing from 0:06. Loops from 0:06 while the door stays open.';
+    soundStatus.textContent = `Playing from ${musicOffset.toFixed(2)} seconds. Loops from the same offset while the door stays open.`;
   }
 }
 
@@ -102,10 +128,10 @@ soundToggle.addEventListener('click', async () => {
       const response = await fetch(trackLink.href);
       if (!response.ok) throw new Error('Music download failed');
       audioBuffer = await audioContext.decodeAudioData(await response.arrayBuffer());
-      if (audioBuffer.duration <= musicOffset) {
-        audioBuffer = null;
-        throw new Error('Track ends before the start offset');
-      }
+    }
+    if (musicOffset >= audioBuffer.duration) {
+      soundStatus.textContent = `Music not enabled. Apply an offset before the track ends (${audioBuffer.duration.toFixed(2)} seconds), then click Enable music.`;
+      return;
     }
     if (audioContext.state !== 'running') throw new Error('Audio is blocked');
     soundEnabled = true;
