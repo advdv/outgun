@@ -1,0 +1,90 @@
+{{ define "main" }}
+<main id="main" class="mx-auto max-w-4xl px-6 py-10">
+  <p class="eyebrow text-rust">Exhibition / calibration only</p>
+  <h1 class="mt-2 font-display text-5xl">{{ .Title }}</h1>
+
+  <div class="mt-6 flex flex-wrap items-center gap-4">
+    <button type="button" id="sensor-toggle" class="button disabled:opacity-50" disabled>Start camera</button>
+    <p id="sensor-status" role="status">Camera off.</p>
+  </div>
+  <noscript><p class="mt-3">Enable JavaScript to read the webcam.</p></noscript>
+
+  <section class="mt-6 border border-ink/25 p-4" aria-label="Music trigger">
+    <p id="sensor-music" role="status" data-state="stop" class="px-4 py-2 font-display text-3xl uppercase data-[state=start]:bg-[#285b38] data-[state=start]:text-white data-[state=stop]:bg-sand/60 data-[state=stop]:text-ink">Music: STOP</p>
+    <p class="mt-2 text-sm">Indicator only—no audio. A crossing must last 0.6 seconds. Between thresholds, keep the previous state.</p>
+    <form id="sensor-thresholds" class="mt-4 flex flex-wrap items-end gap-3" novalidate aria-label="Adjust trigger thresholds">
+      <label class="text-sm" for="sensor-start-threshold">Start at or above (%)
+        <input id="sensor-start-threshold" type="number" min="0" max="100" step="0.1" value="54" required class="mt-1 block w-28 border border-ink/40 bg-paper px-3 py-2 text-lg tabular-nums" aria-describedby="sensor-threshold-help sensor-threshold-error">
+      </label>
+      <label class="text-sm" for="sensor-stop-threshold">Stop at or below (%)
+        <input id="sensor-stop-threshold" type="number" min="0" max="100" step="0.1" value="52" required class="mt-1 block w-28 border border-ink/40 bg-paper px-3 py-2 text-lg tabular-nums" aria-describedby="sensor-threshold-help sensor-threshold-error">
+      </label>
+      <button type="submit" id="sensor-apply-thresholds" class="button-secondary disabled:opacity-50" disabled>Apply thresholds</button>
+    </form>
+    <p id="sensor-threshold-help" class="mt-2 text-sm">Stop must be lower than Start. Apply rearms from STOP; reloading restores these defaults.</p>
+    <p id="sensor-threshold-error" role="alert" class="mt-2 text-rust" hidden></p>
+  </section>
+
+  <dl class="my-8 grid gap-6 sm:grid-cols-3">
+    <div class="border-t border-ink/30 pt-4">
+      <dt class="eyebrow">Brightness</dt>
+      <dd id="sensor-brightness" class="my-2 font-display text-5xl tabular-nums">—</dd>
+      <dd class="text-sm">Average image lightness.<br>0% = black; 100% = white.</dd>
+    </div>
+    <div class="border-t border-ink/30 pt-4">
+      <dt class="eyebrow">Last 10 s</dt>
+      <dd id="sensor-range" class="my-2 font-display text-3xl tabular-nums">—</dd>
+      <dd class="text-sm">Lowest – highest brightness.<br>Watch for overlap between open and closed.</dd>
+    </div>
+    <div class="border-t border-ink/30 pt-4">
+      <dt class="eyebrow">Frame change</dt>
+      <dd id="sensor-change" class="my-2 font-display text-5xl tabular-nums">—</dd>
+      <dd class="text-sm">Average pixel lightness change since the previous sample. 0% = unchanged.</dd>
+    </div>
+  </dl>
+
+  <section class="my-8" aria-labelledby="sensor-graph-title">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <h2 id="sensor-graph-title" class="font-display text-2xl">Brightness history</h2>
+      <button type="button" id="sensor-reset" class="button-secondary disabled:opacity-50" disabled>Reset graph</button>
+    </div>
+    <div class="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-lg tabular-nums">
+      <p class="text-[#285b38]">Start ≥ <strong id="sensor-start-label">—</strong> · solid</p>
+      <p class="text-[#843868]">Stop ≤ <strong id="sensor-stop-label">—</strong> · solid</p>
+      <p class="text-rust">High <strong id="sensor-high">—</strong></p>
+      <p class="text-[#315c77]">Low <strong id="sensor-low">—</strong></p>
+    </div>
+    <p id="sensor-graph-summary" class="mt-1 text-sm">No samples yet. Start the camera to draw the graph.</p>
+    <div class="mt-5 grid grid-cols-[3rem_minmax(0,1fr)] gap-x-2 py-3">
+      <div class="relative h-56 text-right text-sm tabular-nums" aria-hidden="true">
+        <span class="absolute top-0 right-0 -translate-y-1/2">100%</span>
+        <span class="absolute top-1/2 right-0 -translate-y-1/2">50%</span>
+        <span class="absolute right-0 bottom-0 translate-y-1/2">0%</span>
+      </div>
+      <svg id="sensor-graph" viewBox="0 0 720 200" preserveAspectRatio="none" class="h-56 w-full overflow-visible" role="img" aria-labelledby="sensor-graph-title" aria-describedby="sensor-graph-summary">
+        <path d="M0 0H720 M0 50H720 M0 100H720 M0 150H720 M0 200H720 M0 0V200 M240 0V200 M480 0V200 M720 0V200" fill="none" stroke="currentColor" stroke-opacity="0.15" vector-effect="non-scaling-stroke" />
+        <line id="sensor-low-line" x1="0" x2="720" y1="0" y2="0" stroke="#315c77" stroke-width="2" stroke-dasharray="3 4" vector-effect="non-scaling-stroke" visibility="hidden" />
+        <line id="sensor-high-line" x1="0" x2="720" y1="0" y2="0" stroke="#8c4928" stroke-width="2" stroke-dasharray="8 4" vector-effect="non-scaling-stroke" visibility="hidden" />
+        <line id="sensor-start-line" x1="0" x2="720" y1="0" y2="0" stroke="#285b38" stroke-width="2" vector-effect="non-scaling-stroke" visibility="hidden" />
+        <line id="sensor-stop-line" x1="0" x2="720" y1="0" y2="0" stroke="#843868" stroke-width="2" vector-effect="non-scaling-stroke" visibility="hidden" />
+        <path id="sensor-trace" d="" fill="none" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke" />
+      </svg>
+      <div class="col-start-2 mt-3 flex justify-between text-xs tabular-nums" aria-hidden="true">
+        <span id="sensor-time-start">−30 s</span><span id="sensor-time-middle">−20 s</span><span id="sensor-time-end">−10 s</span><span>Latest</span>
+      </div>
+    </div>
+    <p class="text-sm">Keeps the last 3 minutes. Solid green/purple lines are the applied Start/Stop thresholds; dashed lines are the observed low/high. Stop camera freezes the graph and sets Music: STOP. Reset graph clears history, not the trigger state.</p>
+  </section>
+
+  <div class="prose prose-field my-6 max-w-none">{{ .Content }}</div>
+  <details class="border-t border-ink/30 py-4">
+    <summary class="cursor-pointer font-display text-lg">Camera preview</summary>
+    <video id="sensor-video" muted playsinline aria-label="Live webcam preview" class="mt-3 w-64 max-w-full bg-ink"></video>
+    <p class="mt-2 text-sm">Use this to aim the camera. Keep this panel closed while measuring to avoid changing the screen’s glow.</p>
+  </details>
+  <p class="mt-4 text-sm text-ink/70">Samples about 5 times per second while this tab is visible. Camera only: no microphone, audio playback, recording, or uploads. Keep this page open and the Mac awake.</p>
+  {{ with resources.Get "cupboard-sensor.ts" | js.Build (dict "target" "es2022" "minify" (not hugo.IsDevelopment)) | fingerprint }}
+  <script type="module" src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"></script>
+  {{ end }}
+</main>
+{{ end }}

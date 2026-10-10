@@ -11,7 +11,7 @@ const pageAttributes = source => [...source.matchAll(/(?:href|src|data-artwork)=
 const attributes = pageAttributes(html);
 let checked = 0;
 const stylesheets = new Set();
-for (const page of ['index.html', 'kitchen-sink/index.html', 'character-builder/index.html', 'player-cheat-sheet/index.html', 'reference-sheets/index.html']) {
+for (const page of ['index.html', 'kitchen-sink/index.html', 'character-builder/index.html', 'player-cheat-sheet/index.html', 'reference-sheets/index.html', 'cupboard-sensor/index.html']) {
   const source = readFileSync(join('public', page), 'utf8');
   const pageUrl = new URL(page, base);
   for (const value of pageAttributes(source)) {

@@ -200,6 +200,52 @@ is `https://advdv.github.io/outgun/`; the workflow takes the actual base URL
 from GitHub Pages, including custom domains. No deployment has been performed
 as part of the initial local setup.
 
+### Cupboard webcam calibration
+
+Open `/cupboard-sensor/` over HTTPS (or localhost for development), click
+**Start camera**, and allow camera access. The page shows mean image brightness,
+its rolling 10-second minimum/maximum, and mean absolute pixel lightness change
+between samples, all on a 0–100% scale. It samples a 160 × 120 image roughly five
+times a second while the tab is visible. No microphone, audio playback,
+recording, or uploading is involved.
+
+The visual **Music: START / STOP** flag defaults to Start at ≥54% and Stop at
+≤52%, assuming brighter means open. These sit between the supplied calibration
+graph's approximately 49–50% closed and 56–58% open plateaus, not its brief
+39.9%/61.0% extremes. Each crossing must persist for 600 ms; values between the
+thresholds retain the previous state. Comparisons use the displayed 0.1% precision.
+This is only a flag: it does not play music.
+
+Edit the numeric thresholds and click **Apply thresholds** to update the solid
+graph lines and rearm from STOP. Values must be 0–100% in steps of 0.1, with Stop
+below Start; invalid edits leave the applied settings unchanged. Settings are
+held only in memory, so reloading restores defaults. Camera stop, mute, a hidden
+tab, or a sampling gap longer than one second resets the flag to STOP.
+
+The brightness graph keeps the last three minutes, with a fixed 0–100% axis and
+labeled low/high dashed lines for that visible history (not trigger thresholds).
+The time axis starts at 30 seconds and expands to three minutes as samples arrive.
+It uses SVG without a charting dependency. Gaps longer than a second are not
+joined by a line. **Stop camera** releases the webcam and clears live readings,
+but freezes the graph and its low/high marks for inspection. **Reset graph**
+clears history and readings without stopping the camera or changing the trigger
+state; reloading also clears history. Restarting the camera resumes the rolling window.
+
+Use the optional preview to aim the camera, then close it to keep screen glow
+consistent. Reset the graph, then alternate open and closed for 20 seconds each,
+three times. Stop the camera to inspect the graph without a screen recording.
+Keep the laptop awake and screen brightness fixed. Real Mac/cupboard calibration
+is still required; synthetic browser frames cannot establish a usable physical threshold.
+
+```sh
+node scripts/cupboard-sensor.e2e.mjs <sensor-url> [review-artifact-directory]
+```
+
+This checks the displayed measurements using synthetic video, including spatial
+changes with unchanged average brightness, range expiry, graph low/high marks,
+freeze/reset behaviour, trigger hysteresis and hold time, configurable thresholds,
+and stop/retry behaviour.
+
 ## Agent-readable HTML
 
 `scripts/pdf_to_html.py` recursively converts PDFs into static HTML, with one

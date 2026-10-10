@@ -13,3 +13,5 @@ services:
         title: Printable player cheat sheet
       - url: /reference-sheets/
         title: Seven-page printable reference
+      - url: /cupboard-sensor/
+        title: Cupboard webcam calibration
